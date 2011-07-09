@@ -20,7 +20,7 @@ environments {
     test {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:hsqldb:mem:testDb"
+            url = "jdbc:mysql://localhost/finance"
         }
     }
     production {

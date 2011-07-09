@@ -3,7 +3,9 @@ package domain
 class Settings {
 
   String name
-  Currency currency
+  Currency mainCurrency
+  Workspace workspace
+  static hasMany = [ currenccategories : Currency]
   static constraints = {
   }
 
