@@ -1,4 +1,4 @@
-class CategoryOperation extends Base {
+class CategoryOperation extends ICategory {
 
   static constraints = {
   }

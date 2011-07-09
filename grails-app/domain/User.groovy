@@ -1,5 +1,6 @@
 class User extends Base {
 
+  String surname
   String password
   String email
   Settings settings
@@ -8,6 +9,6 @@ class User extends Base {
     password(password: true)
   }
 
-  static hasMany = [notes: Note, bills: Bill, categories: Category, operations: Operation]
+  static hasMany = [notes: Note, bills: Bill, categories: ICategory, operations: Operation]
 
 }

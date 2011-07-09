@@ -1,4 +1,4 @@
-class CategoryBill extends Base {
+class CategoryBill extends ICategory {
 
   static constraints = {
   }
