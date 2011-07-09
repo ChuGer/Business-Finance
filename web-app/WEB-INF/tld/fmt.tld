@@ -327,7 +327,7 @@ equal to "currency"); ignored otherwise.
     </attribute>
     <attribute>
         <description>
-Currency symbol. Applied only when
+domain.Currency symbol. Applied only when
 formatting currencies (i.e. if type is equal
 to "currency"); ignored otherwise.
         </description>

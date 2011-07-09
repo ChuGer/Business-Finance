@@ -41,7 +41,7 @@ Event.simulateMouse = function(element, eventName) {
   $(element).dispatchEvent(oEvent);
 };
 
-// Note: Due to a fix in Firefox 1.0.5/6 that probably fixed "too much", this doesn't work in 1.0.6 or DP2.
+// domain.Note: Due to a fix in Firefox 1.0.5/6 that probably fixed "too much", this doesn't work in 1.0.6 or DP2.
 // You need to downgrade to 1.0.4 for now to get this working
 // See https://bugzilla.mozilla.org/show_bug.cgi?id=289940 for the fix that fixed too much
 Event.simulateKey = function(element, eventName) {
@@ -434,7 +434,7 @@ Test.Unit.Assertions.prototype = {
     var startAt = new Date();
     (iterations || 1).times(operation);
     var timeTaken = ((new Date())-startAt);
-    this.info((arguments[2] || 'Operation') + ' finished ' + 
+    this.info((arguments[2] || 'domain.Operation') + ' finished ' +
        iterations + ' iterations in ' + (timeTaken/1000)+'s' );
     return timeTaken;
   },
@@ -457,7 +457,7 @@ Test.Unit.Assertions.prototype = {
     var startAt = new Date();
     (iterations || 1).times(operation);
     var timeTaken = ((new Date())-startAt);
-    this.info((arguments[2] || 'Operation') + ' finished ' + 
+    this.info((arguments[2] || 'domain.Operation') + ' finished ' +
        iterations + ' iterations in ' + (timeTaken/1000)+'s' );
     return timeTaken;
   }

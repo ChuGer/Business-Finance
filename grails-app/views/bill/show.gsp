@@ -1,10 +1,10 @@
 
-<%@ page import="domain.Task" %>
+<%@ page import="domain.Bill" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'task.label', default: 'Task')}" />
+        <g:set var="entityName" value="${message(code: 'bill.label', default: 'Bill')}" />
         <title><g:message code="default.show.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -23,51 +23,37 @@
                     <tbody>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="task.id.label" default="Id" /></td>
+                            <td valign="top" class="name"><g:message code="bill.id.label" default="Id" /></td>
                             
-                            <td valign="top" class="value">${fieldValue(bean: taskInstance, field: "id")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="task.notifyType.label" default="Notify Type" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: taskInstance, field: "notifyType")}</td>
+                            <td valign="top" class="value">${fieldValue(bean: billInstance, field: "id")}</td>
                             
                         </tr>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="task.endDate.label" default="End Date" /></td>
+                            <td valign="top" class="name"><g:message code="bill.balance.label" default="Balance" /></td>
                             
-                            <td valign="top" class="value"><g:formatDate date="${taskInstance?.endDate}" /></td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="task.interval.label" default="Interval" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: taskInstance, field: "interval")}</td>
+                            <td valign="top" class="value">${fieldValue(bean: billInstance, field: "balance")}</td>
                             
                         </tr>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="task.name.label" default="Name" /></td>
+                            <td valign="top" class="name"><g:message code="bill.category.label" default="Category" /></td>
                             
-                            <td valign="top" class="value">${fieldValue(bean: taskInstance, field: "name")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="task.operation.label" default="Operation" /></td>
-                            
-                            <td valign="top" class="value"><g:link controller="operation" action="show" id="${taskInstance?.operation?.id}">${taskInstance?.operation?.encodeAsHTML()}</g:link></td>
+                            <td valign="top" class="value"><g:link controller="categoryBill" action="show" id="${billInstance?.category?.id}">${billInstance?.category?.encodeAsHTML()}</g:link></td>
                             
                         </tr>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="task.startDate.label" default="Start Date" /></td>
+                            <td valign="top" class="name"><g:message code="bill.currency.label" default="Currency" /></td>
                             
-                            <td valign="top" class="value"><g:formatDate date="${taskInstance?.startDate}" /></td>
+                            <td valign="top" class="value"><g:link controller="currency" action="show" id="${billInstance?.currency?.id}">${billInstance?.currency?.encodeAsHTML()}</g:link></td>
+                            
+                        </tr>
+                    
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="bill.name.label" default="Name" /></td>
+                            
+                            <td valign="top" class="value">${fieldValue(bean: billInstance, field: "name")}</td>
                             
                         </tr>
                     
@@ -76,7 +62,7 @@
             </div>
             <div class="buttons">
                 <g:form>
-                    <g:hiddenField name="id" value="${taskInstance?.id}" />
+                    <g:hiddenField name="id" value="${billInstance?.id}" />
                     <span class="button"><g:actionSubmit class="edit" action="edit" value="${message(code: 'default.button.edit.label', default: 'Edit')}" /></span>
                     <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></span>
                 </g:form>

@@ -1,10 +1,10 @@
 
-<%@ page import="domain.User" %>
+<%@ page import="domain.Operation" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'user.label', default: 'User')}" />
+        <g:set var="entityName" value="${message(code: 'operation.label', default: 'Operation')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -22,35 +22,35 @@
                     <thead>
                         <tr>
                         
-                            <g:sortableColumn property="id" title="${message(code: 'user.id.label', default: 'Id')}" />
+                            <g:sortableColumn property="id" title="${message(code: 'operation.id.label', default: 'Id')}" />
                         
-                            <g:sortableColumn property="email" title="${message(code: 'user.email.label', default: 'Email')}" />
+                            <g:sortableColumn property="type" title="${message(code: 'operation.type.label', default: 'Type')}" />
                         
-                            <g:sortableColumn property="password" title="${message(code: 'user.password.label', default: 'Password')}" />
+                            <th><g:message code="operation.billFrom.label" default="Bill From" /></th>
                         
-                            <g:sortableColumn property="name" title="${message(code: 'user.name.label', default: 'Name')}" />
+                            <th><g:message code="operation.billTo.label" default="Bill To" /></th>
                         
-                            <th><g:message code="user.settings.label" default="Settings" /></th>
+                            <th><g:message code="operation.category.label" default="Category" /></th>
                         
-                            <g:sortableColumn property="surname" title="${message(code: 'user.surname.label', default: 'Surname')}" />
+                            <g:sortableColumn property="isCommitted" title="${message(code: 'operation.isCommitted.label', default: 'Is Committed')}" />
                         
                         </tr>
                     </thead>
                     <tbody>
-                    <g:each in="${userInstanceList}" status="i" var="userInstance">
+                    <g:each in="${operationInstanceList}" status="i" var="operationInstance">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
                         
-                            <td><g:link action="show" id="${userInstance.id}">${fieldValue(bean: userInstance, field: "id")}</g:link></td>
+                            <td><g:link action="show" id="${operationInstance.id}">${fieldValue(bean: operationInstance, field: "id")}</g:link></td>
                         
-                            <td>${fieldValue(bean: userInstance, field: "email")}</td>
+                            <td>${fieldValue(bean: operationInstance, field: "type")}</td>
                         
-                            <td>${fieldValue(bean: userInstance, field: "password")}</td>
+                            <td>${fieldValue(bean: operationInstance, field: "billFrom")}</td>
                         
-                            <td>${fieldValue(bean: userInstance, field: "name")}</td>
+                            <td>${fieldValue(bean: operationInstance, field: "billTo")}</td>
                         
-                            <td>${fieldValue(bean: userInstance, field: "settings")}</td>
+                            <td>${fieldValue(bean: operationInstance, field: "category")}</td>
                         
-                            <td>${fieldValue(bean: userInstance, field: "surname")}</td>
+                            <td><g:formatBoolean boolean="${operationInstance.isCommitted}" /></td>
                         
                         </tr>
                     </g:each>
@@ -58,7 +58,7 @@
                 </table>
             </div>
             <div class="paginateButtons">
-                <g:paginate total="${userInstanceTotal}" />
+                <g:paginate total="${operationInstanceTotal}" />
             </div>
         </div>
     </body>

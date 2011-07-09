@@ -1,5 +1,5 @@
 
-
+<%@ page import="domain.Task" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -24,15 +24,15 @@
                         
                             <g:sortableColumn property="id" title="${message(code: 'task.id.label', default: 'Id')}" />
                         
-                            <g:sortableColumn property="iconPath" title="${message(code: 'task.iconPath.label', default: 'Icon Path')}" />
-                        
                             <g:sortableColumn property="notifyType" title="${message(code: 'task.notifyType.label', default: 'Notify Type')}" />
                         
-                            <g:sortableColumn property="comment" title="${message(code: 'task.comment.label', default: 'Comment')}" />
-                        
-                            <g:sortableColumn property="created" title="${message(code: 'task.created.label', default: 'Created')}" />
-                        
                             <g:sortableColumn property="endDate" title="${message(code: 'task.endDate.label', default: 'End Date')}" />
+                        
+                            <g:sortableColumn property="interval" title="${message(code: 'task.interval.label', default: 'Interval')}" />
+                        
+                            <g:sortableColumn property="name" title="${message(code: 'task.name.label', default: 'Name')}" />
+                        
+                            <th><g:message code="task.operation.label" default="Operation" /></th>
                         
                         </tr>
                     </thead>
@@ -42,15 +42,15 @@
                         
                             <td><g:link action="show" id="${taskInstance.id}">${fieldValue(bean: taskInstance, field: "id")}</g:link></td>
                         
-                            <td>${fieldValue(bean: taskInstance, field: "iconPath")}</td>
-                        
                             <td>${fieldValue(bean: taskInstance, field: "notifyType")}</td>
                         
-                            <td>${fieldValue(bean: taskInstance, field: "comment")}</td>
-                        
-                            <td><g:formatDate date="${taskInstance.created}" /></td>
-                        
                             <td><g:formatDate date="${taskInstance.endDate}" /></td>
+                        
+                            <td>${fieldValue(bean: taskInstance, field: "interval")}</td>
+                        
+                            <td>${fieldValue(bean: taskInstance, field: "name")}</td>
+                        
+                            <td>${fieldValue(bean: taskInstance, field: "operation")}</td>
                         
                         </tr>
                     </g:each>

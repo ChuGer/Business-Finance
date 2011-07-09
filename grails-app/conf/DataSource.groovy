@@ -1,8 +1,8 @@
 dataSource {
     pooled = true
-    driverClassName = "org.hsqldb.jdbcDriver"
-    username = "sa"
-    password = ""
+    driverClassName = "com.mysql.jdbc.Driver"
+    username = "root"
+    password = "123"
 }
 hibernate {
     cache.use_second_level_cache = true
@@ -14,7 +14,7 @@ environments {
     development {
         dataSource {
             dbCreate = "update" // one of 'create', 'create-drop','update'
-            url = "jdbc:hsqldb:file:devDb;shutdown=true"
+            url = "jdbc:mysql://localhost/finance"
         }
     }
     test {

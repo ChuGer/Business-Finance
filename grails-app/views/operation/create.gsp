@@ -1,11 +1,11 @@
 
 
-<%@ page import="domain.Task" %>
+<%@ page import="domain.Operation" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'task.label', default: 'Task')}" />
+        <g:set var="entityName" value="${message(code: 'operation.label', default: 'Operation')}" />
         <title><g:message code="default.create.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -18,9 +18,9 @@
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>
-            <g:hasErrors bean="${taskInstance}">
+            <g:hasErrors bean="${operationInstance}">
             <div class="errors">
-                <g:renderErrors bean="${taskInstance}" as="list" />
+                <g:renderErrors bean="${operationInstance}" as="list" />
             </div>
             </g:hasErrors>
             <g:form action="save" >
@@ -30,55 +30,55 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="notifyType"><g:message code="task.notifyType.label" default="Notify Type" /></label>
+                                    <label for="type"><g:message code="operation.type.label" default="Type" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: taskInstance, field: 'notifyType', 'errors')}">
-                                    <g:select name="notifyType" from="${taskInstance.constraints.notifyType.inList}" value="${fieldValue(bean: taskInstance, field: 'notifyType')}" valueMessagePrefix="task.notifyType"  />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                    <label for="endDate"><g:message code="task.endDate.label" default="End Date" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: taskInstance, field: 'endDate', 'errors')}">
-                                    <g:datePicker name="endDate" precision="day" value="${taskInstance?.endDate}"  />
+                                <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
+                                    <g:select name="type" from="${operationInstance.constraints.type.inList}" value="${fieldValue(bean: operationInstance, field: 'type')}" valueMessagePrefix="operation.type"  />
                                 </td>
                             </tr>
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="interval"><g:message code="task.interval.label" default="Interval" /></label>
+                                    <label for="billFrom"><g:message code="operation.billFrom.label" default="Bill From" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: taskInstance, field: 'interval', 'errors')}">
-                                    <g:textField name="interval" value="${fieldValue(bean: taskInstance, field: 'interval')}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                    <label for="name"><g:message code="task.name.label" default="Name" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: taskInstance, field: 'name', 'errors')}">
-                                    <g:textField name="name" value="${taskInstance?.name}" />
+                                <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'billFrom', 'errors')}">
+                                    <g:select name="billFrom.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.billFrom?.id}"  />
                                 </td>
                             </tr>
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="operation"><g:message code="task.operation.label" default="Operation" /></label>
+                                    <label for="billTo"><g:message code="operation.billTo.label" default="Bill To" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: taskInstance, field: 'operation', 'errors')}">
-                                    <g:select name="operation.id" from="${domain.Operation.list()}" optionKey="id" value="${taskInstance?.operation?.id}"  />
+                                <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'billTo', 'errors')}">
+                                    <g:select name="billTo.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.billTo?.id}"  />
                                 </td>
                             </tr>
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="startDate"><g:message code="task.startDate.label" default="Start Date" /></label>
+                                    <label for="category"><g:message code="operation.category.label" default="Category" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: taskInstance, field: 'startDate', 'errors')}">
-                                    <g:datePicker name="startDate" precision="day" value="${taskInstance?.startDate}"  />
+                                <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'category', 'errors')}">
+                                    <g:select name="category.id" from="${domain.CategoryOperation.list()}" optionKey="id" value="${operationInstance?.category?.id}"  />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="isCommitted"><g:message code="operation.isCommitted.label" default="Is Committed" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isCommitted', 'errors')}">
+                                    <g:checkBox name="isCommitted" value="${operationInstance?.isCommitted}" />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="name"><g:message code="operation.name.label" default="Name" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'name', 'errors')}">
+                                    <g:textField name="name" value="${operationInstance?.name}" />
                                 </td>
                             </tr>
                         

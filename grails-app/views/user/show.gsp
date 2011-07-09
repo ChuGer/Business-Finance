@@ -1,5 +1,5 @@
 
-
+<%@ page import="domain.User" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -30,13 +30,6 @@
                         </tr>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.iconPath.label" default="Icon Path" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: userInstance, field: "iconPath")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
                             <td valign="top" class="name"><g:message code="user.email.label" default="Email" /></td>
                             
                             <td valign="top" class="value">${fieldValue(bean: userInstance, field: "email")}</td>
@@ -47,6 +40,19 @@
                             <td valign="top" class="name"><g:message code="user.password.label" default="Password" /></td>
                             
                             <td valign="top" class="value">${fieldValue(bean: userInstance, field: "password")}</td>
+                            
+                        </tr>
+                    
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="user.billCategories.label" default="Bill Categories" /></td>
+                            
+                            <td valign="top" style="text-align: left;" class="value">
+                                <ul>
+                                <g:each in="${userInstance.billCategories}" var="b">
+                                    <li><g:link controller="categoryBill" action="show" id="${b.id}">${b?.encodeAsHTML()}</g:link></li>
+                                </g:each>
+                                </ul>
+                            </td>
                             
                         </tr>
                     
@@ -64,33 +70,6 @@
                         </tr>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.categories.label" default="Categories" /></td>
-                            
-                            <td valign="top" style="text-align: left;" class="value">
-                                <ul>
-                                <g:each in="${userInstance.categories}" var="c">
-                                    <li><g:link controller="ICategory" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></li>
-                                </g:each>
-                                </ul>
-                            </td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.comment.label" default="Comment" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: userInstance, field: "comment")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
-                            <td valign="top" class="name"><g:message code="user.created.label" default="Created" /></td>
-                            
-                            <td valign="top" class="value"><g:formatDate date="${userInstance?.created}" /></td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
                             <td valign="top" class="name"><g:message code="user.name.label" default="Name" /></td>
                             
                             <td valign="top" class="value">${fieldValue(bean: userInstance, field: "name")}</td>
@@ -104,6 +83,19 @@
                                 <ul>
                                 <g:each in="${userInstance.notes}" var="n">
                                     <li><g:link controller="note" action="show" id="${n.id}">${n?.encodeAsHTML()}</g:link></li>
+                                </g:each>
+                                </ul>
+                            </td>
+                            
+                        </tr>
+                    
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="user.operationCategories.label" default="Operation Categories" /></td>
+                            
+                            <td valign="top" style="text-align: left;" class="value">
+                                <ul>
+                                <g:each in="${userInstance.operationCategories}" var="o">
+                                    <li><g:link controller="categoryOperation" action="show" id="${o.id}">${o?.encodeAsHTML()}</g:link></li>
                                 </g:each>
                                 </ul>
                             </td>

@@ -1,11 +1,11 @@
 
 
-<%@ page import="domain.User" %>
+<%@ page import="domain.Bill" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'user.label', default: 'User')}" />
+        <g:set var="entityName" value="${message(code: 'bill.label', default: 'Bill')}" />
         <title><g:message code="default.create.label" args="[entityName]" /></title>
     </head>
     <body>
@@ -18,9 +18,9 @@
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>
-            <g:hasErrors bean="${userInstance}">
+            <g:hasErrors bean="${billInstance}">
             <div class="errors">
-                <g:renderErrors bean="${userInstance}" as="list" />
+                <g:renderErrors bean="${billInstance}" as="list" />
             </div>
             </g:hasErrors>
             <g:form action="save" >
@@ -30,46 +30,37 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="email"><g:message code="user.email.label" default="Email" /></label>
+                                    <label for="balance"><g:message code="bill.balance.label" default="Balance" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'email', 'errors')}">
-                                    <g:textField name="email" value="${userInstance?.email}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                    <label for="password"><g:message code="user.password.label" default="Password" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'password', 'errors')}">
-                                    <g:passwordField name="password" value="${userInstance?.password}" />
+                                <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'balance', 'errors')}">
+                                    <g:textField name="balance" value="${fieldValue(bean: billInstance, field: 'balance')}" />
                                 </td>
                             </tr>
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="name"><g:message code="user.name.label" default="Name" /></label>
+                                    <label for="category"><g:message code="bill.category.label" default="Category" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'name', 'errors')}">
-                                    <g:textField name="name" value="${userInstance?.name}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                    <label for="settings"><g:message code="user.settings.label" default="Settings" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'settings', 'errors')}">
-                                    <g:select name="settings.id" from="${domain.Settings.list()}" optionKey="id" value="${userInstance?.settings?.id}"  />
+                                <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'category', 'errors')}">
+                                    <g:select name="category.id" from="${domain.CategoryBill.list()}" optionKey="id" value="${billInstance?.category?.id}"  />
                                 </td>
                             </tr>
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="surname"><g:message code="user.surname.label" default="Surname" /></label>
+                                    <label for="currency"><g:message code="bill.currency.label" default="Currency" /></label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'surname', 'errors')}">
-                                    <g:textField name="surname" value="${userInstance?.surname}" />
+                                <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'currency', 'errors')}">
+                                    <g:select name="currency.id" from="${domain.Currency.list()}" optionKey="id" value="${billInstance?.currency?.id}"  />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="name"><g:message code="bill.name.label" default="Name" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'name', 'errors')}">
+                                    <g:textField name="name" value="${billInstance?.name}" />
                                 </td>
                             </tr>
                         

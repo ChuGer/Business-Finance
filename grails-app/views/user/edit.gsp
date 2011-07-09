@@ -1,6 +1,6 @@
 
 
-
+<%@ page import="domain.User" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -33,15 +33,6 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                  <label for="iconPath"><g:message code="user.iconPath.label" default="Icon Path" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'iconPath', 'errors')}">
-                                    <g:textField name="iconPath" value="${userInstance?.iconPath}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
                                   <label for="email"><g:message code="user.email.label" default="Email" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'email', 'errors')}">
@@ -60,37 +51,19 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
+                                  <label for="billCategories"><g:message code="user.billCategories.label" default="Bill Categories" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'billCategories', 'errors')}">
+                                    <g:select name="billCategories" from="${domain.CategoryBill.list()}" multiple="yes" optionKey="id" size="5" value="${userInstance?.billCategories*.id}" />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
                                   <label for="bills"><g:message code="user.bills.label" default="Bills" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'bills', 'errors')}">
-                                    <g:select name="bills" from="${Bill.list()}" multiple="yes" optionKey="id" size="5" value="${userInstance?.bills*.id}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <label for="categories"><g:message code="user.categories.label" default="Categories" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'categories', 'errors')}">
-                                    <g:select name="categories" from="${ICategory.list()}" multiple="yes" optionKey="id" size="5" value="${userInstance?.categories*.id}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <label for="comment"><g:message code="user.comment.label" default="Comment" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'comment', 'errors')}">
-                                    <g:textField name="comment" value="${userInstance?.comment}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                  <label for="created"><g:message code="user.created.label" default="Created" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'created', 'errors')}">
-                                    <g:datePicker name="created" precision="day" value="${userInstance?.created}"  />
+                                    <g:select name="bills" from="${domain.Bill.list()}" multiple="yes" optionKey="id" size="5" value="${userInstance?.bills*.id}" />
                                 </td>
                             </tr>
                         
@@ -108,7 +81,16 @@
                                   <label for="notes"><g:message code="user.notes.label" default="Notes" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'notes', 'errors')}">
-                                    <g:select name="notes" from="${Note.list()}" multiple="yes" optionKey="id" size="5" value="${userInstance?.notes*.id}" />
+                                    <g:select name="notes" from="${domain.Note.list()}" multiple="yes" optionKey="id" size="5" value="${userInstance?.notes*.id}" />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                  <label for="operationCategories"><g:message code="user.operationCategories.label" default="Operation Categories" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'operationCategories', 'errors')}">
+                                    <g:select name="operationCategories" from="${domain.CategoryOperation.list()}" multiple="yes" optionKey="id" size="5" value="${userInstance?.operationCategories*.id}" />
                                 </td>
                             </tr>
                         
@@ -117,7 +99,7 @@
                                   <label for="operations"><g:message code="user.operations.label" default="Operations" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'operations', 'errors')}">
-                                    <g:select name="operations" from="${Operation.list()}" multiple="yes" optionKey="id" size="5" value="${userInstance?.operations*.id}" />
+                                    <g:select name="operations" from="${domain.Operation.list()}" multiple="yes" optionKey="id" size="5" value="${userInstance?.operations*.id}" />
                                 </td>
                             </tr>
                         
@@ -126,7 +108,7 @@
                                   <label for="settings"><g:message code="user.settings.label" default="Settings" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'settings', 'errors')}">
-                                    <g:select name="settings.id" from="${Settings.list()}" optionKey="id" value="${userInstance?.settings?.id}"  />
+                                    <g:select name="settings.id" from="${domain.Settings.list()}" optionKey="id" value="${userInstance?.settings?.id}"  />
                                 </td>
                             </tr>
                         
