@@ -4,8 +4,7 @@ class Settings {
 
   String name
   Currency mainCurrency
-  Workspace workspace
-  static hasMany = [ currenccategories : Currency]
+  static hasMany = [ currencies : Currency]
   static constraints = {
   }
 

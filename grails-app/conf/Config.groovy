@@ -31,7 +31,7 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
 //grails.urlmapping.cache.maxsize = 1000
 
 // The default codec used to encode data with ${}
-grails.views.default.codec = "none" // none, html, base64
+grails.views.default.codec = "html" // none, html, base64
 grails.views.gsp.encoding = "UTF-8"
 grails.converters.encoding = "UTF-8"
 // enable Sitemesh preprocessing of GSP pages
@@ -88,3 +88,17 @@ log4j = {
 
     warn   'org.mortbay.log'
 }
+// Added by the Spring Security Core plugin:
+grails.plugins.springsecurity.password.algorithm='SHA-512'
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'domain.auth.SecUser'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'domain.auth.SecUserSecRole'
+grails.plugins.springsecurity.authority.className = 'domain.auth.SecRole'
+
+grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.InterceptUrlMap
+grails.plugins.springsecurity.interceptUrlMap = [         //TODO map all  pages!
+    '/status/**':         ['IS_AUTHENTICATED_FULLY'],
+    '/login/**':         ['IS_AUTHENTICATED_ANONYMOUSLY'],
+    '/logout/**':         ['IS_AUTHENTICATED_ANONYMOUSLY']
+]
+
+
