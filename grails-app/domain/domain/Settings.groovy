@@ -3,7 +3,8 @@ package domain
 class Settings {
 
   String name
-  Currency currency
+  Currency mainCurrency
+  static hasMany = [ currencies : Currency]
   static constraints = {
   }
 
