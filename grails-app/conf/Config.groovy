@@ -39,6 +39,7 @@ grails.views.gsp.sitemesh.preprocess = true
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
 // setting jquery library
+grails.converters.json.date = 'javascript'
 grails.views.javascript.library="jquery"
 jquery {
     sources = 'jquery' // Holds the value where to store jQuery-js files /web-app/js/

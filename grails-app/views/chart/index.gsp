@@ -14,11 +14,14 @@
   <script type="text/javascript">
     function drawVisualization() {
       // Parse JSON string to JSON object
-      var jsonData =  $.parseJSON('${chartData}');
-      var dataTable = createDataTableFromJSON(jsonData,[0,1,2]);
+      var jsonData = $.parseJSON('${chartData}');
+      var dataTable = createDataTableFromJSON(jsonData, [0,1,2]);
+
+      var dataJSON = $.parseJSON('${dataTableJSON}');
+      var dataTable2 = new google.visualization.DataTable(dataJSON, 0.6);
       // Create and draw the visualization.
-      new google.visualization.PieChart(document.getElementById('visualization')).draw(dataTable, {title:"So, how was your day?"});
-      new google.visualization.LineChart(document.getElementById('chart_div')).draw(dataTable, {width: 600, height: 300, title: 'Company Performance'});
+      new google.visualization.PieChart(document.getElementById('visualization')).draw(dataTable2, {title:"So, how was your day?", colors:['red','black','blue']});
+      new google.visualization.LineChart(document.getElementById('chart_div')).draw(dataTable2, {width: 600, height: 300, title: 'Company Performance'});
       new google.visualization.AnnotatedTimeLine(document.getElementById('annotated')).draw(dataTable, {displayAnnotations: true});
     }
 
@@ -29,7 +32,7 @@
         if (columns.indexOf(i) != -1) {
           table.addColumn(item.type, item.name);
           $.each(item.data, function(j, cellValue) {
-            (cellValue instanceof Object && cellValue.length == 3) ? table.setValue(j,i,new Date(cellValue[0],cellValue[1],cellValue[2])) : table.setValue(j,i,cellValue);
+            (cellValue instanceof Object && cellValue.length == 3) ? table.setValue(j, i, new Date(cellValue[0], cellValue[1], cellValue[2])) : table.setValue(j, i, cellValue);
           });
         }
       });
