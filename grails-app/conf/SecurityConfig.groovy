@@ -5,6 +5,6 @@ security {
     requestMapClass = "domain.auth.PersonAuthority"
 
   loginFormUrl = "/"
-  //defaultTargetUrl = "/post/timeline"     //TODO:  page after login redirecting to
+  defaultTargetUrl = "/note/list"     //TODO:  page after login redirecting to
 
 }

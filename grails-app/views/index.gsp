@@ -54,6 +54,26 @@
         <div id="nav">
             <div class="homePagePanel">
                 <div class="panelTop"></div>
+              <sec:ifNotLoggedIn>
+              <form method="POST" action="${resource(file: 'j_spring_security_check')}">
+                <table>
+                  <tr>
+                    <td>Username:</td><td><g:textField name="j_username"/></td>
+                  </tr>
+                  <tr>
+                    <td>Password:</td><td><input name="j_password" type="password"/></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2"><g:submitButton name="login" value="Login"/></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">try "qwe" or "asd" with "123"</td>
+                  </tr>
+                </table>
+              </form>
+               </sec:ifNotLoggedIn>
+
+
                 <div class="panelBody">
                     <h1>Application Status</h1>
                     <ul>
