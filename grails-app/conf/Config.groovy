@@ -21,6 +21,10 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
                       atom: 'application/atom+xml',
                       css: 'text/css',
                       csv: 'text/csv',
+                      pdf: 'application/pdf',
+                      rtf: 'application/rtf',
+                      excel: 'application/vnd.ms-excel',
+                      ods: 'application/vnd.oasis.opendocument.spreadsheet',
                       all: '*/*',
                       json: ['application/json','text/json'],
                       form: 'application/x-www-form-urlencoded',
@@ -38,14 +42,6 @@ grails.converters.encoding = "UTF-8"
 grails.views.gsp.sitemesh.preprocess = true
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
-// setting jquery library
-grails.converters.json.date = 'javascript'
-grails.views.javascript.library="jquery"
-jquery {
-    sources = 'jquery' // Holds the value where to store jQuery-js files /web-app/js/
-    version = '1.4.2' // The jQuery version in use
-}
-
 // Set to false to use the new Grails 1.2 JSONBuilder in the render method
 grails.json.legacy.builder = false
 // enabled native2ascii conversion of i18n properties files

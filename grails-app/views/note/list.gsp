@@ -6,6 +6,8 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'note.label', default: 'Note')}" />
         <title><g:message code="default.list.label" args="[entityName]" /></title>
+      <export:resource />
+
     </head>
     <body>
         <div class="nav">
@@ -48,6 +50,7 @@
             <div class="paginateButtons">
                 <g:paginate total="${noteInstanceTotal}" />
             </div>
+            <export:formats />
         </div>
     </body>
 </html>

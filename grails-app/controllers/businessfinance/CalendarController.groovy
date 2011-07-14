@@ -1,6 +1,7 @@
 package businessfinance
 
 import grails.converters.JSON
+import java.text.SimpleDateFormat
 
 class CalendarController {
 
@@ -22,10 +23,45 @@ class CalendarController {
   }
 
   def events = {
-    def events = [
-            [id : 1, title : 'ALOE', start: new Date(), end: new Date(), allDay : false, color : 'red'],
-            [title : 'ALOE2', start: new Date(), end: new Date(), allDay : false, color : '#3D3D3D']
-    ]
+    if (session.events == null) {
+      session.events = [getRandomEvent()]
+    }
+    def events = session.events
     render events as JSON
+  }
+
+  def showCalendar = {
+    session.events.add(getRandomEvent())
+  }
+
+  def clearCalendar = {
+    session.events = null
+  }
+
+  def getRandom() {
+    new Random().nextInt(10000).toString()
+  }
+
+  def getRandomEvent() {
+    [id: getRandom(), title: getRandom(), start: new Date(), allDay: false, color: 'red']
+  }
+
+  def aloe = {
+    session.events.add([id: getRandom(), title: params.name, start: new Date(params.startDate) + 1, end: new Date(params.endDate) + 1, allDay: false])
+  }
+
+  def deleteEvent = {
+    println "delete Event with id: ${params.id}"
+    render('')
+  }
+
+  def moveEvent = {
+    println "move Event with id: ${params.id}, dayDelta: ${params.dayDelta}"
+    render('')
+  }
+
+  def resizeEvent = {
+    println "resize Event with id: ${params.id}, dayDelta: ${params.dayDelta}"
+    render('')
   }
 }
