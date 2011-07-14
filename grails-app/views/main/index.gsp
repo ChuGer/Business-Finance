@@ -7,17 +7,20 @@
   <g:javascript library="jquery" plugin="jquery"/>
   <jsTree:resources/>
   <script type="text/javascript">
-    var treeComponent =  $("#treeDiv");
-    $(function() {
-      var treeData = $.parseJSON('${treeData}');
 
-      var tree = treeComponent.jstree({
+    $(function() {
+      createTree();
+    });
+
+    function createTree() {
+      var treeData = $.parseJSON('${treeData}');
+      var tree = $("#treeDiv").jstree({
         "json_data" : {"data" : [treeData]},
         "plugins" : [ "themes", "checkbox", "json_data", "ui" ,"contextmenu","crrm"]
       });
 
       tree.bind("check_node.jstree", function (e, d) {
-        var sname = treeComponent.jstree('get_text', '#' + d.rslt.obj.attr("id"));
+        var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
         var sid = d.rslt.obj.attr("id")
         alert(sid + "  " + sname);
         jQuery.ajax({
@@ -27,20 +30,24 @@
           dataType: "json"
         });
       });
+
       tree.bind("rename.jstree", function(event, data) {
         alert(data.rslt.obj.attr("id") + "  " + data.rslt.new_name + " from " + data.rslt.old_name);
       });
+
       tree.bind("create.jstree", function(event, data) {
-        alert(data.rslt.obj.attr("id") + "  " + treeComponent.jstree('get_text', '#' + d.rslt.obj.attr("id")));
-      });
-      tree.bind("select_node.jstree", function (e, d) {
-        alert(d.rslt.obj.attr("id") + " id  clicked  " + treeComponent.jstree('get_text', '#' + d.rslt.obj.attr("id")));
+        alert(data.rslt.obj.attr("id") + "  " + $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id")));
       });
 
-      function selectAll() {
-        treeComponent.jstree("check_all");
-      };
-    });
+      tree.bind("select_node.jstree", function (e, d) {
+        alert(d.rslt.obj.attr("id") + " id  clicked  " + $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id")));
+      });
+    }
+
+    function selectAll() {
+      $("#treeDiv").jstree("check_all");
+    }
+
 
   </script>
 </head>
