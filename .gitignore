@@ -1,11 +1,8 @@
 
 /target
-/target
 /out
 /test
 /.idea
-/.classpath
-/.project
 /application.properties
 /BusinessFinance.iml
 /BusinessFinance-grailsPlugins.iml
@@ -27,3 +24,7 @@
 /.idea/workspace.xml
 /.idea/copyright/profiles_settings.xml
 /.settings/org.codehaus.groovy.eclipse.preferences.prefs
+/.classpath
+/.project
+/.idea
+/.settings
