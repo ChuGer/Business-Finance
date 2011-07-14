@@ -12,8 +12,6 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
-
-
       $('#hh').click(function() {
         $("#demo1").jstree("check_all");
         $.getJSON("${createLink(controller:'notes',action:'zub')}", {gender:'Male', ajax: 'true'},
@@ -78,11 +76,11 @@
 </head>
 <body>
 <div id="demo1"></div>
-
-
 <div id="hh">=[=====click=======]=</div>
 <div id="hh2">=[=====puck=======]=</div>
 <table id="mytable"></table>
+
+
 <div class="nav">
   <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
   <span class="menuButton"><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]"/></g:link></span>
