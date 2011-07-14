@@ -4,3 +4,13 @@
 /out
 /test
 /.idea
+/application.properties
+/BusinessFinance.iml
+/BusinessFinance-grailsPlugins.iml
+/devDb.log
+/devDb.properties
+/devDb.script
+/.classpath
+/.project
+/.idea
+/.settings
