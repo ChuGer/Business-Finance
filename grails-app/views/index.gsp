@@ -66,7 +66,7 @@
           <script type="text/javascript">
       $(document).ready(function() {
          $('#hh').click(function() {
-              alert('РџС‘СЃ РґРµСЂРЅРё.');
+              alert('Пёс дерни.');
          });
 
 

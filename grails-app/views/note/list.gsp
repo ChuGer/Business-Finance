@@ -74,6 +74,8 @@
 
     </script>
 
+      <export:resource />
+
     </head>
     <body>
                      <div  id="demo1"  > </div>
@@ -122,6 +124,7 @@
             <div class="paginateButtons">
                 <g:paginate total="${noteInstanceTotal}" />
             </div>
+            <export:formats />
         </div>
     </body>
 </html>

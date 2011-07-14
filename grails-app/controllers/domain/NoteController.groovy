@@ -42,6 +42,11 @@ class NoteController {
       ]
         render tdata as JSON
     }
+//    if (params?.format && params.format != "html") {
+  //    response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
+    //  response.setHeader("Content-disposition", "attachment; filename=books.${params.extension}")
+     // exportService.export(params.format, response.outputStream, Note.list(params), [:], [:])
+   // }
     def create = {
         def noteInstance = new Note()
         noteInstance.properties = params
