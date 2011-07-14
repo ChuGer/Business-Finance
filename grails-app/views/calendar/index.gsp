@@ -178,7 +178,6 @@
         events: 'events'
       });
     }
-    ;
 
     //    var jsonObjects = [
     //      {id:1, name:"amit"},

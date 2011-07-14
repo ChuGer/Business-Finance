@@ -50,6 +50,7 @@ class CalendarController {
     session.events.add([id: getRandom(), title: params.name, start: new Date(params.startDate) + 1, end: new Date(params.endDate) + 1, allDay: false])
   }
 
+
   def deleteEvent = {
     println "delete Event with id: ${params.id}"
     render('')
