@@ -7,6 +7,8 @@
   <g:javascript library="jquery" plugin="jquery"/>
   <jsTree:resources/>
   <script type="text/javascript" src="../js/jquery/jquery-ui-1.8.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.dateFormat-1.0.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker.js"></script>
   <script type="text/javascript" src="../js/full-calendar/fullcalendar.min.js"></script>
   <link rel="stylesheet" href="../css/fullcalendar.css"/>
   <link rel="stylesheet" href="../css/ui-lightness/jquery-ui-1.8.11.custom.css"/>
@@ -76,15 +78,15 @@
       calendar.html('');
       calendar.fullCalendar({
         header: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'month'
+          left: '',
+          center: 'prev, title, next',
+          right: 'today'
         },
         selectable: true,
         selectHelper: true,
         select: function(start, end, allDay) {
-          $("#startDate").val(start);
-          $("#endDate").val(end);
+          $("#startDate").val($.format.date(start, "MM/dd/yyyy"));
+          $("#endDate").val($.format.date(end, "MM/dd/yyyy"));
           $("#dialog-form").dialog("open");
 //          var title = prompt('Title:');
 //          if (title) {
@@ -170,7 +172,6 @@
         <div style="width:800px;" id="calendar"></div>
 
         <div id="dialog-form" title="<g:message code="operation.create"/>">
-
           <g:formRemote name="createForm" method="post" url="[action:'addEvent']" onComplete="closeDialog();drawCalendar();">
             <fieldset>
               <table>
@@ -206,7 +207,7 @@
       </td>
     </tr>
   </table>
-
+</div>
 </body>
 </html>
 

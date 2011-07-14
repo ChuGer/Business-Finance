@@ -1,6 +1,7 @@
 package businessfinance
 
 import grails.converters.JSON
+import domain.Note
 import domain.Category
 import domain.Bill
 
@@ -52,12 +53,14 @@ class MainController {
   }
 
   def addEvent = {
-    session.events.add([id: getRandom(), title: params.name, start: new Date(params.startDate) + 1, end: new Date(params.endDate) + 1, allDay: false])
+//    println "${params.startDate} ${params.endDate}"
+    session.events.add([id: getRandom(), title: params.name, start: params.startDate, end: params.endDate, allDay: false])
+    render('')
   }
 
   def deleteEvent = {
     println "deleteEvent with id: ${params.id}"
-    render('')
+    render('OK')
   }
 
   def moveEvent = {
@@ -69,7 +72,13 @@ class MainController {
     println "resizeEvent with id: ${params.id}, dayDelta: ${params.dayDelta}"
     render('')
   }
+
   def events = {
+//    def start = params.start.toLong()
+//    def today = params._.toLong()
+//    def end = params.end.toLong()
+//    println new Date(today-start-end)
+//    println new Date(today+end+start)
     if (session.events == null) {
       session.events = [getRandomEvent()]
     }
@@ -81,15 +90,15 @@ class MainController {
     session.events = null
   }
 
-//  def showCalendar = {
-//    session.events.add(getRandomEvent())
-//  }
-//
-//  def getRandom() {
-//    new Random().nextInt(10000).toString()
-//  }
-//
-//  def getRandomEvent() {
-//    [id: getRandom(), title: getRandom(), start: new Date(), allDay: false, color: 'red']
-//  }
+  def showCalendar = {
+    session.events.add(getRandomEvent())
+  }
+
+  def getRandom() {
+    new Random().nextInt(10000).toString()
+  }
+
+  def getRandomEvent() {
+    [id: getRandom(), title: getRandom(), start: new Date(), allDay: false, color: 'red']
+  }
 }
