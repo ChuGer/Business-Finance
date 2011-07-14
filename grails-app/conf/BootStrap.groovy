@@ -22,8 +22,8 @@ class BootStrap {
         }
 
         [jeff: 'Jef Beown', donald: 'Donald Ducks']
-        def user = new User(username: 'qwe',realname: 'Bob',password: password,enabled: true).save(failOnError: true)
-        def user2 = new User(username: 'asd',realname: 'Frog',password: password,enabled: true).save(failOnError: true)
+        def user = new SecUser(username: 'qwe',realname: 'Bob',email:'dus@dus.du',password: password,enabled: true).save(failOnError: true)
+        def user2 = new SecUser(username: 'asd',realname: 'Frog',email:'dus@dus.su',password: password,enabled: true).save(failOnError: true)
         SecUserSecRole.create user, userRole, true
         SecUserSecRole.create user2, userRole, true
         }

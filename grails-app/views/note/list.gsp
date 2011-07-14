@@ -2,62 +2,97 @@
 <%@ page import="domain.Note" %>
 <html>
     <head>
+      %{--<g:javascript library="jquery" plugin="jquery"/>--}%
+  %{--<script type="text/javascript" src="../js/jquery/jquery-1.4.2.js"></script>--}%
+  %{--<script type="text/javascript" src="../js/jquery/jquery-ui-1.8.1.min.js"></script>--}%
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'note.label', default: 'Note')}" />
-      <g:javascript library="jquery" plugin="jquery"/>
-<jsTree:resources />
-        <title><g:message code="default.list.label" args="[entityName]" /></title>
+ <g:javascript library="jquery" plugin="jquery"/>
+      <jsTree:resources />
+
+          <script type="text/javascript">
+      $(document).ready(function() {
+
+
+         $('#hh').click(function(){
+            $("#demo1").jstree("check_all");
+       $.getJSON("${createLink(controller:'note',action:'zub')}",{gender:'Male', ajax: 'true'},
+                   function(tdata){
+      var myHTMLString = ''
+      for(var i = 0 ; i < tdata.length ; i++)
+      {
+      myHTMLString = myHTMLString + '<tr><td>' + tdata[i].type + '</td>'
+      myHTMLString = myHTMLString + '<td>' + tdata[i].name + '</td>'
+      myHTMLString = myHTMLString + '<td>' + tdata[i].data + '</td></tr>'
+      }
+      $('table#mytable').html(myHTMLString)
+      })
+      })
+
+           var treeData = $.parseJSON('${treeData}');
+        	$('#demo1').jstree({
+
+		"json_data" : {
+			"data" : [
+				treeData
+			]
+		},
+          "plugins" : [ "themes", "checkbox", "json_data", "ui" ,"contextmenu","crrm"]
+        }).bind("check_node.jstree",
+               function (e, d) {
+                 var sname = $("#demo1").jstree('get_text', '#'+d.rslt.obj.attr("id") );
+                 var sid =  d.rslt.obj.attr("id")
+                 alert(sid + "  " +  sname);
+                 jQuery.ajax({
+          url: 'treeCheck',
+          type: "POST",
+          data: {name: sname, id: sid },
+          dataType: "json"
+});
+         }).bind("rename.jstree", function(event, data) {
+          alert(data.rslt.obj.attr("id") + "  " + data.rslt.new_name + " from " + data.rslt.old_name);
+        })
+          .bind("create.jstree", function(event, data) {
+          alert(data.rslt.obj.attr("id") + "  " + $("#demo1").jstree('get_text', '#'+d.rslt.obj.attr("id") ) );
+        }).bind("select_node.jstree",
+               function (e, d) {
+                 alert(d.rslt.obj.attr("id") + " id  clicked  " + $("#demo1").jstree('get_text', '#'+d.rslt.obj.attr("id") ));
+         });
+
+
+//             $("#demo1").jstree("get_checked", false, true).each(function(index,element){alert($(element).attr("id"));});
+
+//        $.jstree._reference('#demo1').refresh();
+//     var tree = $.jstree._reference('#demo1');
+//             tree.uncheck_all() ;
+//            alert('Handler for .click() called.');
+//});
+
+
+            });
+
+    </script>
+
     </head>
     <body>
-        <div class="nav">
+                     <div  id="demo1"  > </div>
+
+
+    <div id="hh">=[=====click=======]=</div>
+    <div  id="hh2">=[=====puck=======]=</div>
+    <table id="mytable"> </table>
+        <div class="nav" >
             <span class="menuButton"><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></span>
             <span class="menuButton"><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>
         </div>
-    <script type="text/javascript">
-      $(function () {
-          // TO CREATE AN INSTANCE
-          // select the tree container using jQuery
-          $("#demo1")
-              // call `.jstree` with the options object
-              .jstree({
-                  // the `plugins` array allows you to configure the active plugins on this instance
-                  "plugins" : ["themes","html_data","ui","crrm","hotkeys"],
-                  // each plugin you have included can have its own config object
-                  "core" : { "initially_open" : [ "phtml_1" ] }
-                  // it makes sense to configure a plugin only if overriding the defaults
-              })
-              // EVENTS
-              // each instance triggers its own events - to process those listen on the container
-              // all events are in the `.jstree` namespace
-              // so listen for `function_name`.`jstree` - you can function names from the docs
-              .bind("loaded.jstree", function (event, data) {
-                  // you get two params - event & data - check the core docs for a detailed description
-              });
-          // INSTANCES
-          // 1) you can call most functions just by selecting the container and calling `.jstree("func",`
-          setTimeout(function () { $("#demo1").jstree("set_focus"); }, 500);
-          // with the methods below you can call even private functions (prefixed with `_`)
-          // 2) you can get the focused instance using `$.jstree._focused()`.
-          setTimeout(function () { $.jstree._focused().select_node("#phtml_1"); }, 1000);
-          // 3) you can use $.jstree._reference - just pass the container, a node inside it, or a selector
-          setTimeout(function () { $.jstree._reference("#phtml_1").close_node("#phtml_1"); }, 1500);
-          // 4) when you are working with an event you can use a shortcut
-          $("#demo1").bind("open_node.jstree", function (e, data) {
-              // data.inst is the instance which triggered this event
-              data.inst.select_node("#phtml_2", true);
-          });
-          setTimeout(function () { $.jstree._reference("#phtml_1").open_node("#phtml_1"); }, 2500);
-      });
-
-      </script>
-        <div class="body">
+        <div class="body" >
             <h1><g:message code="default.list.label" args="[entityName]" /></h1>
             <g:if test="${flash.message}">
             <div class="message">${flash.message}</div>
             </g:if>
             <div class="list">
-                <table>
+                <table >
                     <thead>
                         <tr>
                         

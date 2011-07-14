@@ -1,7 +1,12 @@
 package domain
 
 class OperationController {
-
+     static navigation = [
+		group:'tabs',
+		order:3 ,
+		title:'Operation',
+		action:'list'
+	]
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index = {

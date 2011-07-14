@@ -49,8 +49,75 @@
             margin-right:20px;
         }
         </style>
+  %{--<script type="text/javascript" src="js/jquery/jquery-1.4.2.js"></script>--}%
+  %{--<script type="text/javascript" src="js/jquery/jquery-ui-1.8.1.min.js"></script>--}%
+
+      %{--<script type="text/javascript" src="http://static.jstree.com/v.1.0pre/jquery.js"></script>--}%
+
+      %{--<script type="text/javascript" src="http://static.jstree.com/v.1.0pre/jquery.cookie.js"></script>--}%
+%{--<script type="text/javascript" src="http://static.jstree.com/v.1.0pre/jquery.hotkeys.js"></script>--}%
+%{--<script type="text/javascript" src="http://static.jstree.com/v.1.0pre/jquery.jstree.js"></script>--}%
+            %{--<script type="text/javascript" src="js/jquery.jstree.js"></script>--}%
+      %{--<script type="text/javascript" src="js/_lib/jquery.cookie.js"></script>--}%
+      %{--<script type="text/javascript" src="js/_lib/jquery.hotkeys.js"></script>--}%
+  <g:javascript library="jquery" plugin="jquery"/>
+      <jsTree:resources />
+
+          <script type="text/javascript">
+      $(document).ready(function() {
+         $('#hh').click(function() {
+              alert('Пёс дерни.');
+         });
+
+
+        	$('#demo1').jstree({
+		"json_data" : {
+			"data" : [
+				{
+					"data" : "A node",
+					"metadata" : { id : 23 },
+					"children" : [ "Child 1", "A Child 2" ]
+				},
+				{
+					"attr" : { "id" : "li.node.id1" },
+					"data" : {
+						"title" : "Long format demo",
+						"attr" : { "href" : "#" }
+					}
+				}
+			]
+		},
+		"plugins" : [ "themes", "checkbox", "json_data", "ui" ]
+	}).bind("select_node.jstree", function (e, data) { alert(jQuery.data(data.rslt.obj[0], "jstree").id) });
+     $.jstree._reference('#demo1').open_node("#A node"); ;
+//            alert('Handler for .click() called.');
+//});
+            });
+
+    </script>
     </head>
     <body>
+     <div class="nav" id="hh">======click========</div>
+     <div id="demo1" class="demo" style="height:100px;">
+	%{--<ul>--}%
+		%{--<li id="phtml_1">--}%
+			%{--<a href="#">Root node 1</a>--}%
+			%{--<ul>--}%
+				%{--<li id="phtml_2">--}%
+
+					%{--<a href="#">Child node 1</a>--}%
+				%{--</li>--}%
+				%{--<li id="phtml_3">--}%
+					%{--<a href="#">Child node 2</a>--}%
+				%{--</li>--}%
+			%{--</ul>--}%
+		%{--</li>--}%
+		%{--<li id="phtml_4">--}%
+
+			%{--<a href="#">Root node 2</a>--}%
+		%{--</li>--}%
+	%{--</ul>--}%
+</div>
         <div id="nav">
             <div class="homePagePanel">
                 <div class="panelTop"></div>

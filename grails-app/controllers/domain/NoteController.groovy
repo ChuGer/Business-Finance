@@ -1,6 +1,14 @@
 package domain
 
+import grails.converters.JSON
+
 class NoteController {
+    static navigation = [
+		group:'tabs',
+		order:5,
+		title:'Tree show',
+		action:'list'
+	]
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -10,9 +18,30 @@ class NoteController {
 
     def list = {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
-        [noteInstanceList: Note.list(params), noteInstanceTotal: Note.count()]
-    }
 
+        def treeData = [
+            [data: 'woof',  attr: [id : '23'], children: [[ [data: 'Child zzz',  attr: [id : '26'] ],
+                    [data: 'poog', attr: [id : '11'], children: [[ [data: 'Child t',  attr: [id : '31'] ], [data: 'Rert t',  attr: [id : '33'] ] ] ]] ] ]],
+            [data: 'poog', attr: [id : '18'], children: [[ [data: 'Child t',  attr: [id : '29'] ] , [data: 'Chagur',  attr: [id : '34'] ] ] ]]
+    ];
+        [treeData: treeData as JSON, noteInstanceList: Note.list(params), noteInstanceTotal: Note.count()]
+    }
+    def zub = {
+      println params.gender
+      def tdata = [
+              [type: 'string', name: 'Task', data:'Work'],
+              [type: 'rf', name: 're', data:'zo']
+      ]
+        render tdata as JSON
+    }
+      def treeCheck = {
+      println params.name + ' with id '+params.id
+      def tdata = [
+              [type: 'string', name: 'Task', data:'Work'],
+              [type: 'rf', name: 're', data:'zo']
+      ]
+        render tdata as JSON
+    }
     def create = {
         def noteInstance = new Note()
         noteInstance.properties = params
