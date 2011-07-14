@@ -13,3 +13,5 @@
 /devDb.properties
 /devDb.script
 /stacktrace.log
+/.idea
+/.idea/workspace.xml
