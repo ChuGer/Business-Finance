@@ -98,10 +98,39 @@ grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'domain.auth.S
 grails.plugins.springsecurity.authority.className = 'domain.auth.SecRole'
 
 grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.InterceptUrlMap
-grails.plugins.springsecurity.interceptUrlMap = [         //TODO map all  pages!
-    '/status/**':         ['IS_AUTHENTICATED_FULLY'],
+grails.plugins.springsecurity.interceptUrlMap = [         //TODO == map all  pages!====
+    '/plugins/**':         ['IS_AUTHENTICATED_ANONYMOUSLY'],
+//    '/*/**':         ['ROLE_USER','IS_AUTHENTICATED_FULLY'],
+        '/Note/**':         ['ROLE_USER','IS_AUTHENTICATED_FULLY'],
+        '/Operation/**':         ['ROLE_USER','IS_AUTHENTICATED_FULLY'],
     '/login/**':         ['IS_AUTHENTICATED_ANONYMOUSLY'],
-    '/logout/**':         ['IS_AUTHENTICATED_ANONYMOUSLY']
+    '/logout/**':         ['IS_AUTHENTICATED_ANONYMOUSLY'],
+        '/js/**':         ['IS_AUTHENTICATED_ANONYMOUSLY']
+]
+ grails.plugins.springsecurity.secureChannel.definition = [
+   '/**':          'REQUIRES_SECURE_CHANNEL'
 ]
 
+//Mail settings
+//grails.plugins.springsecurity.ui.register.postRegisterUrl = '/welcome'
+grails.plugins.springsecurity.ui.register.defaultRoleNames = ['ROLE_USER  ']
+grails.plugins.springsecurity.ui.register.emailBody = 'Greetings, ${user.username}! Please, click <a  href="${url}">here</a> to ocmplite your registration process'
+grails.plugins.springsecurity.ui.register.emailFrom = 'altortik@gmail.com'
+grails.plugins.springsecurity.ui.register.emailSubject = 'BFApplication registration'
 
+grails.plugins.springsecurity.ui.forgotPassword.emailBody = 'Greetings, ${user.username}! You have requested your  password to be reset. If you did that request, click <a  href="${url}">here </a> to reset your password'
+grails.plugins.springsecurity.ui.forgotPassword.emailFrom = 'altortik@gmail.com'
+grails.plugins.springsecurity.ui.forgotPassword.emailSubject = 'BFApplication password recovery'
+
+grails {
+   mail {
+     host = "smtp.gmail.com"
+     port = 465
+     username = "altortik@gmail.com"
+     password = "gugeliza"
+     props = ["mail.smtp.auth":"true",
+              "mail.smtp.socketFactory.port":"465",
+              "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+              "mail.smtp.socketFactory.fallback":"false"]
+
+} }

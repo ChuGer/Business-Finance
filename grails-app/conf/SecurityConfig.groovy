@@ -1,10 +1,10 @@
 security {
     active = true
-    loginUserDomainClass = "domain.User"
-    authorityDomainClass = "domain.auth.Authority"
-    requestMapClass = "domain.auth.PersonAuthority"
+    loginUserDomainClass = "domain.SecUser"
+    authorityDomainClass = "domain.auth.SecRole"
+    requestMapClass = "domain.auth.SecUserSecRole"
 
   loginFormUrl = "/"
-  //defaultTargetUrl = "/post/timeline"     //TODO:  page after login redirecting to
+  defaultTargetUrl = "/note/list"     //TODO:  page after login redirecting to
 
 }
