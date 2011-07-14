@@ -1,9 +1,9 @@
 package domain.auth
 
 class SecUser {
-
   String username
   String realname
+  String surname
   String password
   boolean enabled
   boolean accountExpired
@@ -13,11 +13,12 @@ class SecUser {
 
   static constraints = {
     username blank: false, unique: true
+    realname blank: false
+    surname blank: false
     password blank: false
-    email nullable: true
-    realname nullable: true
+    email blank: false
     password(password: true)
-//    email(email: true)
+    email(email: true)
   }
   static searchable = [only: 'realname']
   static mapping = {

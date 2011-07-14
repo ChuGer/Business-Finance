@@ -2,10 +2,13 @@ package domain
 
 class Settings {
 
-  String name
-  Currency mainCurrency
-  static hasMany = [ currencies : Currency]
+  User user
+  Currency currency
+  String language
+  String dateFormat
   static constraints = {
+    language(inList: ['ru_RU','en_US'])
+    dateFormat(inList: ['dd/MM/yy','MM/dd/yy'])
   }
 
 }

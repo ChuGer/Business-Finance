@@ -1,11 +1,13 @@
 package domain
-class Currency {
+class Category {
 
   String name
-  String code
 
   static constraints = {
     name()
-    code()
+    bills()
   }
+
+  static hasMany = [bills: Bill]
+
 }

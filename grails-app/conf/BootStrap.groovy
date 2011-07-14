@@ -14,6 +14,9 @@ class BootStrap {
 
         def adminUser = SecUser.findByUsername('admin') ?: new SecUser(
                 username: 'admin',
+                surname: 'Bob',
+                realname: 'Bob',
+                email:'dus@dus.du',
                 password: springSecurityService.encodePassword('admin'),
                 enabled: true).save(failOnError: true)
 
@@ -21,9 +24,8 @@ class BootStrap {
             SecUserSecRole.create adminUser, adminRole
         }
 
-        [jeff: 'Jef Beown', donald: 'Donald Ducks']
-        def user = new SecUser(username: 'qwe',realname: 'Bob',email:'dus@dus.du',password: password,enabled: true).save(failOnError: true)
-        def user2 = new SecUser(username: 'asd',realname: 'Frog',email:'dus@dus.su',password: password,enabled: true).save(failOnError: true)
+        def user = new SecUser(username: 'qwe',surname: 'Bob', realname: 'Bob',email:'dus@dus.du',password: password,enabled: true).save(failOnError: true)
+        def user2 = new SecUser(username: 'asd',surname: 'Bob',realname: 'Frog',email:'dus@dus.su',password: password,enabled: true).save(failOnError: true)
         SecUserSecRole.create user, userRole, true
         SecUserSecRole.create user2, userRole, true
         }
