@@ -1,7 +1,6 @@
 package businessfinance
 
 import grails.converters.JSON
-import domain.Note
 
 class MainController {
   static navigation = [
