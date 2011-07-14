@@ -1,12 +1,6 @@
 package domain
 
 class BillController {
-     static navigation = [
-		group:'tabs',
-		order:6,
-		title:'Bill lolo',
-		action:'list'
-	]
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def index = {

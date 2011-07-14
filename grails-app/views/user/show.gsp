@@ -82,7 +82,7 @@
                             <td valign="top" style="text-align: left;" class="value">
                                 <ul>
                                 <g:each in="${userInstance.notes}" var="n">
-                                    <li><g:link controller="note" action="show" id="${n.id}">${n?.encodeAsHTML()}</g:link></li>
+                                    <li><g:link controller="notes" action="show" id="${n.id}">${n?.encodeAsHTML()}</g:link></li>
                                 </g:each>
                                 </ul>
                             </td>

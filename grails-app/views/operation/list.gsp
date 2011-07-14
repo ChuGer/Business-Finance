@@ -1,4 +1,3 @@
-
 <%@ page import="domain.Operation" %>
 <html>
     <head>

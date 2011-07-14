@@ -16,7 +16,7 @@
 
       $('#hh').click(function() {
         $("#demo1").jstree("check_all");
-        $.getJSON("${createLink(controller:'note',action:'zub')}", {gender:'Male', ajax: 'true'},
+        $.getJSON("${createLink(controller:'notes',action:'zub')}", {gender:'Male', ajax: 'true'},
                  function(tdata) {
                    var myHTMLString = ''
                    for (var i = 0; i < tdata.length; i++) {
