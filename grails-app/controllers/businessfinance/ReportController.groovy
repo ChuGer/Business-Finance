@@ -9,8 +9,11 @@ class ReportController {
           title: 'Отчеты',
           action: 'index'
   ]
-  def index = {
-    def chartData = [
+
+  def index = {}
+
+  def lineChart = {
+    def lineChart = [
             [type: 'date', name: 'Data', data: [[2008, 1, 1], [2008, 2, 1], [2008, 3, 1]]],
             [type: 'number', name: 'Hours per Day', data: [11, 34, 465]],
             [type: 'number', name: 'Sales', data: [345, 3, 465]],

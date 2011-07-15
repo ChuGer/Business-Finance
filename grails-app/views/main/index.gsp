@@ -61,7 +61,6 @@
     function dialog() {
       $("#startDate").datepicker();
       $("#endDate").datepicker();
-
       $("#dialog-form").dialog({
         autoOpen: false,
         height: 400,
@@ -111,15 +110,13 @@
             type: "POST",
             data: {id: event.id},
             dataType: "json",
-            beforeSend: function(x) {
-              if (x && x.overrideMimeType) {
-                x.overrideMimeType("application/json;charset=UTF-8");
-              }
-            },
-            success: function(result) {
+            complete: function() {
               calendar.fullCalendar('removeEvents', event.id);
             }
           });
+          if (!confirm("Want to revert deleted event?")) {
+            revertFunc();
+          }
         },
         eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
           console.log(event.id + " " + event.title + " was moved " +
@@ -170,45 +167,76 @@
         <button id="selectAll" onclick="selectAll();">selectAll</button>
       </td>
       <td>
-        <g:remoteLink action="clearCalendar" onComplete="drawCalendar()">clearCalendar</g:remoteLink><br/>
         <div style="width:800px;" id="calendar"></div>
-
-        <div id="dialog-form" title="<g:message code="operation.create"/>">
-          <g:formRemote name="createForm" method="post" url="[action:'addEvent']" onComplete="closeDialog();drawCalendar();">
-            <fieldset>
-              <table>
-                <tr>
-                  <td>
-                    <label for="name">Name</label>
-                  </td>
-                  <td>
-                    <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all"/>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="startDate">StartDate</label>
-                  </td>
-                  <td>
-                    <input type="text" name="startDate" id="startDate" class="text ui-widget-content ui-corner-all"/> <br/>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="endDate">EndDate</label>
-                  </td>
-                  <td>
-                    <input type="text" name="endDate" id="endDate" class="text ui-widget-content ui-corner-all"/>
-                  </td>
-                </tr>
-              </table>
-              <g:actionSubmit value="${message(code: 'default.button.update.label', default: 'Update')}"/>
-            </fieldset>
-          </g:formRemote>
-        </div>
       </td>
     </tr>
   </table>
+
+
+  <div id="dialog-form" title="<g:message code="operation.create"/>">
+    <g:hasErrors bean="${operationInstance}">
+      <div class="errors">
+        <g:renderErrors bean="${operationInstance}" as="list"/>
+      </div>
+    </g:hasErrors>
+    <g:formRemote name="createForm" method="post" url="[action: 'addEvent']" onComplete="closeDialog();drawCalendar();">
+      <div class="dialog">
+        <table>
+          <tbody>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="name"><g:message code="operation.name.label" default="Name"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'name', 'errors')}">
+              <g:textField id="name" name="name" value="${operationInstance?.name}"/>
+            </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="startDate"><g:message code="operation.startDate.label" default="Start Date"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'startDate', 'errors')}">
+              <g:textField id="startDate" name="startDate" precision="day" value="${operationInstance?.startDate}"/>
+            </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="endDate"><g:message code="operation.endDate.label" default="End Date"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'endDate', 'errors')}">
+              <g:textField id="endDate" name="endDate" precision="day" value="${operationInstance?.endDate}" default="none" noSelection="['': '']"/>
+            </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="type"><g:message code="operation.type.label" default="Type"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
+              <g:select name="type" from="${operationInstance.constraints.type.inList}" value="${fieldValue(bean: operationInstance, field: 'type')}" valueMessagePrefix="operation.type"/>
+            </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="bill"><g:message code="operation.bill.label" default="Bill"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'bill', 'errors')}">
+              <g:select name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
+            </td>
+          </tr>
+                <div class="buttons">
+                    <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.update.label', default: 'Update')}" /></span>
+                    <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></span>
+                </div>
+          </tbody>
+        </table>
+      </div>
+    </g:formRemote>
+  </div>
 </div>
 </body>
 </html>
