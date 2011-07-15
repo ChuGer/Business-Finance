@@ -3,11 +3,11 @@ class Category {
 
   String name
 
+  static hasMany = [bills: Bill]
+
   static constraints = {
     name()
     bills()
   }
-
-  static hasMany = [bills: Bill]
 
 }

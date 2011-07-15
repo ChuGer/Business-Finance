@@ -1,6 +1,9 @@
 package businessfinance
 
 import grails.converters.JSON
+import domain.Note
+import domain.Category
+import domain.Bill
 
 class MainController {
   static navigation = [
@@ -10,13 +13,34 @@ class MainController {
           action: 'index'
   ]
 
+  def parseEntityData(Bill bill) {
+    def data = []
+    def inn = [:]
+    inn.put('data', bill.name)
+    inn.put('attr', [id: bill.id])
+    data.add(inn)
+    data
+  }
+
+  def parseCategoryData() {
+    def data = []
+    Category.list().each {c ->
+      def inn = [:]
+      inn.put('data', c.name)
+      inn.put('attr', [id: c.id])
+      def childs = []
+      c.bills.each {b ->
+        childs.add(parseEntityData(b))
+      }
+      inn.put('children', childs)
+      data.add(inn)
+
+    }
+    data
+  }
+
   def index = {
-    def treeData = [
-            [data: 'woof', attr: [id: '23'], children: [[[data: 'Child zzz', attr: [id: '26']],
-                    [data: 'poog', attr: [id: '11'], children: [[[data: 'Child t', attr: [id: '31']], [data: 'Rert t', attr: [id: '33']]]]]]]],
-            [data: 'poog', attr: [id: '18'], children: [[[data: 'Child t', attr: [id: '29']], [data: 'Chagur', attr: [id: '34']]]]]
-    ];
-    [treeData: treeData as JSON]
+    [treeData: parseCategoryData() as JSON]
   }
 
   def treeCheck = {

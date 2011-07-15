@@ -10,11 +10,17 @@ class Operation {
   Boolean isRepietable
   Boolean isCommitted
   Bill bill
-  static hasOne = [note : Note]
+  Note note
+  static hasOne = Note
   static constraints = {
     name(blank: false, unique: true)
-    startDate()
-    endDate()
+    isRepietable(nullable: true)
+    isCommitted(nullable: true)
+    note(nullable: true)
+    period(nullable: true)
+    times(nullable: true)
+    startDate(nullable: true)
+    endDate(nullable: true)
     type(inList: [0, 1, 2, 3])
 
   }
