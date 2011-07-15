@@ -40,7 +40,9 @@ class MainController {
   }
 
   def index = {
-    [treeData: parseCategoryData() as JSON]
+    def operationInstance = new Operation()
+    operationInstance.properties = params
+    [treeData: parseCategoryData() as JSON, operationInstance: operationInstance]
   }
 
   def treeCheck = {
@@ -53,8 +55,11 @@ class MainController {
   }
 
   def addEvent = {
-//    println "${params.startDate} ${params.endDate}"
-    session.events.add([id: getRandom(), title: params.name, start: params.startDate, end: params.endDate, allDay: false])
+    println params
+    def operationInstance = new Operation(params)
+    if (operationInstance.save(flush: true)) {
+      flash.message = "${message(code: 'default.created.message', args: [message(code: 'operation.label', default: 'Operation'), operationInstance.id])}"
+    }
     render('')
   }
 
