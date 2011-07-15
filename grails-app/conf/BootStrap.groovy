@@ -1,6 +1,5 @@
 import domain.auth.SecRole
 import domain.auth.SecUser
-import domain.User
 import domain.auth.SecUserSecRole
 import domain.Currency
 import domain.Bill
@@ -12,7 +11,7 @@ class BootStrap {
   def springSecurityService
   def init = { servletContext ->
     // Creating users
-    if (!User.count()) {
+    if (!SecUser.count()) {
       def userRole = new SecRole(authority: 'ROLE_USER').save(failOnError: true)
       def adminRole = SecRole.findByAuthority('ROLE_ADMIN') ?: new SecRole(authority: 'ROLE_ADMIN').save(failOnError: true)
       def password = springSecurityService.encodePassword('123')
@@ -29,11 +28,11 @@ class BootStrap {
         SecUserSecRole.create adminUser, adminRole
       }
 
-      def user = new SecUser(username: 'qwe', surname: 'Bob', realname: 'Bob', email: 'dus@dus.du', password: password, enabled: true).save(failOnError: true)
+      def user = new SecUser(username: 'qwe', surname: 'Zohan', realname: 'Bob', email: 'dus@dusca.du', password: password, enabled: true).save(failOnError: true)
       def user2 = new SecUser(username: 'asd', surname: 'Bob', realname: 'Frog', email: 'dus@dus.su', password: password, enabled: true).save(failOnError: true)
       SecUserSecRole.create user, userRole, true
       SecUserSecRole.create user2, userRole, true
-    }
+
 
     //Creating Curencies
     def cur1 = new Currency(code: 'rur', name: 'curencies.rur').save(failOnError: true)
@@ -59,6 +58,13 @@ class BootStrap {
     //Updating categories
     ctg1.addToBills(bill1).addToBills(bill2).addToBills(bill3).addToBills(bill4)
     ctg2.addToBills(bill4).addToBills(bill5).addToBills(bill6)
+
+
+//    Updating users
+    user.addToCategories(ctg1).addToCategories(ctg2)
+    user.addToOperations(op1 ).addToOperations(op2 )
+
+    }
   }
   def destroy = {
   }

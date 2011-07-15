@@ -6,8 +6,7 @@ class Bill {
   Currency currency
   Boolean isHidden
   String color
-  Category category
-  static belongsTo = Category
+  static belongsTo = [ category:Category ]
   static hasMany = [operations: Operation]
   static constraints = {
     name()

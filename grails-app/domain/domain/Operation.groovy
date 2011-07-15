@@ -1,6 +1,9 @@
 package domain
-class Operation {
 
+import domain.auth.SecUser
+
+class Operation {
+  static belongsTo = SecUser
   String name
   Long period
   Long times

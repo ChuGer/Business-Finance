@@ -1,5 +1,8 @@
 package domain.auth
 
+import domain.Settings
+import domain.Operation
+
 class SecUser {
   String username
   String realname
@@ -10,7 +13,11 @@ class SecUser {
   boolean accountLocked
   boolean passwordExpired
   String email
-
+  Settings settings
+  static hasMany = [
+          categories: domain.Category,
+          operations: Operation
+  ]
   static constraints = {
     username blank: false, unique: true
     realname blank: false
@@ -19,8 +26,11 @@ class SecUser {
     email blank: false
     password(password: true)
     email(email: true)
+    settings nullable: true
+//    operations nullable: true
+//    categories nullable: true
   }
-  static searchable = [only: 'realname']
+//  static searchable = [only: 'realname']     //Searchable Plugin
   static mapping = {
     password column: '`password`'
   }

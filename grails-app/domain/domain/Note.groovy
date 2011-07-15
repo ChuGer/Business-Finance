@@ -3,7 +3,7 @@ class Note {
 
     String name
     String value
-    Operation operation
+    static belongsTo = [operation :Operation ]
     static constraints = {
       name()
       value(maxSize: 10000)

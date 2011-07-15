@@ -100,9 +100,10 @@ grails.plugins.springsecurity.authority.className = 'domain.auth.SecRole'
 grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.InterceptUrlMap
 grails.plugins.springsecurity.interceptUrlMap = [         //TODO == map all  pages!====  NOTE: IS_AUTHENTICATED_FULLY  - break remeber me
         '/plugins/**': ['IS_AUTHENTICATED_ANONYMOUSLY'],
-//    '/*/**':         ['ROLE_USER','IS_AUTHENTICATED_FULLY'],
-        '/Note/**': ['ROLE_USER', 'IS_AUTHENTICATED_FULLY'],
-        '/Operation/**': ['ROLE_USER', 'IS_AUTHENTICATED_FULLY'],
+        '/Report/**': ['ROLE_USER'],
+        '/Notes/**': ['ROLE_USER'],
+        '/Main/**': ['ROLE_USER'],
+        '/Settings/**': ['ROLE_USER', 'IS_AUTHENTICATED_FULLY'],
         '/login/**': ['IS_AUTHENTICATED_ANONYMOUSLY'],
         '/logout/**': ['IS_AUTHENTICATED_ANONYMOUSLY'],
         '/js/**': ['IS_AUTHENTICATED_ANONYMOUSLY']

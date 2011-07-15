@@ -1,8 +1,10 @@
 package domain
 
+import domain.auth.SecUser
+
 class Settings {
 
-  User user
+  static belongsTo = [user : SecUser]
   Currency currency
   String language
   String dateFormat

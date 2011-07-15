@@ -30,15 +30,17 @@
       tree.bind("check_node.jstree", function (e, d) {
         var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
         var sid = d.rslt.obj.attr("id")
-        alert(sid + "  " + sname);
+        var stype = d.rslt.obj.attr("type")
         jQuery.ajax({
           url: 'treeCheck',
           type: "POST",
-          data: {name: sname, id: sid },
+          data: {name: sname, id: sid, type: stype},
           dataType: "json"
         });
       });
-
+      tree.bind("loaded.jstree", function (event, data) {
+        tree.jstree("open_all");
+      });
       tree.bind("rename.jstree", function(event, data) {
         alert(data.rslt.obj.attr("id") + "  " + data.rslt.new_name + " from " + data.rslt.old_name);
       });
@@ -48,7 +50,7 @@
       });
 
       tree.bind("select_node.jstree", function (e, d) {
-        alert(d.rslt.obj.attr("id") + " id  clicked  " + $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id")));
+        d.rslt.obj.css("background-color", "green")
       });
     }
 

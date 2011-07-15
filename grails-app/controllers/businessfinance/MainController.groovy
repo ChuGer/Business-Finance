@@ -12,12 +12,12 @@ class MainController {
           title: 'Главная страница',
           action: 'index'
   ]
-
+  def springSecurityService
   def parseEntityData(Bill bill) {
     def data = []
     def inn = [:]
     inn.put('data', bill.name)
-    inn.put('attr', [id: bill.id])
+    inn.put('attr', [id: bill.id, type:'bill'])
     data.add(inn)
     data
   }
@@ -27,7 +27,7 @@ class MainController {
     Category.list().each {c ->
       def inn = [:]
       inn.put('data', c.name)
-      inn.put('attr', [id: c.id])
+      inn.put('attr', [id: c.id,type : 'ctgr'])
       def childs = []
       c.bills.each {b ->
         childs.add(parseEntityData(b))
@@ -40,16 +40,25 @@ class MainController {
   }
 
   def index = {
+    if( springSecurityService.getCurrentUser() )
     [treeData: parseCategoryData() as JSON]
+    else{
+      def treeData = [
+            [data: 'ExCateg1', attr: [id: '23'], children: [[[data: 'Bill1', attr: [id: '26']],
+                    [data: 'bill2', attr: [id: '11']  ]  ]]],
+            [data: 'ExCateg2', attr: [id: '18'], children: [[[data: 'bill t', attr: [id: '29']], [data: 'Chagur', attr: [id: '34']]]]]
+    ];
+      [treeData: treeData as JSON]
+    }
   }
 
   def treeCheck = {
-    println params.name + ' with id ' + params.id
+    println params.name + ' with id ' + params.id + ' is ' + params.type
     def tdata = [
             [type: 'string', name: 'Task', data: 'Work'],
             [type: 'rf', name: 're', data: 'zo']
     ]
-    render tdata as JSON
+//    render tdata as JSON
   }
 
   def addEvent = {
