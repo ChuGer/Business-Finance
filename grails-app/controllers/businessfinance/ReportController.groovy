@@ -9,6 +9,7 @@ class ReportController {
           title: 'Отчеты',
           action: 'index'
   ]
+
   def index = {}
 
   def lineChart = {

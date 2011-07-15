@@ -19,7 +19,7 @@ class Operation {
     note(nullable: true)
     period(nullable: true)
     times(nullable: true)
-    startDate(nullable: true)
+    startDate(nullable: false)
     endDate(nullable: true)
     type(inList: [0, 1, 2, 3])
 

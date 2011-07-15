@@ -4,6 +4,7 @@ import grails.converters.JSON
 import domain.Note
 import domain.Category
 import domain.Bill
+import domain.Operation
 
 class MainController {
   static navigation = [
@@ -34,7 +35,6 @@ class MainController {
       }
       inn.put('children', childs)
       data.add(inn)
-
     }
     data
   }
@@ -60,45 +60,36 @@ class MainController {
 
   def deleteEvent = {
     println "deleteEvent with id: ${params.id}"
-    render('OK')
+    Operation.findById(params.id).delete()
+    render('')
   }
 
   def moveEvent = {
-    println "moveEvent with id: ${params.id}, dayDelta: ${params.dayDelta}"
+    def op = Operation.findById(params.id)
+    op.startDate += params.dayDelta.toInteger()
+    op.save()
     render('')
   }
 
   def resizeEvent = {
-    println "resizeEvent with id: ${params.id}, dayDelta: ${params.dayDelta}"
+    def op = Operation.findById(params.id)
+    op.endDate += params.dayDelta.toInteger()
+    op.save()
     render('')
   }
 
   def events = {
-//    def start = params.start.toLong()
-//    def today = params._.toLong()
-//    def end = params.end.toLong()
-//    println new Date(today-start-end)
-//    println new Date(today+end+start)
-    if (session.events == null) {
-      session.events = [getRandomEvent()]
+    def data = []
+    Operation.list().each {o ->
+      def map = [:]
+      map.put('id', o.id)
+      map.put('title', o.name)
+      map.put('start', o?.startDate)
+      map.put('end', o?.endDate)
+      map.put('allDay', false)
+      map.put('color', o?.bill?.color);
+      data.add(map)
     }
-    def events = session.events
-    render events as JSON
-  }
-
-  def clearCalendar = {
-    session.events = null
-  }
-
-  def showCalendar = {
-    session.events.add(getRandomEvent())
-  }
-
-  def getRandom() {
-    new Random().nextInt(10000).toString()
-  }
-
-  def getRandomEvent() {
-    [id: getRandom(), title: getRandom(), start: new Date(), allDay: false, color: 'red']
+    render data as JSON
   }
 }

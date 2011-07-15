@@ -28,13 +28,13 @@
       });
 
       tree.bind("check_node.jstree", function (e, d) {
-        var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
-        var sid = d.rslt.obj.attr("id")
-        alert(sid + "  " + sname);
+        var name = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
+        var id = d.rslt.obj.attr("id")
+        alert(id + "  " + name);
         jQuery.ajax({
           url: 'treeCheck',
           type: "POST",
-          data: {name: sname, id: sid },
+          data: {name: name, id: id },
           dataType: "json"
         });
       });
@@ -47,8 +47,8 @@
         alert(data.rslt.obj.attr("id") + "  " + $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id")));
       });
 
-      tree.bind("select_node.jstree", function (e, d) {
-        alert(d.rslt.obj.attr("id") + " id  clicked  " + $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id")));
+      tree.bind("select_node.jstree", function (event, data) {
+        alert(data.rslt.obj.attr("id") + " id  clicked  " + $("#treeDiv").jstree('get_text', '#' + data.rslt.obj.attr("id")));
       });
     }
 
@@ -59,7 +59,6 @@
     function dialog() {
       $("#startDate").datepicker();
       $("#endDate").datepicker();
-
       $("#dialog-form").dialog({
         autoOpen: false,
         height: 400,
@@ -109,12 +108,7 @@
             type: "POST",
             data: {id: event.id},
             dataType: "json",
-            beforeSend: function(x) {
-              if (x && x.overrideMimeType) {
-                x.overrideMimeType("application/json;charset=UTF-8");
-              }
-            },
-            success: function(result) {
+            complete: function() {
               calendar.fullCalendar('removeEvents', event.id);
             }
           });
@@ -168,7 +162,6 @@
         <button id="selectAll" onclick="selectAll();">selectAll</button>
       </td>
       <td>
-        <g:remoteLink action="clearCalendar" onComplete="drawCalendar()">clearCalendar</g:remoteLink><br/>
         <div style="width:800px;" id="calendar"></div>
 
         <div id="dialog-form" title="<g:message code="operation.create"/>">
