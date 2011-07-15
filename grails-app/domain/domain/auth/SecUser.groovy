@@ -20,8 +20,8 @@ class SecUser {
   ]
   static constraints = {
     username blank: false, unique: true
-    realname blank: false
-    surname blank: false
+    realname nullable: true
+    surname nullable: true
     password blank: false
     email blank: false
     password(password: true)

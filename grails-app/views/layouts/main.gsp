@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}"/>
   <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon"/>
   <g:layoutHead/>
+
   <nav:resources/>
   <g:javascript library="application"/>
 </head>
@@ -13,7 +14,9 @@
   <img src="${resource(dir: 'images', file: 'spinner.gif')}" alt="${message(code: 'spinner.alt', default: 'Loading...')}"/>
 </div>
 <br/>
-
+ <div id="lang" style=" float: right;">
+   <langs:selector langs=" en, en_US,  ru, by_by" />
+  </div>
 <div id="menu">
   <div style="width: 500px; float: left;">
     <nav:render group="tabs"/>

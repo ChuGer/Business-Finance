@@ -58,4 +58,20 @@ class CategoryService {
     }
     bills
   }
+
+  def initRegisteredUser(def user){
+
+     //Creating categories
+    def ctg1 = new Category(name: 'Cards', isChecked: true).save(failOnError: true)
+    def ctg2 = new Category(name: 'Debentures', isChecked: true).save(failOnError: true)
+
+      //Creating Bills
+    def bill1 = new Bill(name: 'Card1', currency: Currency.findByCode('usd'), balance: 1000, category: ctg1, color: 'red', isChecked: true).save(failOnError: true)
+    def bill2 = new Bill(name: 'Note2', currency: Currency.findByCode('eur'), balance: 4040, category: ctg1, color: 'magenta', isChecked: true).save(failOnError: true)
+
+    ctg1.addToBills(bill1)
+    ctg2.addToBills(bill2)
+
+    user.addToCategories(ctg1).addToCategories(ctg2)
+  }
 }
