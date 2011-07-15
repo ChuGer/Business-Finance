@@ -24,23 +24,36 @@
       var treeData = $.parseJSON('${treeData}');
       var tree = $("#treeDiv").jstree({
         "json_data" : {"data" : [treeData]},
-        "plugins" : [ "themes", "checkbox", "json_data", "ui" ,"contextmenu","crrm"]
+        "plugins" : [ "themes", "checkbox", "json_data", "ui" ,"contextmenu","crrm" , "hotkeys"],
+        hotkeys: {
+          "return" : function () {
+            $hovered = $('#treeDiv .jstree-hovered');
+            if ($hovered.length) {
+              alert('Hovered node text: ' + $hovered.text());
+            } else {
+              alert('No element was hovered over when return was pressed');
+            }
+          }
+        }
       });
 
       tree.bind("loaded.jstree", function (event, data) {
         tree.jstree("open_all");
         data.inst.get_container().find('li').each(function(i) {
 //          alert($(this).attr("type"))
-                if($(this).attr("chkd")=='true'){
-
-                        data.inst.check_node($(this));
-                }
+          if ($(this).attr("chkd") == 'true') {
+            data.inst.check_node($(this));
+          }
+          else {
+            data.inst.uncheck_node($(this));
+          }
         });
         isLoaded = true;
       });
 
       tree.bind("check_node.jstree", function (e, d) {
         if (isLoaded) {
+          d.rslt.obj.css("background-color", "green")
           var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
           var sid = d.rslt.obj.attr("id")
           var stype = d.rslt.obj.attr("type")
@@ -52,8 +65,15 @@
           });
         }
       });
+      tree.bind("hover_node.jstree", function (e, d) {
+          d.rslt.obj.css("background-color", d.rslt.obj.attr("color"));
+      });
+      tree.bind("dehover_node.jstree", function (e, d) {
+          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
+      });
       tree.bind("uncheck_node.jstree", function (e, d) {
         if (isLoaded) {
+          d.rslt.obj.css("background-color", "red")
           var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
           var sid = d.rslt.obj.attr("id")
           var stype = d.rslt.obj.attr("type")

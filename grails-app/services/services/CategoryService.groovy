@@ -10,7 +10,7 @@ class CategoryService {
     def data = []
     def inn = [:]
     inn.put('data', bill.name)
-    inn.put('attr', [id: bill.id, type: 'bill', chkd: bill.isChecked])
+    inn.put('attr', [id: bill.id, type: 'bill', chkd: bill.isChecked, color : bill.color])
     data.add(inn)
     data
   }
