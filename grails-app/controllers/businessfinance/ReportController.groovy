@@ -9,15 +9,20 @@ class ReportController {
           title: 'Отчеты',
           action: 'index'
   ]
-  def index = {
-    def chartData = [
+  def index = {}
+
+  def lineChart = {
+    def lineChart = [
             [type: 'date', name: 'Data', data: [[2008, 1, 1], [2008, 2, 1], [2008, 3, 1]]],
             [type: 'number', name: 'Hours per Day', data: [11, 34, 465]],
             [type: 'number', name: 'Sales', data: [345, 3, 465]],
             [type: 'number', name: 'Sales2', data: [345, 3, 465]],
             [type: 'string', name: 'Task', data: ['Work', 'Eats', 'Comute']]
     ];
+    render lineChart as JSON
+  }
 
+  def dataTableJSON = {
     def dataTableJSON = [
             cols: [
                     [id: 'A', label: 'NEW A', type: 'string'],
@@ -43,7 +48,7 @@ class ReportController {
             ]
 
     ]
+    render dataTableJSON as JSON
 
-    [chartData: chartData as JSON, dataTableJSON: dataTableJSON as JSON]
   }
 }
