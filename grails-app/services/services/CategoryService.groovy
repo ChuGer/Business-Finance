@@ -38,7 +38,7 @@ class CategoryService {
       bill.isChecked = !bill.isChecked
     }
     else {
-      def ctg = Category.findById(params.id)
+      def ctg = Category.findById(params.id[1..-1])
       ctg.isChecked = !ctg.isChecked
       ctg.bills.each { bill ->
         bill.isChecked = ctg.isChecked

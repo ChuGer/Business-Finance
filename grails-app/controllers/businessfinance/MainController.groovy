@@ -18,7 +18,6 @@ class MainController {
   def springSecurityService
   def categoryService
 
-  // TODO [GerMan] -> use 'categoryService.getUsersSelectedBills()'
   def index = {
     if (springSecurityService.getCurrentUser())
     [treeData: categoryService.getCategoryTree() as JSON]
