@@ -21,7 +21,7 @@ class CategoryService {
     user.categories?.each {c ->
       def inn = [:]
       inn.put('data', c.name)
-      inn.put('attr', [id: c.id, type: 'ctgr', chkd: c.isChecked])
+      inn.put('attr', [id: 'c'+c.id, type: 'ctgr', chkd: c.isChecked])
       def childs = []
       c.bills.each {bill ->
         childs.add(parseEntityData(bill))
@@ -33,7 +33,6 @@ class CategoryService {
   }
 
   def persistCheckEvent(def params) {
-    println params.name + ' with id ' + params.id + ' is ' + params.type
     if (params.type == 'bill') {
       def bill = Bill.findById(params.id)
       bill.isChecked = !bill.isChecked

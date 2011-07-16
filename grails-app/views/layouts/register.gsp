@@ -22,7 +22,9 @@
 </head>
 
 <body>
-
+  <div id="lang" style=" float: right;">
+   <langs:selector langs=" en, en_US,  ru, by_by" />
+  </div>
 <g:javascript src='jquery/jquery.jgrowl.js'/>
 <g:javascript src='jquery/jquery.checkbox.js'/>
 <g:javascript src='spring-security-ui.js'/>

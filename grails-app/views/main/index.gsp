@@ -40,13 +40,24 @@
       tree.bind("loaded.jstree", function (event, data) {
         tree.jstree("open_all");
         data.inst.get_container().find('li').each(function(i) {
-//          alert($(this).attr("type"))
+          //restoring check state
           if ($(this).attr("chkd") == 'true') {
             data.inst.check_node($(this));
           }
           else {
             data.inst.uncheck_node($(this));
           }
+          //adding [+] divs
+          var newid = $(this).attr("id") + "p";
+//          var el = ($(this).attr("type") == "bill") ? $('#' + $(this).attr("id") + ' :last-child') : $('#' + $(this).attr("id") + ' :first-child')
+          var el = $('#' + $(this).attr("id") ).children('a')
+          el.append("<div id=" + newid + " style='  width: 25px; visibility: hidden; background-color: lime; '></div>");
+          $("#" + newid).append('[+]');
+
+          $("#" + newid).click(function() {
+            var node = $('#treeDiv .jstree-hovered').parent('li')
+            console.log('plus cliked on node = '+ node.attr("id")+ ' named '+node.text())
+          });
         });
         isLoaded = true;
       });
@@ -66,10 +77,15 @@
         }
       });
       tree.bind("hover_node.jstree", function (e, d) {
-          d.rslt.obj.css("background-color", d.rslt.obj.attr("color"));
+        var pid = d.rslt.obj.attr("id")+"p";
+        $("#"+pid).animate().css({visibility: "visible"})
+//          d.rslt.obj.css("background-color", d.rslt.obj.attr("color"));
       });
       tree.bind("dehover_node.jstree", function (e, d) {
-          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
+         var pid = d.rslt.obj.attr("id")+"p";
+        $("#"+pid).animate().css({visibility: "hidden"})
+
+//          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
       });
       tree.bind("uncheck_node.jstree", function (e, d) {
         if (isLoaded) {
@@ -95,8 +111,13 @@
       });
 
       tree.bind("select_node.jstree", function (e, d) {
-        d.rslt.obj.css("background-color", "green")
+//        d.rslt.obj.css("background-color", "green")
+        var newid = d.rslt.obj.attr("id") + "p";
+//        $('#treeDiv .jstree-hovered').append("<div id="+newid+" style='  width: 15px; text-align: right'></div>");
+//        $("#"+newid).append('z.');
+
       });
+
     }
 
     function selectAll() {
