@@ -80,7 +80,7 @@ class MainController {
 
   def events = {
     def data = []
-    def billIds = [1L, 4L]
+    def billIds = categoryService.usersSelectedBillsIds()
 
     Operation.list().each {o ->
       if (billIds.contains(o.bill.id)) {
