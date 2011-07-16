@@ -20,10 +20,7 @@ class ReportController {
             [type: 'number', name: 'Sales2', data: [345, 3, 465]],
             [type: 'string', name: 'Task', data: ['Work', 'Eats', 'Comute']]
     ];
-    render lineChart as JSON
-  }
 
-  def dataTableJSON = {
     def dataTableJSON = [
             cols: [
                     [id: 'A', label: 'NEW A', type: 'string'],
@@ -49,7 +46,7 @@ class ReportController {
             ]
 
     ]
-    render dataTableJSON as JSON
 
+    [chartData: chartData as JSON, dataTableJSON: dataTableJSON as JSON]
   }
 }

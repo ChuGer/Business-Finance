@@ -19,24 +19,71 @@
       drawCalendar();
       dialog();
     });
-
+     var isLoaded = false ;
     function createTree() {
       var treeData = $.parseJSON('${treeData}');
       var tree = $("#treeDiv").jstree({
         "json_data" : {"data" : [treeData]},
-        "plugins" : [ "themes", "checkbox", "json_data", "ui" ,"contextmenu","crrm"]
+        "plugins" : [ "themes", "checkbox", "json_data", "ui" ,"contextmenu","crrm" , "hotkeys"],
+        hotkeys: {
+          "return" : function () {
+            $hovered = $('#treeDiv .jstree-hovered');
+            if ($hovered.length) {
+              alert('Hovered node text: ' + $hovered.text());
+            } else {
+              alert('No element was hovered over when return was pressed');
+            }
+          }
+        }
+      });
+
+      tree.bind("loaded.jstree", function (event, data) {
+        tree.jstree("open_all");
+        data.inst.get_container().find('li').each(function(i) {
+//          alert($(this).attr("type"))
+          if ($(this).attr("chkd") == 'true') {
+            data.inst.check_node($(this));
+          }
+          else {
+            data.inst.uncheck_node($(this));
+          }
+        });
+        isLoaded = true;
       });
 
       tree.bind("check_node.jstree", function (e, d) {
-        var name = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
-        var id = d.rslt.obj.attr("id")
-        alert(id + "  " + name);
-        jQuery.ajax({
-          url: 'treeCheck',
-          type: "POST",
-          data: {name: name, id: id },
-          dataType: "json"
-        });
+        if (isLoaded) {
+          d.rslt.obj.css("background-color", "green")
+          var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
+          var sid = d.rslt.obj.attr("id")
+          var stype = d.rslt.obj.attr("type")
+          jQuery.ajax({
+            url: 'treeCheck',
+            type: "POST",
+            data: {name: sname, id: sid, type: stype},
+            dataType: "json"
+          });
+        }
+      });
+      tree.bind("hover_node.jstree", function (e, d) {
+          d.rslt.obj.css("background-color", d.rslt.obj.attr("color"));
+      });
+      tree.bind("dehover_node.jstree", function (e, d) {
+          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
+      });
+      tree.bind("uncheck_node.jstree", function (e, d) {
+        if (isLoaded) {
+          d.rslt.obj.css("background-color", "red")
+          var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
+          var sid = d.rslt.obj.attr("id")
+          var stype = d.rslt.obj.attr("type")
+          jQuery.ajax({
+            url: 'treeCheck',
+            type: "POST",
+            data: {name: sname, id: sid, type: stype},
+            dataType: "json"
+          });
+        }
       });
 
       tree.bind("rename.jstree", function(event, data) {
@@ -47,8 +94,8 @@
         alert(data.rslt.obj.attr("id") + "  " + $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id")));
       });
 
-      tree.bind("select_node.jstree", function (event, data) {
-        alert(data.rslt.obj.attr("id") + " id  clicked  " + $("#treeDiv").jstree('get_text', '#' + data.rslt.obj.attr("id")));
+      tree.bind("select_node.jstree", function (e, d) {
+        d.rslt.obj.css("background-color", "green")
       });
     }
 
@@ -208,15 +255,15 @@
               <g:textField id="endDate" name="endDate" precision="day" value="${operationInstance?.endDate}" default="none" noSelection="['': '']"/>
             </td>
           </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="type"><g:message code="operation.type.label" default="Type"/></label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
-              <g:select name="type" from="${operationInstance.constraints.type.inList}" value="${fieldValue(bean: operationInstance, field: 'type')}" valueMessagePrefix="operation.type"/>
-            </td>
-          </tr>
+          %{--FIXME !! Error executing tag <g:formRemote>: Error evaluating expression [operationInstance.constraints.type.inList] on line [219]:--}%
+          %{--<tr class="prop">--}%
+            %{--<td valign="top" class="name">--}%
+              %{--<label for="type"><g:message code="operation.type.label" default="Type"/></label>--}%
+            %{--</td>--}%
+            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">--}%
+              %{--<g:select name="type" from="${operationInstance.constraints.type.inList}" value="${fieldValue(bean: operationInstance, field: 'type')}" valueMessagePrefix="operation.type"/>--}%
+            %{--</td>--}%
+          %{--</tr>--}%
 
           <tr class="prop">
             <td valign="top" class="name">
