@@ -22,6 +22,8 @@ class Operation {
     startDate(nullable: false)
     endDate(nullable: true)
     type(inList: [0, 1, 2, 3])
-
+  }
+  public String toString(){
+    "${id} ${name} ${startDate} ${endDate}"
   }
 }

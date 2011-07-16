@@ -18,4 +18,7 @@ class Bill {
     category()
     operations()
   }
+  public String toString() {
+    "${name} (${currency?.code})"
+  }
 }
