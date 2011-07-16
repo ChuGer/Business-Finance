@@ -86,7 +86,7 @@ class MainController {
         map.put('start', o?.startDate)
         map.put('end', o?.endDate)
         map.put('allDay', false)
-        map.put('color', o?.bill?.color);
+        map.put('color', o?.bill?.category.color);
         data.add(map)
       }
     }

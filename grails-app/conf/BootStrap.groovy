@@ -17,7 +17,7 @@ class BootStrap {
               username: 'admin',
               surname: 'Bob',
               realname: 'Bob',
-              email: 'dus@dus.du',
+              email: 'admin@admin.com',
               password: springSecurityService.encodePassword('admin'),
               enabled: true).save(failOnError: true)
 

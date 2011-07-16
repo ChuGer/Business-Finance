@@ -18,6 +18,9 @@ class Bill {
     operations()
   }
   public String toString() {
+    if(!currency.isAttached()) {
+	currency.attach()
+}
     "${name} (${currency?.code})"
   }
 }
