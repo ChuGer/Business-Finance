@@ -1,7 +1,7 @@
 package domain.auth
 
-import domain.Settings
 import domain.Operation
+import domain.Settings
 
 class SecUser {
   String username
@@ -15,7 +15,8 @@ class SecUser {
   String email
   Settings settings
   static hasMany = [
-          categories: domain.Category,
+          categoriesB: domain.CategoryBill,
+          categoriesO: domain.CategoryOp,
           operations: Operation
   ]
   static constraints = {

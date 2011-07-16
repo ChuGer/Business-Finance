@@ -3,12 +3,13 @@ package domain
 import domain.auth.SecUser
 
 class Operation {
-  static belongsTo = SecUser
+  static belongsTo = [ category:CategoryOp, user : SecUser ]
   String name
   Long period
   Long times
   Date startDate
   Date endDate
+  Boolean isChecked = true
   Integer type
   Boolean isRepietable
   Boolean isCommitted

@@ -3,7 +3,6 @@
 /out
 /test
 /.idea
-/application.properties
 /BusinessFinance.iml
 /BusinessFinance-grailsPlugins.iml
 /devDb.log

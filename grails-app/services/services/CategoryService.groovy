@@ -1,30 +1,44 @@
 package services
 
-import domain.*
+import domain.Bill
+import domain.CategoryBill
+import domain.Currency
+import domain.auth.SecUser
 
 class CategoryService {
   def springSecurityService
   static transactional = true
 
-  def parseEntityData(Bill bill) {
+  def parseEntityData(def bill) {
     def data = []
     def inn = [:]
     inn.put('data', bill.name)
-    inn.put('attr', [id: bill.id, type: 'bill', chkd: bill.isChecked, color: bill.color])
+    inn.put('attr', [id: 'e'+bill.id, type: 'bill', chkd: bill.isChecked, color: bill.category.color])
     data.add(inn)
     data
   }
 
   def getCategoryTree() {
     def data = []
-    def user = springSecurityService.getCurrentUser()
-    user.categories?.each {c ->
+    SecUser user = springSecurityService.getCurrentUser()
+    user.categoriesB?.each {c ->
       def inn = [:]
       inn.put('data', c.name)
-      inn.put('attr', [id: 'c'+c.id, type: 'ctgr', chkd: c.isChecked])
+      inn.put('attr', [id: 'c'+c.id, type: 'ctgr', chkd: c.isChecked, color : c.color])
       def childs = []
       c.bills.each {bill ->
         childs.add(parseEntityData(bill))
+      }
+      inn.put('children', childs)
+      data.add(inn)
+    }
+    user.categoriesO?.each {c ->
+      def inn = [:]
+      inn.put('data', c.name)
+      inn.put('attr', [id: 'd'+c.id, type: 'ctgr', chkd: c.isChecked, color : c.color])
+      def childs = []
+      c.operations.each {operation ->
+        childs.add(parseEntityData(operation))
       }
       inn.put('children', childs)
       data.add(inn)
@@ -34,11 +48,11 @@ class CategoryService {
 
   def persistCheckEvent(def params) {
     if (params.type == 'bill') {
-      def bill = Bill.findById(params.id)
+      def bill = Bill.findById(params.id[1..-1])
       bill.isChecked = !bill.isChecked
     }
     else {
-      def ctg = Category.findById(params.id[1..-1])
+      def ctg = CategoryBill.findById(params.id[1..-1])
       ctg.isChecked = !ctg.isChecked
       ctg.bills.each { bill ->
         bill.isChecked = ctg.isChecked
@@ -75,12 +89,12 @@ class CategoryService {
   def initRegisteredUser(def user) {
 
     //Creating categories
-    def ctg1 = new Category(name: 'Cards', isChecked: true).save(failOnError: true)
-    def ctg2 = new Category(name: 'Debentures', isChecked: true).save(failOnError: true)
+    def ctg1 = new CategoryBill(name: 'Cards', isChecked: true, color: 'red',).save(failOnError: true)
+    def ctg2 = new CategoryBill(name: 'Debentures', isChecked: true, color: 'magenta').save(failOnError: true)
 
     //Creating Bills
-    def bill1 = new Bill(name: 'Card1', currency: Currency.findByCode('usd'), balance: 1000, category: ctg1, color: 'red', isChecked: true).save(failOnError: true)
-    def bill2 = new Bill(name: 'Note2', currency: Currency.findByCode('eur'), balance: 4040, category: ctg1, color: 'magenta', isChecked: true).save(failOnError: true)
+    def bill1 = new Bill(name: 'Card1', currency: Currency.findByCode('usd'), balance: 1000, category: ctg1,  isChecked: true).save(failOnError: true)
+    def bill2 = new Bill(name: 'Note2', currency: Currency.findByCode('eur'), balance: 4040, category: ctg1, isChecked: true).save(failOnError: true)
 
     ctg1.addToBills(bill1)
     ctg2.addToBills(bill2)

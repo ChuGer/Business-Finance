@@ -6,15 +6,13 @@ class Bill {
   Currency currency
   Boolean isHidden
   Boolean isChecked
-  String color
-  static belongsTo = [ category:Category ]
+  static belongsTo = [ category:CategoryBill ]
   static hasMany = [operations: Operation]
   static constraints = {
     name()
     isChecked(blank: false)
     balance()
     currency()
-    color(nullable: true)
     isHidden(nullable: true)
     category()
     operations()

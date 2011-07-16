@@ -1,10 +1,7 @@
 import domain.auth.SecRole
 import domain.auth.SecUser
 import domain.auth.SecUserSecRole
-import domain.Currency
-import domain.Bill
-import domain.Operation
-import domain.Category
+import domain.*
 
 class BootStrap {
 
@@ -40,32 +37,39 @@ class BootStrap {
     def cur3 = new Currency(code: 'eur', name: 'curencies.eur').save(failOnError: true)
 
     //Creating categories
-    def ctg1 = new Category(name: 'UleBank', isChecked: true).save(failOnError: true)
-    def ctg2 = new Category(name: 'BufBank', isChecked: true).save(failOnError: true)
+    def ctg1 = new CategoryBill(name: 'UleBank', isChecked: true, color: 'blue', user: user).save(failOnError: true)
+    def ctg2 = new CategoryBill(name: 'BufBank', isChecked: true, color: 'magenta', user: user).save(failOnError: true)
+
+    def ctg3 = new CategoryOp(name: 'Bo2l', isChecked: true, color: 'magenta', user: user).save(failOnError: true)
+    def ctg4 = new CategoryOp(name: 'Pay2', isChecked: true, color: 'red', user: user).save(failOnError: true)
 
     //Creating Bills
-    def bill1 = new Bill(name: 'Card1', currency: cur1, balance: 1000, category: ctg1, color: 'red', isChecked: true).save(failOnError: true)
-    def bill2 = new Bill(name: 'Card2', currency: cur2, balance: 4040, category: ctg1, color: 'magenta', isChecked: true).save(failOnError: true)
-    def bill3 = new Bill(name: 'iCard', currency: cur2, balance: 4020, category: ctg1, color: 'blue', isChecked: true).save(failOnError: true)
-    def bill4 = new Bill(name: 'bCard', currency: cur3, balance: 7000, category: ctg1, color: 'black', isChecked: true).save(failOnError: true)
-    def bill5 = new Bill(name: 'sCard', currency: cur2, balance: 9040, category: ctg2, color: 'green', isChecked: true).save(failOnError: true)
-    def bill6 = new Bill(name: 'Dep1', currency: cur3, balance: 1040, category: ctg2, color: 'gray', isChecked: true).save(failOnError: true)
+    def bill1 = new Bill(name: 'Card1', currency: cur1, balance: 1000, category: ctg1, isChecked: true).save(failOnError: true)
+    def bill2 = new Bill(name: 'Card2', currency: cur2, balance: 4040, category: ctg1, isChecked: true).save(failOnError: true)
+    def bill3 = new Bill(name: 'iCard', currency: cur2, balance: 4020, category: ctg1,  isChecked: true).save(failOnError: true)
+    def bill4 = new Bill(name: 'bCard', currency: cur3, balance: 7000, category: ctg1, isChecked: true).save(failOnError: true)
+    def bill5 = new Bill(name: 'sCard', currency: cur2, balance: 9040, category: ctg2, isChecked: true).save(failOnError: true)
+    def bill6 = new Bill(name: 'Dep1', currency: cur3, balance: 1040, category: ctg2,  isChecked: true).save(failOnError: true)
 
     //Creating operations
-    def op1 = new Operation(name: 'Колбасы', type: 2,bill: bill1, startDate: new Date(111,6,7), endDate: new Date(111,6,10)).save(failOnError: true)
-    def op2 = new Operation(name: 'Вертолёт', type: 1,bill: bill2, startDate: new Date(111,6,8), endDate: new Date(111,6,8)).save(failOnError: true)
-    def op3 = new Operation(name: 'Car', type: 1,bill: bill3, startDate: new Date(111,6,11), endDate: new Date(111,6,12)).save(failOnError: true)
-    def op4 = new Operation(name: 'bear', type: 2,bill: bill3, startDate: new Date(111,6,13), endDate: new Date(111,6,13)).save(failOnError: true)
-    def op5 = new Operation(name: 'dog house', type: 1,bill: bill5, startDate: new Date(111,6,4), endDate: new Date(111,6,5)).save(failOnError: true)
+    def op1 = new Operation(name: 'Колбасы', user: user,category: ctg3,  type: 2,bill: bill1, startDate: new Date(111,6,7), endDate: new Date(111,6,10)).save(failOnError: true)
+    def op2 = new Operation(name: 'Вертолёт',user: user,category: ctg3,  type: 1,bill: bill2, startDate: new Date(111,6,8), endDate: new Date(111,6,8)).save(failOnError: true)
+    def op3 = new Operation(name: 'Car', user: user,category: ctg3,     type: 1,bill: bill3, startDate: new Date(111,6,11), endDate: new Date(111,6,12)).save(failOnError: true)
+    def op4 = new Operation(name: 'bear', user: user,category: ctg3,     type: 2,bill: bill3, startDate: new Date(111,6,13), endDate: new Date(111,6,13)).save(failOnError: true)
+    def op5 = new Operation(name: 'dog house',user: user,category: ctg3,  type: 1,bill: bill5, startDate: new Date(111,6,4), endDate: new Date(111,6,5)).save(failOnError: true)
 
     //Updating categories
     ctg1.addToBills(bill1).addToBills(bill2).addToBills(bill3).addToBills(bill4)
     ctg2.addToBills(bill5).addToBills(bill6)
 
+    ctg3.addToOperations(op1).addToOperations(op2).addToOperations(op3)
+    ctg4.addToOperations(op4).addToOperations(op5)
+
 
 //    Updating users
-    user.addToCategories(ctg1).addToCategories(ctg2)
-    user.addToOperations(op1 ).addToOperations(op2 )
+    user.addToCategoriesB(ctg1).addToCategoriesB(ctg2)
+    user.addToCategoriesO(ctg3).addToCategoriesO(ctg4)
+    user.addToOperations(op1 ).addToOperations(op2 ).addToOperations(op3 ).addToOperations(op5 ).addToOperations(op5 )
 
     }
   }

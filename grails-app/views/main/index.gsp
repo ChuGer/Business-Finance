@@ -12,14 +12,38 @@
   <script type="text/javascript" src="../js/full-calendar/fullcalendar.min.js"></script>
   <link rel="stylesheet" href="../css/fullcalendar.css"/>
   <link rel="stylesheet" href="../css/ui-lightness/jquery-ui-1.8.11.custom.css"/>
+  <link rel="stylesheet" media="screen" type="text/css" href="../css/layout.css" />
+  <link rel="stylesheet" media="screen" type="text/css" href="../css/colorpicker.css"/>
+  <script type="text/javascript" src="../js/eye.js"></script>
+
+    <script type="text/javascript" src="../js/utils.js"></script>
+    <script type="text/javascript" src="../js/layout.js"></script>
+  <script type="text/javascript" src="../js/colorpicker.js"></script>
   <script type="text/javascript">
 
     $(function() {
       createTree();
       drawCalendar();
       dialog();
+      createColor();
     });
     var isLoaded = false;
+    function createColor()  {
+        $('#colorpickerHolder2').ColorPicker({
+			flat: true,
+			color: '#00ff00',
+			onSubmit: function(hsb, hex, rgb) {
+				$('#colorSelector2 div').css('backgroundColor', '#' + hex);
+			}
+		});
+		$('#colorpickerHolder2 div').css('position', 'absolute');
+		var widt = false;
+		$('#colorSelector2').bind('click', function() {
+			$('#colorpickerHolder2').stop().animate({height: widt ? 0 : 173}, 500);
+			widt = !widt;
+		});
+	};
+
     function createTree() {
       var treeData = $.parseJSON('${treeData}');
       var tree = $("#treeDiv").jstree({
@@ -50,13 +74,13 @@
           //adding [+] divs
           var newid = $(this).attr("id") + "p";
 //          var el = ($(this).attr("type") == "bill") ? $('#' + $(this).attr("id") + ' :last-child') : $('#' + $(this).attr("id") + ' :first-child')
-          var el = $('#' + $(this).attr("id") ).children('a')
+          var el = $('#' + $(this).attr("id")).children('a')
           el.append("<div id=" + newid + " style='  width: 25px; visibility: hidden; background-color: lime; '></div>");
           $("#" + newid).append('[+]');
 
           $("#" + newid).click(function() {
             var node = $('#treeDiv .jstree-hovered').parent('li')
-            console.log('plus cliked on node = '+ node.attr("id")+ ' named '+node.text())
+            console.log('plus cliked on node = ' + node.attr("id") + ' named ' + node.text())
           });
         });
         isLoaded = true;
@@ -78,13 +102,13 @@
         }
       });
       tree.bind("hover_node.jstree", function (e, d) {
-        var pid = d.rslt.obj.attr("id")+"p";
-        $("#"+pid).animate().css({visibility: "visible"})
+        var pid = d.rslt.obj.attr("id") + "p";
+        $("#" + pid).animate().css({visibility: "visible"})
 //          d.rslt.obj.css("background-color", d.rslt.obj.attr("color"));
       });
       tree.bind("dehover_node.jstree", function (e, d) {
-         var pid = d.rslt.obj.attr("id")+"p";
-        $("#"+pid).animate().css({visibility: "hidden"})
+        var pid = d.rslt.obj.attr("id") + "p";
+        $("#" + pid).animate().css({visibility: "hidden"})
 
 //          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
       });
@@ -227,7 +251,10 @@
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-
+  <div id="customWidget">
+  <div id="colorSelector2">   </div>
+    <div id="colorpickerHolder2">  </div>
+    </div>
   <table>
     <tr>
       <td width="200px;">
@@ -240,6 +267,21 @@
     </tr>
   </table>
 
+    <div id="bill-form" title="<g:message code="bill.create"/>">
+    <g:hasErrors bean="${operationInstance}">
+      <div class="errors">
+        <g:renderErrors bean="${operationInstance}" as="list"/>
+      </div>
+    </g:hasErrors>
+         <g:formRemote name="createBillForm" method="post" url="[action: 'addBill']" onComplete="closeDialog();drawCalendar();">
+      <div class="dialog">
+        <table>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </g:formRemote>
+    </div>
 
   <div id="dialog-form" title="<g:message code="operation.create"/>">
     <g:hasErrors bean="${operationInstance}">
@@ -305,6 +347,7 @@
       </div>
     </g:formRemote>
   </div>
+
 </div>
 </body>
 </html>

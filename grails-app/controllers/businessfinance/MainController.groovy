@@ -1,11 +1,8 @@
 package businessfinance
 
-import grails.converters.JSON
-import domain.Note
-import domain.Category
 import domain.Bill
 import domain.Operation
-import sun.java2d.pipe.SpanShapeRenderer.Simple
+import grails.converters.JSON
 import java.text.SimpleDateFormat
 
 class MainController {
