@@ -19,7 +19,7 @@
       drawCalendar();
       dialog();
     });
-     var isLoaded = false ;
+    var isLoaded = false;
     function createTree() {
       var treeData = $.parseJSON('${treeData}');
       var tree = $("#treeDiv").jstree({
@@ -72,7 +72,8 @@
             url: 'treeCheck',
             type: "POST",
             data: {name: sname, id: sid, type: stype},
-            dataType: "json"
+            dataType: "json",
+            complete: drawCalendar()
           });
         }
       });
@@ -97,7 +98,8 @@
             url: 'treeCheck',
             type: "POST",
             data: {name: sname, id: sid, type: stype},
-            dataType: "json"
+            dataType: "json",
+            complete: drawCalendar()
           });
         }
       });
@@ -278,12 +280,12 @@
           </tr>
           %{--FIXME !! Error executing tag <g:formRemote>: Error evaluating expression [operationInstance.constraints.type.inList] on line [219]:--}%
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="type"><g:message code="operation.type.label" default="Type"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">--}%
-              %{--<g:select name="type" from="${operationInstance.constraints.type.inList}" value="${fieldValue(bean: operationInstance, field: 'type')}" valueMessagePrefix="operation.type"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="type"><g:message code="operation.type.label" default="Type"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">--}%
+          %{--<g:select name="type" from="${operationInstance.constraints.type.inList}" value="${fieldValue(bean: operationInstance, field: 'type')}" valueMessagePrefix="operation.type"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           <tr class="prop">
@@ -294,10 +296,10 @@
               <g:select name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
             </td>
           </tr>
-                <div class="buttons">
-                    <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.update.label', default: 'Update')}" /></span>
-                    <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></span>
-                </div>
+          <div class="buttons">
+            <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.update.label', default: 'Update')}"/></span>
+            <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/></span>
+          </div>
           </tbody>
         </table>
       </div>

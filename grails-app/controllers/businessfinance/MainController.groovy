@@ -5,6 +5,8 @@ import domain.Note
 import domain.Category
 import domain.Bill
 import domain.Operation
+import sun.java2d.pipe.SpanShapeRenderer.Simple
+import java.text.SimpleDateFormat
 
 class MainController {
   static navigation = [
@@ -41,12 +43,17 @@ class MainController {
   }
 
   def addEvent = {
-    println params
-    def operationInstance = new Operation(params)
-    if (operationInstance.save(flush: true)) {
-      flash.message = "${message(code: 'default.created.message', args: [message(code: 'operation.label', default: 'Operation'), operationInstance.id])}"
+    //TODO : something more simply?
+    def sdf = new SimpleDateFormat("MM/dd/yyyy");
+    def operation = new Operation()
+    operation.name = params.name
+    operation.startDate = sdf.parse(params.startDate) + 1
+    operation.endDate = sdf.parse(params.endDate) + 1
+    operation.bill = Bill.findById(params?.bill?.id)
+    operation.type = params.type.toInteger()
+    if (operation.save(flush: true)) {
+      render('')
     }
-    render('')
   }
 
   def deleteEvent = {
@@ -57,7 +64,9 @@ class MainController {
 
   def moveEvent = {
     def op = Operation.findById(params.id)
-    op.startDate += params.dayDelta.toInteger()
+    def dayDelta = params.dayDelta.toInteger()
+    op.startDate += dayDelta
+    op.endDate += dayDelta
     op.save()
     render('')
   }
@@ -71,15 +80,19 @@ class MainController {
 
   def events = {
     def data = []
+    def billIds = categoryService.usersSelectedBillsIds()
+
     Operation.list().each {o ->
-      def map = [:]
-      map.put('id', o.id)
-      map.put('title', o.name)
-      map.put('start', o?.startDate)
-      map.put('end', o?.endDate)
-      map.put('allDay', false)
-      map.put('color', o?.bill?.color);
-      data.add(map)
+      if (billIds.contains(o.bill.id)) {
+        def map = [:]
+        map.put('id', o.id)
+        map.put('title', o.name)
+        map.put('start', o?.startDate)
+        map.put('end', o?.endDate)
+        map.put('allDay', false)
+        map.put('color', o?.bill?.color);
+        data.add(map)
+      }
     }
     render data as JSON
   }
