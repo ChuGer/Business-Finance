@@ -5,6 +5,7 @@ import domain.auth.SecUser
 class Operation {
   static belongsTo = [category: CategoryOp, user: SecUser]
   String name
+  String ico = 'oprDef.png'
   Long period
   Long times
   Float sum

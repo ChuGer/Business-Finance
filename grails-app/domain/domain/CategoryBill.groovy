@@ -3,6 +3,7 @@ package domain
 class CategoryBill {
 
   String name
+  String ico = 'ctbDef.png'
   static hasMany = [bills: Bill, categories: CategoryBill]
   String color
   Boolean isChecked
