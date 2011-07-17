@@ -10,10 +10,9 @@ class CategoryService {
   def parseEntityOData(def bill) {
     def data = []
     def inn = [:]
-    inn.put('data', bill.name)
+    inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
     inn.put('attr', [id: 'o' + bill.id, type: 'opr', chkd: bill.isChecked, color: bill.category.color])
     inn.put('metadata', [id: bill.id])
-    inn.put('icon', '../images/treei/script-office.png')
     data.add(inn)
     data
   }
@@ -21,9 +20,8 @@ class CategoryService {
   def parseEntityBData(def bill) {
     def data = []
     def inn = [:]
-    inn.put('data', bill.name)
+    inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
     inn.put('attr', [id: 'b' + bill.id, type: 'bil', chkd: bill.isChecked, color: bill.category.color])
-    inn.put('icon', '../images/treei/script-office.png')
     data.add(inn)
     data
   }
@@ -37,7 +35,7 @@ class CategoryService {
 
     ctg.categories?.each {c ->
       def inn = [:]
-      inn.put('data', c.name)
+      inn.put('data', [title: c.name, icon: '../images/treei/' + c.ico])
       inn.put('attr', [id: 'd' + c.id, type: 'cto', chkd: c.isChecked, color: c.color])
       def childs = []
       c.operations?.each {bill ->
@@ -46,7 +44,7 @@ class CategoryService {
       }
       c.categories?.each {cti ->
         def inn2 = [:]
-        inn2.put('data', cti.name)
+        inn2.put('data', [title: cti.name, icon: '../images/treei/' + cti.ico])
         inn2.put('attr', [id: 'd' + cti.id, type: 'cto', chkd: cti.isChecked, color: cti.color])
         def childs2 = parseCtgOData(cti)
         inn2.put('children', childs2)
@@ -68,7 +66,7 @@ class CategoryService {
 
     ctg.categories?.each {c ->
       def inn = [:]
-      inn.put('data', c.name)
+      inn.put('data', [title: c.name, icon: '../images/treei/' + c.ico])
       inn.put('attr', [id: 'c' + c.id, type: 'ctb', chkd: c.isChecked, color: c.color])
       def childs = []
       c.bills?.each {bill ->
@@ -77,7 +75,7 @@ class CategoryService {
       }
       c.categories?.each {cti ->
         def inn2 = [:]
-        inn2.put('data', cti.name)
+        inn2.put('data', [title: cti.name, icon: '../images/treei/' + cti.ico])
         inn2.put('attr', [id: 'c' + cti.id, type: 'ctb', chkd: cti.isChecked, color: cti.color])
         def childs2 = parseCtgBData(cti)
         inn2.put('children', childs2)
@@ -97,7 +95,7 @@ class CategoryService {
       return data
     def c = user.categoriesB
     def inn = [:]
-    inn.put('data', c.name)
+    inn.put('data', [title: c.name, icon: '../images/treei/' + c.ico])
     inn.put('attr', [id: 'c' + c.id, type: 'ctb', chkd: c.isChecked, color: c.color])
     def childs = parseCtgBData(c)
     inn.put('children', childs)
@@ -105,7 +103,7 @@ class CategoryService {
 
     c = user.categoriesO
     def inn2 = [:]
-    inn2.put('data', c.name)
+    inn2.put('data', [title: c.name, icon: '../images/treei/' + c.ico])
     inn2.put('attr', [id: 'd' + c.id, type: 'cto', chkd: c.isChecked, color: c.color])
     def childs2 = parseCtgOData(c)
     inn2.put('children', childs2)
@@ -145,14 +143,14 @@ class CategoryService {
     }
     else if (params.type == 'ctb') {
       def ctg = CategoryBill.findById(params.id[1..-1])
-      boolean checked =  params.ch == '1' ?: false
-      ctg.isChecked =  checked
+      boolean checked = params.ch == '1' ?: false
+      ctg.isChecked = checked
       checkCtgB(ctg)
     }
     else if (params.type == 'cto') {
       def ctg = CategoryOp.findById(params.id[1..-1])
-      boolean checked =  params.ch == '1' ?: false
-      ctg.isChecked =  checked
+      boolean checked = params.ch == '1' ?: false
+      ctg.isChecked = checked
       checkCtgO(ctg)
     }
   }
@@ -161,7 +159,7 @@ class CategoryService {
   def usersSelectedBillsIds() {
     def billsIds = []
     SecUser user = springSecurityService.getCurrentUser()
-    List<Bill> bills = Bill.findAllByUserAndIsChecked (user, true)
+    List<Bill> bills = Bill.findAllByUserAndIsChecked(user, true)
     bills.each { b ->    billsIds.add(b.id)}
     billsIds
   }
@@ -169,13 +167,13 @@ class CategoryService {
   def usersSelectedOpsIds() {
     def opsIds = []
     SecUser user = springSecurityService.getCurrentUser()
-    List<Operation> ops = Operation.findAllByUserAndIsChecked (user, true)
+    List<Operation> ops = Operation.findAllByUserAndIsChecked(user, true)
     ops.each { o ->    opsIds.add(o.id)}
     opsIds
   }
 
   def initRegisteredUser(def user) {
-     // TODO inject from bootsra4
+    // TODO inject from bootsra4
     //Creating categories
     def ctg1 = new CategoryBill(name: 'Cards', isChecked: true, color: 'red',).save(failOnError: true)
     def ctg2 = new CategoryBill(name: 'Debentures', isChecked: true, color: 'magenta').save(failOnError: true)

@@ -5,6 +5,7 @@ import domain.auth.SecUser
 class Bill {
 
   String name
+  String ico = 'billDef.png'
   Float balance
   Currency currency
   Boolean isHidden

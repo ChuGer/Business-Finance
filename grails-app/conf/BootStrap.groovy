@@ -36,9 +36,9 @@ class BootStrap {
       def cur3 = new Currency(code: 'eur', name: 'curencies.eur').save(failOnError: true)
 
       //Creating categories
-      def rootB = new CategoryBill(name: 'root.bill', isChecked: true, color: 'magenta').save(failOnError: true)
+      def rootB = new CategoryBill(name: 'root.bill', isChecked: true, color: 'magenta', ico: 'smiley-mr-green.png').save(failOnError: true)
 
-      def rootO = new CategoryOp(name: 'root.oper', isChecked: true, color: 'magenta').save(failOnError: true)
+      def rootO = new CategoryOp(name: 'root.oper', isChecked: true, color: 'magenta', ico: 'script-office.png').save(failOnError: true)
 
       def ctg1 = new CategoryBill(name: 'UleBank', isChecked: true, color: 'blue').save(failOnError: true)
       def ctg2 = new CategoryBill(name: 'BufBank', isChecked: true, color: 'magenta').save(failOnError: true)
@@ -48,7 +48,7 @@ class BootStrap {
       def ctg7 = new CategoryOp(name: 'Pay2', isChecked: true, color: 'red').save(failOnError: true)
 
       //Creating Bills
-      def bill1 = new Bill(name: 'Card1', currency: cur1, balance: 1000, category: ctg1, isChecked: true, user : user).save(failOnError: true)
+      def bill1 = new Bill(name: 'Card1', currency: cur1, balance: 1000, category: ctg1, isChecked: true, user : user, ico: 'user.png').save(failOnError: true)
       def bill2 = new Bill(name: 'Card2', currency: cur2, balance: 4040, category: ctg1, isChecked: true, user : user).save(failOnError: true)
       def bill3 = new Bill(name: 'iCard', currency: cur2, balance: 4020, category: ctg1, isChecked: true, user : user).save(failOnError: true)
       def bill4 = new Bill(name: 'bCard', currency: cur3, balance: 7000, category: ctg1, isChecked: true, user : user).save(failOnError: true)
@@ -59,7 +59,7 @@ class BootStrap {
       //Creating operations
       def op1 = new Operation(name: 'Колбасы', user: user, category: ctg7, type: 0, bill: bill1, startDate: new Date(111, 6, 7), endDate: new Date(111, 6, 10)).save(failOnError: true)
       def op2 = new Operation(name: 'Вертолёт', user: user, category: ctg7, type: 1, bill: bill2, startDate: new Date(111, 6, 8), endDate: new Date(111, 6, 8)).save(failOnError: true)
-      def op3 = new Operation(name: 'Car', user: user, category: ctg7, type: 1, bill: bill3, startDate: new Date(111, 6, 11), endDate: new Date(111, 6, 12)).save(failOnError: true)
+      def op3 = new Operation(name: 'Car', user: user, category: ctg7, type: 1, bill: bill3, startDate: new Date(111, 6, 11), endDate: new Date(111, 6, 12), ico: 'hand-point.png').save(failOnError: true)
       def op4 = new Operation(name: 'bear', user: user, category: ctg7, type: 0, bill: bill3, startDate: new Date(111, 6, 13), endDate: new Date(111, 6, 13)).save(failOnError: true)
       def op5 = new Operation(name: 'dog house', user: user, category: ctg7, type: 1, bill: bill5, startDate: new Date(111, 6, 4), endDate: new Date(111, 6, 5)).save(failOnError: true)
 

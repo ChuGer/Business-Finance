@@ -1,11 +1,10 @@
 package businessfinance
 
 import domain.Bill
+import domain.CategoryOp
 import domain.Operation
 import grails.converters.JSON
 import java.text.SimpleDateFormat
-import domain.CategoryOp
-import domain.auth.SecUser
 
 class MainController {
   static navigation = [
@@ -18,6 +17,7 @@ class MainController {
   def categoryService
 
   def index = {
+    println         request.getQueryString()
     def operationInstance = new Operation()
     operationInstance.properties = params
     if (springSecurityService.getCurrentUser())

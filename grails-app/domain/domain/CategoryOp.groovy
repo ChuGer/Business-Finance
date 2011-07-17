@@ -3,6 +3,7 @@ package domain
 class CategoryOp {
 
   String name
+  String ico = 'ctoDef.png'
   static hasMany = [operations: Operation, categories: CategoryOp]
   String color
   Boolean isChecked
