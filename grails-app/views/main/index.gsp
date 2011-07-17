@@ -11,11 +11,10 @@
   <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker.js"></script>
   <script type="text/javascript" src="../js/full-calendar/fullcalendar.min.js"></script>
   <link rel="stylesheet" href="../css/fullcalendar.css"/>
-  <link rel="stylesheet" href="../css/ui-lightness/jquery-ui-1.8.11.custom.css"/>
+  <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.2.custom.css"/>
   <link rel="stylesheet" media="screen" type="text/css" href="../css/layout.css"/>
   <link rel="stylesheet" media="screen" type="text/css" href="../css/colorpicker.css"/>
   <script type="text/javascript" src="../js/eye.js"></script>
-
   <script type="text/javascript" src="../js/utils.js"></script>
   <script type="text/javascript" src="../js/layout.js"></script>
   <script type="text/javascript" src="../js/colorpicker.js"></script>
@@ -95,7 +94,7 @@
             var newid = $(this).attr("id") + "p";
 //          var el = ($(this).attr("type") == "bill") ? $('#' + $(this).attr("id") + ' :last-child') : $('#' + $(this).attr("id") + ' :first-child')
             var el = $('#' + $(this).attr("id")).children('a');
-            el.append("<div id=" + newid + " style='  width: 25px; visibility: hidden; background-color: lime; '></div>");
+            el.append("<div id=" + newid + " style='  width: 25px; display: none; background-color: lime; '></div>");
             $("#" + newid).append('[+]');
 
             $("#" + newid).click(function() {
@@ -124,12 +123,12 @@
       });
       tree.bind("hover_node.jstree", function (e, d) {
         var pid = d.rslt.obj.attr("id") + "p";
-        $("#" + pid).animate().css({visibility: "visible"})
+        $("#" + pid).animate().css({display: "block"})
 //          d.rslt.obj.css("background-color", d.rslt.obj.attr("color"));
       });
       tree.bind("dehover_node.jstree", function (e, d) {
         var pid = d.rslt.obj.attr("id") + "p";
-        $("#" + pid).animate().css({visibility: "hidden"});
+        $("#" + pid).animate().css({display: "none"})
 
 //          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
       });
@@ -356,16 +355,61 @@
               <label for="name"><g:message code="operation.name.label" default="Name"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'name', 'errors')}">
-              <g:textField id="name" name="name" value="${operationInstance?.name}"/>
+              <g:textField name="name" value="${operationInstance?.name}"/>
             </td>
           </tr>
+
+          %{--<tr class="prop">--}%
+            %{--<td valign="top" class="name">--}%
+              %{--<label for="isRepeatable"><g:message code="operation.isRepeatable.label" default="Is Repeatable"/></label>--}%
+            %{--</td>--}%
+            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isRepeatable', 'errors')}">--}%
+              %{--<g:checkBox name="isRepeatable" value="${operationInstance?.isRepeatable}"/>--}%
+            %{--</td>--}%
+          %{--</tr>--}%
+
+          %{--<tr class="prop">--}%
+            %{--<td valign="top" class="name">--}%
+              %{--<label for="isCommitted"><g:message code="operation.isCommitted.label" default="Is Committed"/></label>--}%
+            %{--</td>--}%
+            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isCommitted', 'errors')}">--}%
+              %{--<g:checkBox name="isCommitted" value="${operationInstance?.isCommitted}"/>--}%
+            %{--</td>--}%
+          %{--</tr>--}%
+
+          %{--<tr class="prop">--}%
+            %{--<td valign="top" class="name">--}%
+              %{--<label for="note"><g:message code="operation.note.label" default="Note"/></label>--}%
+            %{--</td>--}%
+            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'note', 'errors')}">--}%
+              %{--<g:select name="note.id" from="${domain.Note.list()}" optionKey="id" value="${operationInstance?.note?.id}" noSelection="['null': '']"/>--}%
+            %{--</td>--}%
+          %{--</tr>--}%
+
+          %{--<tr class="prop">--}%
+            %{--<td valign="top" class="name">--}%
+              %{--<label for="period"><g:message code="operation.period.label" default="Period"/></label>--}%
+            %{--</td>--}%
+            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'period', 'errors')}">--}%
+              %{--<g:textField name="period" value="${fieldValue(bean: operationInstance, field: 'period')}"/>--}%
+            %{--</td>--}%
+          %{--</tr>--}%
+
+          %{--<tr class="prop">--}%
+            %{--<td valign="top" class="name">--}%
+              %{--<label for="times"><g:message code="operation.times.label" default="Times"/></label>--}%
+            %{--</td>--}%
+            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'times', 'errors')}">--}%
+              %{--<g:textField name="times" value="${fieldValue(bean: operationInstance, field: 'times')}"/>--}%
+            %{--</td>--}%
+          %{--</tr>--}%
 
           <tr class="prop">
             <td valign="top" class="name">
               <label for="startDate"><g:message code="operation.startDate.label" default="Start Date"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'startDate', 'errors')}">
-              <g:textField id="startDate" name="startDate" precision="day" value="${operationInstance?.startDate}"/>
+              <g:textField name="startDate" id="startDate" precision="day" value="${operationInstance?.startDate}"/>
             </td>
           </tr>
 
@@ -374,18 +418,18 @@
               <label for="endDate"><g:message code="operation.endDate.label" default="End Date"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'endDate', 'errors')}">
-              <g:textField id="endDate" name="endDate" precision="day" value="${operationInstance?.endDate}" default="none" noSelection="['': '']"/>
+              <g:textField name="endDate" id="endDate" precision="day" value="${operationInstance?.endDate}" default="none" noSelection="['': '']"/>
             </td>
           </tr>
-          %{--FIXME !! Error executing tag <g:formRemote>: Error evaluating expression [operationInstance.constraints.type.inList] on line [219]:--}%
-          %{--<tr class="prop">--}%
-          %{--<td valign="top" class="name">--}%
-          %{--<label for="type"><g:message code="operation.type.label" default="Type"/></label>--}%
-          %{--</td>--}%
-          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">--}%
-          %{--<g:select name="type" from="${operationInstance.constraints.type.inList}" value="${fieldValue(bean: operationInstance, field: 'type')}" valueMessagePrefix="operation.type"/>--}%
-          %{--</td>--}%
-          %{--</tr>--}%
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="type"><g:message code="operation.type.label" default="Type"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
+              <g:select name="type" from="${operationInstance.constraints.type.inList}" value="${fieldValue(bean: operationInstance, field: 'type')}" valueMessagePrefix="operation.type"/>
+            </td>
+          </tr>
 
           <tr class="prop">
             <td valign="top" class="name">
@@ -395,6 +439,33 @@
               <g:select name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
             </td>
           </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="category"><g:message code="operation.category.label" default="Category"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'category', 'errors')}">
+              <g:select name="category.id" from="${domain.CategoryOp.list()}" optionKey="id" value="${operationInstance?.category?.id}"/>
+            </td>
+          </tr>
+
+          %{--<tr class="prop">--}%
+            %{--<td valign="top" class="name">--}%
+              %{--<label for="isChecked"><g:message code="operation.isChecked.label" default="Is Checked"/></label>--}%
+            %{--</td>--}%
+            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isChecked', 'errors')}">--}%
+              %{--<g:checkBox name="isChecked" value="${operationInstance?.isChecked}"/>--}%
+            %{--</td>--}%
+          %{--</tr>--}%
+
+          %{--<tr class="prop">--}%
+            %{--<td valign="top" class="name">--}%
+              %{--<label for="user"><g:message code="operation.user.label" default="User"/></label>--}%
+            %{--</td>--}%
+            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'user', 'errors')}">--}%
+              %{--<g:select name="user.id" from="${domain.auth.SecUser.list()}" optionKey="id" value="${operationInstance?.user?.id}"/>--}%
+            %{--</td>--}%
+          %{--</tr>--}%
           <div class="buttons">
             <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.update.label', default: 'Update')}"/></span>
             <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/></span>

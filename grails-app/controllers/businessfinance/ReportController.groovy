@@ -6,10 +6,9 @@ class ReportController {
   static navigation = [
           group: 'tabs',
           order: 2,
-          title: 'report',
+          title: "report",
           action: 'index'
   ]
-
   def index = {}
 
   def lineChart = {
@@ -20,8 +19,11 @@ class ReportController {
             [type: 'number', name: 'Sales2', data: [345, 3, 465]],
             [type: 'string', name: 'Task', data: ['Work', 'Eats', 'Comute']]
     ];
+    render lineChart as JSON
+  }
 
-    def dataTableJSON = [
+  def pieChart = {
+    def pieChart = [
             cols: [
                     [id: 'A', label: 'NEW A', type: 'string'],
                     [id: 'B', label: 'B-label', type: 'number'],
@@ -46,7 +48,7 @@ class ReportController {
             ]
 
     ]
+    render pieChart as JSON
 
-    [chartData: chartData as JSON, dataTableJSON: dataTableJSON as JSON]
   }
 }

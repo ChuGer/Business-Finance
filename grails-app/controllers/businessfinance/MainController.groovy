@@ -4,22 +4,24 @@ import domain.Bill
 import domain.Operation
 import grails.converters.JSON
 import java.text.SimpleDateFormat
+import domain.CategoryOp
+import domain.auth.SecUser
 
 class MainController {
   static navigation = [
           group: 'tabs',
           order: 1,
-          title: "main" ,
+          title: "main",
           action: 'index'
   ]
   def springSecurityService
   def categoryService
 
   def index = {
-    println  categoryService.usersSelectedBillsIds()
-//    println g.message(code: "menu.main.title", null, default: "Missing message", encodeAs: "HTML")
+    def operationInstance = new Operation()
+    operationInstance.properties = params
     if (springSecurityService.getCurrentUser())
-    [treeData: categoryService.getCategoryTree() as JSON]
+      [treeData: categoryService.getCategoryTree() as JSON, operationInstance: operationInstance]
     else {  // goes as demonstration tree data?
       def treeData = [
               [data: 'ExCateg1', attr: [id: '23'], children: [[[data: 'Bill1', attr: [id: '26']],
@@ -42,6 +44,7 @@ class MainController {
   }
 
   def addEvent = {
+    println params
     //TODO : something more simply?
     def sdf = new SimpleDateFormat("MM/dd/yyyy");
     def operation = new Operation()
@@ -49,10 +52,15 @@ class MainController {
     operation.startDate = sdf.parse(params.startDate) + 1
     operation.endDate = sdf.parse(params.endDate) + 1
     operation.bill = Bill.findById(params?.bill?.id)
+    operation.category = CategoryOp.findById(params?.category?.id)
     operation.type = params.type.toInteger()
-    if (operation.save(flush: true)) {
-      render('')
+    operation.user = springSecurityService.getCurrentUser()
+    if (!operation.save()) {
+       operation.errors.each {
+            println it
+       }
     }
+    render('')
   }
 
   def deleteEvent = {
@@ -79,10 +87,11 @@ class MainController {
 
   def events = {
     def data = []
-    def billIds = categoryService.usersSelectedBillsIds()
-
+    def opsIds = categoryService.usersSelectedOpsIds()
+//    def billIds = categoryService.usersSelectedBillsIds()
+//    println opsIds + ' ' +  billIds
     Operation.list().each {o ->
-      if (billIds.contains(o.bill.id)) {
+      if (opsIds.contains(o.id) ) {
         def map = [:]
         map.put('id', o.id)
         map.put('title', o.name)

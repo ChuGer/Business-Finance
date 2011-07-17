@@ -57,10 +57,10 @@ class BootStrap {
       def bill7 = new Bill(name: 'Dep2', currency: cur1, balance:  40, category: ctg1, isChecked: true, user : user).save(failOnError: true)
 
       //Creating operations
-      def op1 = new Operation(name: 'Колбасы', user: user, category: ctg7, type: 2, bill: bill1, startDate: new Date(111, 6, 7), endDate: new Date(111, 6, 10)).save(failOnError: true)
+      def op1 = new Operation(name: 'Колбасы', user: user, category: ctg7, type: 0, bill: bill1, startDate: new Date(111, 6, 7), endDate: new Date(111, 6, 10)).save(failOnError: true)
       def op2 = new Operation(name: 'Вертолёт', user: user, category: ctg7, type: 1, bill: bill2, startDate: new Date(111, 6, 8), endDate: new Date(111, 6, 8)).save(failOnError: true)
       def op3 = new Operation(name: 'Car', user: user, category: ctg7, type: 1, bill: bill3, startDate: new Date(111, 6, 11), endDate: new Date(111, 6, 12)).save(failOnError: true)
-      def op4 = new Operation(name: 'bear', user: user, category: ctg7, type: 2, bill: bill3, startDate: new Date(111, 6, 13), endDate: new Date(111, 6, 13)).save(failOnError: true)
+      def op4 = new Operation(name: 'bear', user: user, category: ctg7, type: 0, bill: bill3, startDate: new Date(111, 6, 13), endDate: new Date(111, 6, 13)).save(failOnError: true)
       def op5 = new Operation(name: 'dog house', user: user, category: ctg7, type: 1, bill: bill5, startDate: new Date(111, 6, 4), endDate: new Date(111, 6, 5)).save(failOnError: true)
 
       //Updating categories

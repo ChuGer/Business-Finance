@@ -11,23 +11,23 @@ class Operation {
   Date endDate
   Boolean isChecked = true
   Integer type
-  Boolean isRepietable
+  Boolean isRepeatable
   Boolean isCommitted
   Bill bill
   Note note
   static hasOne = Note
   static constraints = {
     name(blank: false, unique: true)
-    isRepietable(nullable: true)
+    isRepeatable(nullable: true)
     isCommitted(nullable: true)
     note(nullable: true)
     period(nullable: true)
     times(nullable: true)
     startDate(nullable: false)
     endDate(nullable: true)
-    type(inList: [0, 1, 2, 3])
+    type(inList: [0, 1])
   }
   public String toString(){
-    "${id} ${name} ${startDate} ${endDate}"
+    "${name} ${startDate}-${endDate}"
   }
 }

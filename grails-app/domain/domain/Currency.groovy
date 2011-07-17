@@ -8,4 +8,8 @@ class Currency {
     name()
     code()
   }
+
+  public String toString() {
+    "${name} ${code}"
+  }
 }

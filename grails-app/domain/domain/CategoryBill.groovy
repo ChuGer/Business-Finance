@@ -11,5 +11,8 @@ class CategoryBill {
     name()
     bills()
   }
+  public String toString() {
+    "${name}"
+  }
 
 }

@@ -5,20 +5,44 @@
   <meta name="layout" content="main"/>
   <title><g:message code="menu.report.title"/></title>
   <g:javascript library="jquery" plugin="jquery"/>
+  <script type="text/javascript" src="../js/jquery/jquery-1.6.1.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.tabs.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.widget.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.core.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery-ui-1.8.1.min.js"></script>
   <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+  <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.2.custom.css"/>
+
   <script type="text/javascript">
     google.load('visualization', '1', {packages: ['corechart']});
     google.load('visualization', '1', {'packages':['annotatedtimeline']});
-    function drawVisualization() {
-      // Parse JSON string to JSON object
-      var jsonData = $.parseJSON('${chartData}');
-      var dataTable = createDataTableFromJSON(jsonData, [0,1,2]);
+  </script>
+  <script type="text/javascript">
+    $(function() {
+      $("#tabs").tabs();
+    });
 
-      var dataJSON = $.parseJSON('${dataTableJSON}');
-      var dataTable2 = new google.visualization.DataTable(dataJSON, 0.6);
+    function drawVisualization() {
+      drawLineChart();
+      drawPieChart();
+    }
+
+    function drawLineChart() {
+      // Parse JSON string to JSON object
+      $.getJSON("lineChart", function(jsonData) {
+        var dataTable = createDataTableFromJSON(jsonData, [0,1,2]);
+        new google.visualization.AnnotatedTimeLine(document.getElementById('lineChart'))
+                .draw(dataTable, {displayAnnotations: true});
+      })
+    }
+
+    function drawPieChart() {
+      $.getJSON("pieChart", function(jsonData) {
+      var dataTable = new google.visualization.DataTable(jsonData, 0.6);
       // Create and draw the visualization.
-      new google.visualization.PieChart(document.getElementById('visualization')).draw(dataTable2, {title:"So, how was your day?", colors:['red','black','blue']});
-      new google.visualization.AnnotatedTimeLine(document.getElementById('annotated')).draw(dataTable, {displayAnnotations: true});
+      new google.visualization.PieChart(document.getElementById('pieChart'))
+              .draw(dataTable, {title:"So, how was your day?", colors:['red','black','blue']});
+      })
     }
 
     function createDataTableFromJSON(jsonData, columns) {
@@ -46,9 +70,18 @@
     <div class="message">${flash.message}</div>
   </g:if>
 
-  <div id="visualization" style="width: 600px; height: 600px;"></div>
-  <div id='annotated' style='width: 700px; height: 240px;'></div>
+  <div id="tabs">
+    <ul>
+      <li><a href="#tabs-1" onclick="drawLineChart();"><g:message code="report.chart.line"/></a></li>
+      <li><a href="#tabs-2" onclick="drawPieChart();"><g:message code="report.chart.pie"/></a></li>
+    </ul>
+    <div id="tabs-1" style="width: 850px;" >
+      <div id="lineChart" style="width: 800px; height: 240px;"></div>
+    </div>
+    <div id="tabs-2">
+      <div id="pieChart" style="min-width: 600px; height: 400px;"></div>
+    </div>
+  </div>
 </div>
 </body>
 </html>
-
