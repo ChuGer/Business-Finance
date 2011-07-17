@@ -15,7 +15,7 @@
 </div>
 <br/>
  <div id="lang" style=" float: right;">
-   <langs:selector langs=" en, en_US,  ru, by_by" />
+   <langs:selector langs=" en, en_US, ru" />
   </div>
 <div id="menu">
   <div style="width: 500px; float: left;">
