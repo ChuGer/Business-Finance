@@ -49,8 +49,9 @@ class MainController {
     operation.name = params.name
     operation.startDate = sdf.parse(params.startDate) + 1
     operation.endDate = sdf.parse(params.endDate) + 1
-    operation.bill = Bill.findById(params?.bill?.id)
-    operation.type = params.type.toInteger()
+//    operation.bill = Bill.findById(params?.bill?.id)
+//    operation.type = params.type.toInteger()
+    println operation
     if (operation.save(flush: true)) {
       println operation
       render('')
@@ -81,10 +82,11 @@ class MainController {
 
   def events = {
     def data = []
+    def opsIds = categoryService.usersSelectedOpsIds()
     def billIds = categoryService.usersSelectedBillsIds()
-    billIds = []
+    println opsIds + ' ' +  billIds
     Operation.list().each {o ->
-      if (billIds.contains(o.bill.id)) {
+      if (opsIds.contains(o.id) && billIds.contains(o.bill.id)) {
         def map = [:]
         map.put('id', o.id)
         map.put('title', o.name)
