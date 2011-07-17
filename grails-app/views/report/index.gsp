@@ -75,7 +75,7 @@
       <li><a href="#tabs-1" onclick="drawLineChart();"><g:message code="report.chart.line"/></a></li>
       <li><a href="#tabs-2" onclick="drawPieChart();"><g:message code="report.chart.pie"/></a></li>
     </ul>
-    <div id="tabs-1">
+    <div id="tabs-1" style="width: 850px;" >
       <div id="lineChart" style="width: 800px; height: 240px;"></div>
     </div>
     <div id="tabs-2">

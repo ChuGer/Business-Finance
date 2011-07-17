@@ -9,16 +9,17 @@ class MainController {
   static navigation = [
           group: 'tabs',
           order: 1,
-          title: "main" ,
+          title: "main",
           action: 'index'
   ]
   def springSecurityService
   def categoryService
 
   def index = {
-//    println g.message(code: "menu.main.title", null, default: "Missing message", encodeAs: "HTML")
+    def operationInstance = new Operation()
+    operationInstance.properties = params
     if (springSecurityService.getCurrentUser())
-    [treeData: categoryService.getCategoryTree() as JSON]
+      [treeData: categoryService.getCategoryTree() as JSON, operationInstance: operationInstance]
     else {  // goes as demonstration tree data?
       def treeData = [
               [data: 'ExCateg1', attr: [id: '23'], children: [[[data: 'Bill1', attr: [id: '26']],
@@ -41,6 +42,7 @@ class MainController {
   }
 
   def addEvent = {
+    println params
     //TODO : something more simply?
     def sdf = new SimpleDateFormat("MM/dd/yyyy");
     def operation = new Operation()
@@ -50,6 +52,7 @@ class MainController {
     operation.bill = Bill.findById(params?.bill?.id)
     operation.type = params.type.toInteger()
     if (operation.save(flush: true)) {
+      println operation
       render('')
     }
   }
@@ -79,7 +82,7 @@ class MainController {
   def events = {
     def data = []
     def billIds = categoryService.usersSelectedBillsIds()
-
+    billIds = []
     Operation.list().each {o ->
       if (billIds.contains(o.bill.id)) {
         def map = [:]

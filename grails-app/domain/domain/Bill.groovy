@@ -6,7 +6,7 @@ class Bill {
   Currency currency
   Boolean isHidden
   Boolean isChecked
-  static belongsTo = [ category:CategoryBill ]
+  static belongsTo = [category: CategoryBill]
   static hasMany = [operations: Operation]
   static constraints = {
     name()
@@ -17,10 +17,10 @@ class Bill {
     category()
     operations()
   }
+
   public String toString() {
-    if(!currency.isAttached()) {
-	currency.attach()
-}
+    if (!currency.isAttached())
+      currency.attach()
     "${name} (${currency?.code})"
   }
 }

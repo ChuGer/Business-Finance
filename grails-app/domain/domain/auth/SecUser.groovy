@@ -2,6 +2,8 @@ package domain.auth
 
 import domain.Operation
 import domain.Settings
+import domain.CategoryBill
+import domain.CategoryOp
 
 class SecUser {
   String username
@@ -14,8 +16,8 @@ class SecUser {
   boolean passwordExpired
   String email
   Settings settings
-  domain.CategoryBill categoriesB
-  domain.CategoryOp  categoriesO
+  CategoryBill categoriesB
+  CategoryOp categoriesO
   static hasMany =
   [
           operations: Operation
@@ -25,9 +27,8 @@ class SecUser {
     realname nullable: true
     surname nullable: true
     password blank: false
-    email blank: false
+    email(blank: false,email: true)
     password(password: true)
-    email(email: true)
     settings nullable: true
     categoriesB nullable: true
     categoriesO nullable: true
@@ -39,5 +40,9 @@ class SecUser {
 
   Set<SecRole> getAuthorities() {
     SecUserSecRole.findAllBySecUser(this).collect { it.secRole } as Set
+  }
+
+  public String toString() {
+    "${username} (${realname} ${surname})}"
   }
 }
