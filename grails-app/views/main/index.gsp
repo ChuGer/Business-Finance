@@ -323,23 +323,23 @@
             </td>
           </tr>
 
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="isRepeatable"><g:message code="operation.isRepeatable.label" default="Is Repeatable"/></label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isRepeatable', 'errors')}">
-              <g:checkBox name="isRepeatable" value="${operationInstance?.isRepeatable}"/>
-            </td>
-          </tr>
+          %{--<tr class="prop">--}%
+            %{--<td valign="top" class="name">--}%
+              %{--<label for="isRepeatable"><g:message code="operation.isRepeatable.label" default="Is Repeatable"/></label>--}%
+            %{--</td>--}%
+            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isRepeatable', 'errors')}">--}%
+              %{--<g:checkBox name="isRepeatable" value="${operationInstance?.isRepeatable}"/>--}%
+            %{--</td>--}%
+          %{--</tr>--}%
 
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="isCommitted"><g:message code="operation.isCommitted.label" default="Is Committed"/></label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isCommitted', 'errors')}">
-              <g:checkBox name="isCommitted" value="${operationInstance?.isCommitted}"/>
-            </td>
-          </tr>
+          %{--<tr class="prop">--}%
+            %{--<td valign="top" class="name">--}%
+              %{--<label for="isCommitted"><g:message code="operation.isCommitted.label" default="Is Committed"/></label>--}%
+            %{--</td>--}%
+            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isCommitted', 'errors')}">--}%
+              %{--<g:checkBox name="isCommitted" value="${operationInstance?.isCommitted}"/>--}%
+            %{--</td>--}%
+          %{--</tr>--}%
 
           %{--<tr class="prop">--}%
             %{--<td valign="top" class="name">--}%

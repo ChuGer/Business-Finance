@@ -4,6 +4,8 @@ import domain.Bill
 import domain.Operation
 import grails.converters.JSON
 import java.text.SimpleDateFormat
+import domain.CategoryOp
+import domain.auth.SecUser
 
 class MainController {
   static navigation = [
@@ -49,13 +51,16 @@ class MainController {
     operation.name = params.name
     operation.startDate = sdf.parse(params.startDate) + 1
     operation.endDate = sdf.parse(params.endDate) + 1
-//    operation.bill = Bill.findById(params?.bill?.id)
-//    operation.type = params.type.toInteger()
-    println operation
-    if (operation.save(flush: true)) {
-      println operation
-      render('')
+    operation.bill = Bill.findById(params?.bill?.id)
+    operation.category = CategoryOp.findById(params?.category?.id)
+    operation.type = params.type.toInteger()
+    operation.user = springSecurityService.getCurrentUser()
+    if (!operation.save()) {
+       operation.errors.each {
+            println it
+       }
     }
+    render('')
   }
 
   def deleteEvent = {
@@ -83,10 +88,10 @@ class MainController {
   def events = {
     def data = []
     def opsIds = categoryService.usersSelectedOpsIds()
-    def billIds = categoryService.usersSelectedBillsIds()
-    println opsIds + ' ' +  billIds
+//    def billIds = categoryService.usersSelectedBillsIds()
+//    println opsIds + ' ' +  billIds
     Operation.list().each {o ->
-      if (opsIds.contains(o.id) && billIds.contains(o.bill.id)) {
+      if (opsIds.contains(o.id) ) {
         def map = [:]
         map.put('id', o.id)
         map.put('title', o.name)
