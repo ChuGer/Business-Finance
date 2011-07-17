@@ -9,13 +9,14 @@ class MainController {
   static navigation = [
           group: 'tabs',
           order: 1,
-          title: 'Главная страница',
+          title: "main" ,
           action: 'index'
   ]
   def springSecurityService
   def categoryService
 
   def index = {
+//    println g.message(code: "menu.main.title", null, default: "Missing message", encodeAs: "HTML")
     if (springSecurityService.getCurrentUser())
     [treeData: categoryService.getCategoryTree() as JSON]
     else {  // goes as demonstration tree data?
@@ -29,6 +30,7 @@ class MainController {
   }
 
   def treeCheck = {
+
     categoryService.persistCheckEvent(params)
     // TODO: select all persist problem
     def tdata = [

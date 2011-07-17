@@ -18,7 +18,7 @@
 <link rel="stylesheet" media="screen" href="${resource(dir:'css',file:'auth.css')}"/>
 
 <g:layoutHead/>
-
+  <langs:resources/>
 </head>
 
 <body>

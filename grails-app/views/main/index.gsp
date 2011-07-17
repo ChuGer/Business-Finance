@@ -12,12 +12,12 @@
   <script type="text/javascript" src="../js/full-calendar/fullcalendar.min.js"></script>
   <link rel="stylesheet" href="../css/fullcalendar.css"/>
   <link rel="stylesheet" href="../css/ui-lightness/jquery-ui-1.8.11.custom.css"/>
-  <link rel="stylesheet" media="screen" type="text/css" href="../css/layout.css" />
+  <link rel="stylesheet" media="screen" type="text/css" href="../css/layout.css"/>
   <link rel="stylesheet" media="screen" type="text/css" href="../css/colorpicker.css"/>
   <script type="text/javascript" src="../js/eye.js"></script>
 
-    <script type="text/javascript" src="../js/utils.js"></script>
-    <script type="text/javascript" src="../js/layout.js"></script>
+  <script type="text/javascript" src="../js/utils.js"></script>
+  <script type="text/javascript" src="../js/layout.js"></script>
   <script type="text/javascript" src="../js/colorpicker.js"></script>
   <script type="text/javascript">
 
@@ -28,21 +28,22 @@
       createColor();
     });
     var isLoaded = false;
-    function createColor()  {
-        $('#colorpickerHolder2').ColorPicker({
-			flat: true,
-			color: '#00ff00',
-			onSubmit: function(hsb, hex, rgb) {
-				$('#colorSelector2 div').css('backgroundColor', '#' + hex);
-			}
-		});
-		$('#colorpickerHolder2 div').css('position', 'absolute');
-		var widt = false;
-		$('#colorSelector2').bind('click', function() {
-			$('#colorpickerHolder2').stop().animate({height: widt ? 0 : 173}, 500);
-			widt = !widt;
-		});
-	};
+    function createColor() {
+      $('#colorpickerHolder2').ColorPicker({
+        flat: true,
+        color: '#00ff00',
+        onSubmit: function(hsb, hex, rgb) {
+          $('#colorSelector2 div').css('backgroundColor', '#' + hex);
+        }
+      });
+      $('#colorpickerHolder2 div').css('position', 'absolute');
+      var widt = false;
+      $('#colorSelector2').bind('click', function() {
+        $('#colorpickerHolder2').stop().animate({height: widt ? 0 : 173}, 500);
+        widt = !widt;
+      });
+    }
+    ;
 
     function createTree() {
       var treeData = $.parseJSON('${treeData}');
@@ -58,7 +59,25 @@
               alert('No element was hovered over when return was pressed');
             }
           }
+        },
+        "contextmenu" : {
+          "items" :{
+            "rename" : {
+              // The item label
+              "label"                : "RenBus",
+              // The function to execute upon a click
+              "action"            : function (obj) {
+                this.rename(obj);
+              },
+              // All below are optional
+              "_disabled"            : false,        // clicking the item won't do a thing
+              "_class"            : "class",    // class is applied to the item LI node
+              "separator_before"    : false,    // Insert a separator before the item
+              "separator_after"    : false
+            }
+          }
         }
+
       });
 
       tree.bind("loaded.jstree", function (event, data) {
@@ -72,16 +91,18 @@
             data.inst.uncheck_node($(this));
           }
           //adding [+] divs
-          var newid = $(this).attr("id") + "p";
+          if ($(this).attr("type").indexOf('ct') === 0) {
+            var newid = $(this).attr("id") + "p";
 //          var el = ($(this).attr("type") == "bill") ? $('#' + $(this).attr("id") + ' :last-child') : $('#' + $(this).attr("id") + ' :first-child')
-          var el = $('#' + $(this).attr("id")).children('a')
-          el.append("<div id=" + newid + " style='  width: 25px; visibility: hidden; background-color: lime; '></div>");
-          $("#" + newid).append('[+]');
+            var el = $('#' + $(this).attr("id")).children('a')
+            el.append("<div id=" + newid + " style='  width: 25px; visibility: hidden; background-color: lime; '></div>");
+            $("#" + newid).append('[+]');
 
-          $("#" + newid).click(function() {
-            var node = $('#treeDiv .jstree-hovered').parent('li')
-            console.log('plus cliked on node = ' + node.attr("id") + ' named ' + node.text())
-          });
+            $("#" + newid).click(function() {
+              var node = $('#treeDiv .jstree-hovered').parent('li')
+              console.log('plus cliked on node = ' + node.attr("id") + ' named ' + node.text())
+            });
+          }
         });
         isLoaded = true;
       });
@@ -252,9 +273,9 @@
     <div class="message">${flash.message}</div>
   </g:if>
   <div id="customWidget">
-  <div id="colorSelector2">   </div>
-    <div id="colorpickerHolder2">  </div>
-    </div>
+    <div id="colorSelector2"></div>
+    <div id="colorpickerHolder2"></div>
+  </div>
   <table>
     <tr>
       <td width="200px;">
@@ -267,13 +288,13 @@
     </tr>
   </table>
 
-    <div id="bill-form" title="<g:message code="bill.create"/>">
+  <div id="bill-form" title="<g:message code="bill.create"/>">
     <g:hasErrors bean="${operationInstance}">
       <div class="errors">
         <g:renderErrors bean="${operationInstance}" as="list"/>
       </div>
     </g:hasErrors>
-         <g:formRemote name="createBillForm" method="post" url="[action: 'addBill']" onComplete="closeDialog();drawCalendar();">
+    <g:formRemote name="createBillForm" method="post" url="[action: 'addBill']" onComplete="closeDialog();drawCalendar();">
       <div class="dialog">
         <table>
           <tbody>
@@ -281,7 +302,7 @@
         </table>
       </div>
     </g:formRemote>
-    </div>
+  </div>
 
   <div id="dialog-form" title="<g:message code="operation.create"/>">
     <g:hasErrors bean="${operationInstance}">

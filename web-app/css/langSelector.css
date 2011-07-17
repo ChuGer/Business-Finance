@@ -1,0 +1,15 @@
+@CHARSET "ISO-8859-1";
+
+.lang_selector{
+	margin: 3px;
+}
+
+.lang_flag{}
+
+.lang_link{
+	text-decoration: none;	
+}
+
+.opacitiy_not_selected{
+	opacity: 0.5;
+}

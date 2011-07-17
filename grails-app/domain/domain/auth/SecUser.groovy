@@ -14,9 +14,10 @@ class SecUser {
   boolean passwordExpired
   String email
   Settings settings
-  static hasMany = [
-          categoriesB: domain.CategoryBill,
-          categoriesO: domain.CategoryOp,
+  domain.CategoryBill categoriesB
+  domain.CategoryOp  categoriesO
+  static hasMany =
+  [
           operations: Operation
   ]
   static constraints = {
@@ -28,8 +29,8 @@ class SecUser {
     password(password: true)
     email(email: true)
     settings nullable: true
-//    operations nullable: true
-//    categories nullable: true
+    categoriesB nullable: true
+    categoriesO nullable: true
   }
 //  static searchable = [only: 'realname']     //Searchable Plugin
   static mapping = {

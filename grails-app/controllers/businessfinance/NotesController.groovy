@@ -4,7 +4,7 @@ class NotesController {
   static navigation = [
           group: 'tabs',
           order: 3,
-          title: 'Заметки',
+          title: 'note',
           action: 'index'
   ]
   def index = { }

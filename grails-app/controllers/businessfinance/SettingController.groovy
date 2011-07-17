@@ -4,7 +4,7 @@ class SettingController {
   static navigation = [
           group: 'tabs',
           order: 4,
-          title: 'Настройки',
+          title: 'setting',
           action: 'index'
   ]
   def index = { }

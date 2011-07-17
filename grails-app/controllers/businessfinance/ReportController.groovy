@@ -6,7 +6,7 @@ class ReportController {
   static navigation = [
           group: 'tabs',
           order: 2,
-          title: 'Отчеты',
+          title: 'report',
           action: 'index'
   ]
 
