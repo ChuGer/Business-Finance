@@ -123,7 +123,7 @@
       });
       tree.bind("hover_node.jstree", function (e, d) {
         var pid = d.rslt.obj.attr("id") + "p";
-        $("#" + pid).animate().css({display: "block"})
+        $("#" + pid).animate().css({display: "inline-block"})
 //          d.rslt.obj.css("background-color", d.rslt.obj.attr("color"));
       });
       tree.bind("dehover_node.jstree", function (e, d) {

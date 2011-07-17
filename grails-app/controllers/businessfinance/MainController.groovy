@@ -88,17 +88,17 @@ class MainController {
   def events = {
     def data = []
     def opsIds = categoryService.usersSelectedOpsIds()
-//    def billIds = categoryService.usersSelectedBillsIds()
-//    println opsIds + ' ' +  billIds
+    def billIds = categoryService.usersSelectedBillsIds()
+    println opsIds + ' ' +  billIds
     Operation.list().each {o ->
-      if (opsIds.contains(o.id) ) {
+      if (o.id in opsIds) {
         def map = [:]
         map.put('id', o.id)
         map.put('title', o.name)
-        map.put('start', o?.startDate)
+        map.put('start', o.startDate)
         map.put('end', o?.endDate)
         map.put('allDay', false)
-        map.put('color', o?.bill?.category.color);
+        map.put('color', o.category.color);
         data.add(map)
       }
     }
