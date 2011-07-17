@@ -26,6 +26,7 @@
       drawCalendar();
       dialog();
       createColor();
+      var lastHoveredNodeId;
     });
     var isLoaded = false;
     function createColor() {
@@ -44,7 +45,12 @@
       });
     }
 
+    function createBillnode(data ,textStatus ){
+      console.log(textStatus+ '  '+data[0].id)
+      var nodeData = data[1];
+      $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside',nodeData[0]);
 
+    }
     function createTree() {
       var treeData = $.parseJSON('${treeData}');
       console.log(treeData);
@@ -100,6 +106,7 @@
             $("#" + newid).append('[+]');
 
             $("#" + newid).click(function() {
+              $("#bill-form").dialog ("open");
               var node = $('#treeDiv .jstree-hovered').parent('li');
               console.log('plus cliked on node = ' + node.attr("id") + ' named ' + node.text())
             });
@@ -126,6 +133,8 @@
       tree.bind("hover_node.jstree", function (e, d) {
         var pid = d.rslt.obj.attr("id") + "p";
         $("#" + pid).animate().css({display: "block"})
+        lastHoveredNodeId = d.rslt.obj.attr("id");
+        $("#categoryb").val(lastHoveredNodeId);
 //          d.rslt.obj.css("background-color", d.rslt.obj.attr("color"));
       });
       tree.bind("dehover_node.jstree", function (e, d) {
@@ -139,7 +148,7 @@
           d.rslt.obj.css("background-color", "red");
           var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
           var sid = d.rslt.obj.attr("id");
-          var stype = d.rslt.obj.attr("type") ;
+          var stype = d.rslt.obj.attr("type");
           jQuery.ajax({
             url: 'treeCheck',
             type: "POST",
@@ -155,7 +164,7 @@
       });
 
       tree.bind("create.jstree", function(event, data) {
-        alert(data.rslt.obj.attr("id") + "  " + $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id")));
+//        alert(data.rslt.obj.attr("id") + "  " + $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id")));
       });
 
       tree.bind("select_node.jstree", function (e, d) {
@@ -181,16 +190,23 @@
         width: 350,
         modal: true
       });
+      $("#bill-form").dialog({
+            autoOpen: false,
+            height: 400,
+            width: 350,
+            modal: true
+          });
     }
+
 
     function closeDialog() {
       $("#dialog-form").dialog("close");
       $("#name").val('');
     }
 
-     function closeBillDialog() {
+    function closeBillDialog() {
+
       $("#bill-form").dialog("close");
-      $("#name").val('');
     }
 
     function drawCalendar() {
@@ -300,16 +316,16 @@
         <g:renderErrors bean="${billInstance}" as="list"/>
       </div>
     </g:hasErrors>
-    <g:formRemote name="createBillForm" method="post" url="[action: 'addBill']" onComplete="closeBillDialog(); ">
+    <g:formRemote name="createBillForm"    url="[action: 'addBill']" onSuccess="createBillnode(data,textStatus);" onComplete="closeBillDialog()"  >
       <div class="dialog">
         <table>
           <tbody>
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="name"><g:message code="bill.name.label" default="Name"/></label>
+              <label for="billName"><g:message code="bill.name.label" default="Name"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'name', 'errors')}">
-              <g:textField id="name" name="name" value="${billInstance?.name}"/>
+              <g:textField id="billName" name="name" value="${billInstance?.name}"/>
             </td>
           </tr>
 
@@ -319,19 +335,27 @@
               <label for="currency"><g:message code="bill.currency.label" default="Currency"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'currency', 'errors')}">
-              <g:select name="bill.id" from="${domain.Currency.list()}" optionKey="id" value="${billInstance?.currency?.id}"/>
+              <g:select name="currency" from="${domain.Currency.list()}" optionKey="id" value="${billInstance?.currency?.id}"/>
             </td>
           </tr>
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="name"><g:message code="bill.balance.label" default="Balance"/></label>
+              <label for="balance"><g:message code="bill.balance.label" default="Balance"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'balance', 'errors')}">
               <g:textField id="balance" name="balance" value="${billInstance?.name}"/>
             </td>
           </tr>
-
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="icon"><g:message code="bill.ico.label" default="Icon"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'ico', 'errors')}">
+              <g:textField id="icon" name="ico" value="${billInstance?.ico}"/>
+            </td>
+          </tr>
+           <g:hiddenField id="categoryb" name="categoryb" />
           <div class="buttons">
             <span class="button"><g:actionSubmit class="save" action="addBill" value="${message(code: 'default.button.save.label', default: 'Save')}"/></span>
           </div>
@@ -362,48 +386,48 @@
           </tr>
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="isRepeatable"><g:message code="operation.isRepeatable.label" default="Is Repeatable"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isRepeatable', 'errors')}">--}%
-              %{--<g:checkBox name="isRepeatable" value="${operationInstance?.isRepeatable}"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="isRepeatable"><g:message code="operation.isRepeatable.label" default="Is Repeatable"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isRepeatable', 'errors')}">--}%
+          %{--<g:checkBox name="isRepeatable" value="${operationInstance?.isRepeatable}"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="isCommitted"><g:message code="operation.isCommitted.label" default="Is Committed"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isCommitted', 'errors')}">--}%
-              %{--<g:checkBox name="isCommitted" value="${operationInstance?.isCommitted}"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="isCommitted"><g:message code="operation.isCommitted.label" default="Is Committed"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isCommitted', 'errors')}">--}%
+          %{--<g:checkBox name="isCommitted" value="${operationInstance?.isCommitted}"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="note"><g:message code="operation.note.label" default="Note"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'note', 'errors')}">--}%
-              %{--<g:select name="note.id" from="${domain.Note.list()}" optionKey="id" value="${operationInstance?.note?.id}" noSelection="['null': '']"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="note"><g:message code="operation.note.label" default="Note"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'note', 'errors')}">--}%
+          %{--<g:select name="note.id" from="${domain.Note.list()}" optionKey="id" value="${operationInstance?.note?.id}" noSelection="['null': '']"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="period"><g:message code="operation.period.label" default="Period"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'period', 'errors')}">--}%
-              %{--<g:textField name="period" value="${fieldValue(bean: operationInstance, field: 'period')}"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="period"><g:message code="operation.period.label" default="Period"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'period', 'errors')}">--}%
+          %{--<g:textField name="period" value="${fieldValue(bean: operationInstance, field: 'period')}"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="times"><g:message code="operation.times.label" default="Times"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'times', 'errors')}">--}%
-              %{--<g:textField name="times" value="${fieldValue(bean: operationInstance, field: 'times')}"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="times"><g:message code="operation.times.label" default="Times"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'times', 'errors')}">--}%
+          %{--<g:textField name="times" value="${fieldValue(bean: operationInstance, field: 'times')}"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           <tr class="prop">
@@ -435,7 +459,7 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="bill"><g:message code="operation.bill.label" default="Bill"/></label>
+              <label for="bill.id"><g:message code="operation.bill.label" default="Bill"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'bill', 'errors')}">
               <g:select name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
@@ -444,7 +468,7 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="category"><g:message code="operation.category.label" default="Category"/></label>
+              <label for="category.id"><g:message code="operation.category.label" default="Category"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'category', 'errors')}">
               <g:select name="category.id" from="${domain.CategoryOp.list()}" optionKey="id" value="${operationInstance?.category?.id}"/>
@@ -452,21 +476,21 @@
           </tr>
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="isChecked"><g:message code="operation.isChecked.label" default="Is Checked"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isChecked', 'errors')}">--}%
-              %{--<g:checkBox name="isChecked" value="${operationInstance?.isChecked}"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="isChecked"><g:message code="operation.isChecked.label" default="Is Checked"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isChecked', 'errors')}">--}%
+          %{--<g:checkBox name="isChecked" value="${operationInstance?.isChecked}"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="user"><g:message code="operation.user.label" default="User"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'user', 'errors')}">--}%
-              %{--<g:select name="user.id" from="${domain.auth.SecUser.list()}" optionKey="id" value="${operationInstance?.user?.id}"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="user"><g:message code="operation.user.label" default="User"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'user', 'errors')}">--}%
+          %{--<g:select name="user.id" from="${domain.auth.SecUser.list()}" optionKey="id" value="${operationInstance?.user?.id}"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
           <div class="buttons">
             <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.update.label', default: 'Update')}"/></span>

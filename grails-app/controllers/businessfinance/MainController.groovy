@@ -1,10 +1,8 @@
 package businessfinance
 
-import domain.Bill
-import domain.CategoryOp
-import domain.Operation
 import grails.converters.JSON
 import java.text.SimpleDateFormat
+import domain.*
 
 class MainController {
   static navigation = [
@@ -17,11 +15,12 @@ class MainController {
   def categoryService
 
   def index = {
-    println         request.getQueryString()
     def operationInstance = new Operation()
     operationInstance.properties = params
+    def billInstance = new Bill()
+    billInstance.properties = params
     if (springSecurityService.getCurrentUser())
-      [treeData: categoryService.getCategoryTree() as JSON, operationInstance: operationInstance]
+      [treeData: categoryService.getCategoryTree() as JSON, operationInstance: operationInstance, billInstance: billInstance]
     else {  // goes as demonstration tree data?
       def treeData = [
               [data: 'ExCateg1', attr: [id: '23'], children: [[[data: 'Bill1', attr: [id: '26']],
@@ -40,7 +39,8 @@ class MainController {
             [type: 'string', name: 'Task', data: 'Work'],
             [type: 'rf', name: 're', data: 'zo']
     ]
-    render tdata as JSON
+    def answer =  [id: '4' ]
+    render  answer as JSON
   }
 
   def addEvent = {
@@ -56,11 +56,24 @@ class MainController {
     operation.type = params.type.toInteger()
     operation.user = springSecurityService.getCurrentUser()
     if (!operation.save()) {
-       operation.errors.each {
-            println it
-       }
+      operation.errors.each {
+        println it
+      }
     }
     render('')
+  }
+  def addBill = {
+//    println params
+    def ctgId = params.categoryb[1..-1]
+    def billInstance = new Bill(name: params.name, balance: params.balance.toFloat(),user : springSecurityService.getCurrentUser(),
+                                currency: Currency.findById(params.currency), category : CategoryBill.findById(ctgId), isChecked: true,)
+    if (billInstance.save()) {
+      flash.message = "${message(code: 'bill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
+      println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
+    }
+    def answer =  categoryService.parseBillById(billInstance.id)
+
+    render answer as JSON
   }
 
   def deleteEvent = {
@@ -91,7 +104,7 @@ class MainController {
 //    def billIds = categoryService.usersSelectedBillsIds()
 //    println opsIds + ' ' +  billIds
     Operation.list().each {o ->
-      if (opsIds.contains(o.id) ) {
+      if (opsIds.contains(o.id)) {
         def map = [:]
         map.put('id', o.id)
         map.put('title', o.name)

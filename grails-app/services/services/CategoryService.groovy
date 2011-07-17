@@ -171,7 +171,18 @@ class CategoryService {
     ops.each { o ->    opsIds.add(o.id)}
     opsIds
   }
-
+  def parseBillById(def id){
+    def list = [[id : id] ]
+      def bill =  Bill.findById(id)
+      def data = []
+      def inn = [:]
+      inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
+      inn.put('attr', [id: 'b' + bill.id, type: 'opr', chkd: bill.isChecked, color: bill.category.color])
+      inn.put('metadata', [id: bill.id])
+      data.add(inn)
+      list.add(data)
+      list
+  }
   def initRegisteredUser(def user) {
     // TODO inject from bootsra4
     //Creating categories
