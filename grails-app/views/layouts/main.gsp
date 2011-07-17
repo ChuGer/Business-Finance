@@ -22,16 +22,16 @@
   <div style="display:inline-block; float: right; margin-top:20px;">
   <div style="display:inline-block;">
     <sec:ifNotLoggedIn>
-    <g:link controller="login" action="auth">[=Login=]</g:link>
+    <g:link controller="login" action="auth"><g:message code="main.login"/> </g:link>
     </sec:ifNotLoggedIn>
     <sec:ifAllGranted roles="ROLE_USER">
       <h2><sec:username/></h2>
       </div>
       <div style="display:inline-block;">
-        <g:link controller="logout">[=Logout=]</g:link>
+        <g:link controller="logout"><g:message code="main.logout"/></g:link>
       </div>
       <div id="lang" style="display:inline-block;">
-        <langs:selector langs="  en_US, ru"/>
+        <langs:selector langs="en_US, ru"/>
       </div>
     </sec:ifAllGranted>
   </div>

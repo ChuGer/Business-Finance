@@ -18,14 +18,16 @@
   <script type="text/javascript" src="../js/utils.js"></script>
   <script type="text/javascript" src="../js/layout.js"></script>
   <script type="text/javascript" src="../js/colorpicker.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-ru.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-en-US.js"></script>
   <script type="text/javascript">
 
     $(function() {
       createTree();
-      drawCalendar();
-      dialog();
+      createCalendars();
       createColor();
     });
+
     var isLoaded = false;
     function createColor() {
       $('#colorpickerHolder2').ColorPicker({
@@ -42,7 +44,6 @@
         widt = !widt;
       });
     }
-
 
     function createTree() {
       var treeData = $.parseJSON('${treeData}');
@@ -137,7 +138,7 @@
           d.rslt.obj.css("background-color", "red");
           var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
           var sid = d.rslt.obj.attr("id");
-          var stype = d.rslt.obj.attr("type") ;
+          var stype = d.rslt.obj.attr("type");
           jQuery.ajax({
             url: 'treeCheck',
             type: "POST",
@@ -170,10 +171,21 @@
       $("#treeDiv").jstree("check_all");
     }
 
-    function dialog() {
-      $("#startDate").datepicker();
-      $("#endDate").datepicker();
+    function createCalendars() {
+      $.getJSON("locale", function(json) {
+        regional = $.datepicker.regional[json.locale];
+        $("#startDate").datepicker(regional);
+        $("#endDate").datepicker(regional);
+        drawCalendar(regional);
+      });
+
       $("#dialog-form").dialog({
+        autoOpen: false,
+        height: 400,
+        width: 350,
+        modal: true
+      });
+      $("#bill-form").dialog({
         autoOpen: false,
         height: 400,
         width: 350,
@@ -186,14 +198,18 @@
       $("#name").val('');
     }
 
-     function closeBillDialog() {
+    function closeBillDialog() {
       $("#bill-form").dialog("close");
       $("#name").val('');
     }
 
-    function drawCalendar() {
+    function refetchEvents() {
+      $('#calendar').fullCalendar('refetchEvents');
+    }
+
+    function drawCalendar(regional) {
+
       var calendar = $('#calendar');
-      calendar.html('');
       calendar.fullCalendar({
         header: {
           left: '',
@@ -202,22 +218,16 @@
         },
         selectable: true,
         selectHelper: true,
+        monthNames: regional.monthNames,
+        monthNamesShort: regional.monthNamesShort,
+        dayNames: regional.dayNames,
+        dayNamesShort: regional.dayNamesShort,
+        firstDay: 1,
+
         select: function(start, end, allDay) {
           $("#startDate").val($.format.date(start, "MM/dd/yyyy"));
           $("#endDate").val($.format.date(end, "MM/dd/yyyy"));
           $("#dialog-form").dialog("open");
-//          var title = prompt('Title:');
-//          if (title) {
-//            calendar.fullCalendar('renderEvent',
-//            {
-//              title: title,
-//              start: start,
-//              end: end,
-//              allDay: allDay
-//            },
-//                    true // make the event "stick"
-//                    );
-//          }
           calendar.fullCalendar('unselect');
         },
         eventClick:  function(event, jsEvent, view) {
@@ -231,9 +241,9 @@
               calendar.fullCalendar('removeEvents', event.id);
             }
           });
-          if (!confirm("Want to revert deleted event?")) {
-            revertFunc();
-          }
+//          if (!confirm("Want to revert deleted event?")) {
+//            revertFunc();
+//          }
         },
         eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
           console.log(event.id + " " + event.title + " was moved " +
@@ -264,6 +274,8 @@
         editable: true,
         events: 'events'
       });
+
+
     }
 
   </script>
@@ -276,15 +288,17 @@
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-  <div id="customWidget">
-    <div id="colorSelector2"></div>
-    <div id="colorpickerHolder2"></div>
-  </div>
+%{--<div id="customWidget">--}%
+%{--<div id="colorSelector2"></div>--}%
+%{--<div id="colorpickerHolder2"></div>--}%
+%{--</div>--}%
   <table>
     <tr>
       <td width="200px;">
         <div id="treeDiv"></div>
-        <button id="selectAll" onclick="selectAll();">selectAll</button>
+        <button id="selectAll" onclick="selectAll();">
+          <g:message code="default.button.selectAll"/>
+        </button>
       </td>
       <td>
         <div style="width:800px;" id="calendar"></div>
@@ -314,7 +328,7 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="currency"><g:message code="bill.currency.label" default="Currency"/></label>
+              <label for="bill.id"><g:message code="bill.currency.label" default="Currency"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'currency', 'errors')}">
               <g:select name="bill.id" from="${domain.Currency.list()}" optionKey="id" value="${billInstance?.currency?.id}"/>
@@ -345,7 +359,7 @@
         <g:renderErrors bean="${operationInstance}" as="list"/>
       </div>
     </g:hasErrors>
-    <g:formRemote name="createForm" method="post" url="[action: 'addEvent']" onComplete="closeDialog();drawCalendar();">
+    <g:formRemote name="createForm" method="post" url="[action: 'addEvent']" onComplete="closeDialog();refetchEvents();">
       <div class="dialog">
         <table>
           <tbody>
@@ -355,53 +369,84 @@
               <label for="name"><g:message code="operation.name.label" default="Name"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'name', 'errors')}">
-              <g:textField name="name" value="${operationInstance?.name}"/>
+              <g:textField id="name" name="name" value="${operationInstance?.name}"/>
+            </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="bill.id"><g:message code="operation.bill.label" default="Bill"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'bill', 'errors')}">
+              <g:select name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
+            </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="sum"><g:message code="operation.sum.label" default="Sum"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'sum', 'errors')}">
+              <g:textField name="sum" value="${fieldValue(bean: operationInstance, field: 'sum')}"/>
+            </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="type"><g:message code="operation.type.label" default="Type"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
+              <g:radioGroup name="type" labels="['income','outcome']" values="[0,1]" value="${fieldValue(bean: operationInstance, field: 'type')}">
+                <div style="display:inline-block;">
+                  <p>${it.radio} <g:message code="operation.type.${it.label}"/></p>
+                </div>
+              </g:radioGroup>
             </td>
           </tr>
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="isRepeatable"><g:message code="operation.isRepeatable.label" default="Is Repeatable"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isRepeatable', 'errors')}">--}%
-              %{--<g:checkBox name="isRepeatable" value="${operationInstance?.isRepeatable}"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="isRepeatable"><g:message code="operation.isRepeatable.label" default="Is Repeatable"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isRepeatable', 'errors')}">--}%
+          %{--<g:checkBox name="isRepeatable" value="${operationInstance?.isRepeatable}"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="isCommitted"><g:message code="operation.isCommitted.label" default="Is Committed"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isCommitted', 'errors')}">--}%
-              %{--<g:checkBox name="isCommitted" value="${operationInstance?.isCommitted}"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="isCommitted"><g:message code="operation.isCommitted.label" default="Is Committed"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isCommitted', 'errors')}">--}%
+          %{--<g:checkBox name="isCommitted" value="${operationInstance?.isCommitted}"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="note"><g:message code="operation.note.label" default="Note"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'note', 'errors')}">--}%
-              %{--<g:select name="note.id" from="${domain.Note.list()}" optionKey="id" value="${operationInstance?.note?.id}" noSelection="['null': '']"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="note"><g:message code="operation.note.label" default="Note"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'note', 'errors')}">--}%
+          %{--<g:select name="note.id" from="${domain.Note.list()}" optionKey="id" value="${operationInstance?.note?.id}" noSelection="['null': '']"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="period"><g:message code="operation.period.label" default="Period"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'period', 'errors')}">--}%
-              %{--<g:textField name="period" value="${fieldValue(bean: operationInstance, field: 'period')}"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="period"><g:message code="operation.period.label" default="Period"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'period', 'errors')}">--}%
+          %{--<g:textField name="period" value="${fieldValue(bean: operationInstance, field: 'period')}"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="times"><g:message code="operation.times.label" default="Times"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'times', 'errors')}">--}%
-              %{--<g:textField name="times" value="${fieldValue(bean: operationInstance, field: 'times')}"/>--}%
-            %{--</td>--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="times"><g:message code="operation.times.label" default="Times"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'times', 'errors')}">--}%
+          %{--<g:textField name="times" value="${fieldValue(bean: operationInstance, field: 'times')}"/>--}%
+          %{--</td>--}%
           %{--</tr>--}%
 
           <tr class="prop">
@@ -424,48 +469,13 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="type"><g:message code="operation.type.label" default="Type"/></label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
-              <g:select name="type" from="${operationInstance.constraints.type.inList}" value="${fieldValue(bean: operationInstance, field: 'type')}" valueMessagePrefix="operation.type"/>
-            </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="bill"><g:message code="operation.bill.label" default="Bill"/></label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'bill', 'errors')}">
-              <g:select name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
-            </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="category"><g:message code="operation.category.label" default="Category"/></label>
+              <label for="category.id"><g:message code="operation.category.label" default="Category"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'category', 'errors')}">
               <g:select name="category.id" from="${domain.CategoryOp.list()}" optionKey="id" value="${operationInstance?.category?.id}"/>
             </td>
           </tr>
 
-          %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="isChecked"><g:message code="operation.isChecked.label" default="Is Checked"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isChecked', 'errors')}">--}%
-              %{--<g:checkBox name="isChecked" value="${operationInstance?.isChecked}"/>--}%
-            %{--</td>--}%
-          %{--</tr>--}%
-
-          %{--<tr class="prop">--}%
-            %{--<td valign="top" class="name">--}%
-              %{--<label for="user"><g:message code="operation.user.label" default="User"/></label>--}%
-            %{--</td>--}%
-            %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'user', 'errors')}">--}%
-              %{--<g:select name="user.id" from="${domain.auth.SecUser.list()}" optionKey="id" value="${operationInstance?.user?.id}"/>--}%
-            %{--</td>--}%
-          %{--</tr>--}%
           <div class="buttons">
             <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.update.label', default: 'Update')}"/></span>
             <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/></span>
