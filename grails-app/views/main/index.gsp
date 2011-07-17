@@ -21,6 +21,7 @@
   <script type="text/javascript">
 
     $(function() {
+
       createTree();
       drawCalendar();
       dialog();
@@ -46,6 +47,7 @@
 
     function createTree() {
       var treeData = $.parseJSON('${treeData}');
+      console.log(treeData);
       var tree = $("#treeDiv").jstree({
         "json_data" : {"data" : [treeData]},
         "plugins" : [ "themes", "checkbox", "json_data", "ui" ,"contextmenu","crrm" , "hotkeys"],
@@ -115,7 +117,7 @@
           jQuery.ajax({
             url: 'treeCheck',
             type: "POST",
-            data: {name: sname, id: sid, type: stype},
+            data: {name: sname, id: sid, type: stype, ch : 1},
             dataType: "json",
             complete: drawCalendar()
           });
@@ -141,7 +143,7 @@
           jQuery.ajax({
             url: 'treeCheck',
             type: "POST",
-            data: {name: sname, id: sid, type: stype},
+            data: {name: sname, id: sid, type: stype, ch : 0},
             dataType: "json",
             complete: drawCalendar()
           });

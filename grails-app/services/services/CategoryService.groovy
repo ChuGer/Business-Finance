@@ -110,17 +110,15 @@ class CategoryService {
     def childs2 = parseCtgOData(c)
     inn2.put('children', childs2)
     data.add(inn2)
-    println data
     data
   }
 
   def checkCtgB(CategoryBill ctg) {
-
     ctg.bills?.each { bill ->
       bill.isChecked = bill.category.isChecked
     }
     ctg.categories?.each { bill ->
-      ctg.isChecked = bill.category.isChecked
+      bill.isChecked = bill.category.isChecked
       checkCtgB(bill)
     }
   }
@@ -130,7 +128,7 @@ class CategoryService {
       bill.isChecked = ctg.isChecked
     }
     ctg.categories.each { bill ->
-      ctg.isChecked = bill.category.isChecked
+      bill.isChecked = bill.category.isChecked
       checkCtgO(bill)
     }
   }
@@ -147,15 +145,15 @@ class CategoryService {
     }
     else if (params.type == 'ctb') {
       def ctg = CategoryBill.findById(params.id[1..-1])
-      ctg.isChecked = !ctg.isChecked
+      boolean checked =  params.ch == '1' ?: false
+      ctg.isChecked =  checked
       checkCtgB(ctg)
     }
     else if (params.type == 'cto') {
       def ctg = CategoryOp.findById(params.id[1..-1])
-      ctg.isChecked = !ctg.isChecked
-      ctg.operations.each { bill ->
-        bill.isChecked = ctg.isChecked
-      }
+      boolean checked =  params.ch == '1' ?: false
+      ctg.isChecked =  checked
+      checkCtgO(ctg)
     }
   }
 
@@ -163,16 +161,16 @@ class CategoryService {
   def usersSelectedBillsIds() {
     def billsIds = []
     SecUser user = springSecurityService.getCurrentUser()
-    List<Bill> bills = Bill.findAllByUser(user)
-    bills.each { b ->  if(b.isChecked) billsIds.add(b.id)}
+    List<Bill> bills = Bill.findAllByUserAndIsChecked (user, true)
+    bills.each { b ->    billsIds.add(b.id)}
     billsIds
   }
 
   def usersSelectedOpsIds() {
     def opsIds = []
     SecUser user = springSecurityService.getCurrentUser()
-    List<Operation> ops = Operation.findAllByUser(user)
-    ops.each { o ->  if(o.isChecked) opsIds.add(o.id)}
+    List<Operation> ops = Operation.findAllByUserAndIsChecked (user, true)
+    ops.each { o ->    opsIds.add(o.id)}
     opsIds
   }
 
