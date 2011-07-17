@@ -1,5 +1,6 @@
 package domain.auth
 
+import domain.Bill
 import domain.Operation
 import domain.Settings
 
@@ -17,7 +18,7 @@ class SecUser {
   domain.CategoryBill categoriesB
   domain.CategoryOp  categoriesO
   static hasMany =
-  [
+  [       bills: Bill,
           operations: Operation
   ]
   static constraints = {

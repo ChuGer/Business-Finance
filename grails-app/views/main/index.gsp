@@ -43,7 +43,7 @@
         widt = !widt;
       });
     }
-    ;
+
 
     function createTree() {
       var treeData = $.parseJSON('${treeData}');
@@ -94,12 +94,12 @@
           if ($(this).attr("type").indexOf('ct') === 0) {
             var newid = $(this).attr("id") + "p";
 //          var el = ($(this).attr("type") == "bill") ? $('#' + $(this).attr("id") + ' :last-child') : $('#' + $(this).attr("id") + ' :first-child')
-            var el = $('#' + $(this).attr("id")).children('a')
+            var el = $('#' + $(this).attr("id")).children('a');
             el.append("<div id=" + newid + " style='  width: 25px; visibility: hidden; background-color: lime; '></div>");
             $("#" + newid).append('[+]');
 
             $("#" + newid).click(function() {
-              var node = $('#treeDiv .jstree-hovered').parent('li')
+              var node = $('#treeDiv .jstree-hovered').parent('li');
               console.log('plus cliked on node = ' + node.attr("id") + ' named ' + node.text())
             });
           }
@@ -109,10 +109,10 @@
 
       tree.bind("check_node.jstree", function (e, d) {
         if (isLoaded) {
-          d.rslt.obj.css("background-color", "green")
+          d.rslt.obj.css("background-color", "green");
           var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
-          var sid = d.rslt.obj.attr("id")
-          var stype = d.rslt.obj.attr("type")
+          var sid = d.rslt.obj.attr("id");
+          var stype = d.rslt.obj.attr("type");
           jQuery.ajax({
             url: 'treeCheck',
             type: "POST",
@@ -129,16 +129,16 @@
       });
       tree.bind("dehover_node.jstree", function (e, d) {
         var pid = d.rslt.obj.attr("id") + "p";
-        $("#" + pid).animate().css({visibility: "hidden"})
+        $("#" + pid).animate().css({visibility: "hidden"});
 
 //          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
       });
       tree.bind("uncheck_node.jstree", function (e, d) {
         if (isLoaded) {
-          d.rslt.obj.css("background-color", "red")
+          d.rslt.obj.css("background-color", "red");
           var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
-          var sid = d.rslt.obj.attr("id")
-          var stype = d.rslt.obj.attr("type")
+          var sid = d.rslt.obj.attr("id");
+          var stype = d.rslt.obj.attr("type") ;
           jQuery.ajax({
             url: 'treeCheck',
             type: "POST",
@@ -184,6 +184,11 @@
 
     function closeDialog() {
       $("#dialog-form").dialog("close");
+      $("#name").val('');
+    }
+
+     function closeBillDialog() {
+      $("#bill-form").dialog("close");
       $("#name").val('');
     }
 
@@ -289,15 +294,46 @@
   </table>
 
   <div id="bill-form" title="<g:message code="bill.create"/>">
-    <g:hasErrors bean="${operationInstance}">
+    <g:hasErrors bean="${billInstance}">
       <div class="errors">
-        <g:renderErrors bean="${operationInstance}" as="list"/>
+        <g:renderErrors bean="${billInstance}" as="list"/>
       </div>
     </g:hasErrors>
-    <g:formRemote name="createBillForm" method="post" url="[action: 'addBill']" onComplete="closeDialog();drawCalendar();">
+    <g:formRemote name="createBillForm" method="post" url="[action: 'addBill']" onComplete="closeBillDialog(); ">
       <div class="dialog">
         <table>
           <tbody>
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="name"><g:message code="bill.name.label" default="Name"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'name', 'errors')}">
+              <g:textField id="name" name="name" value="${billInstance?.name}"/>
+            </td>
+          </tr>
+
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="currency"><g:message code="bill.currency.label" default="Currency"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'currency', 'errors')}">
+              <g:select name="bill.id" from="${domain.Currency.list()}" optionKey="id" value="${billInstance?.currency?.id}"/>
+            </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="name"><g:message code="bill.balance.label" default="Balance"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'balance', 'errors')}">
+              <g:textField id="balance" name="balance" value="${billInstance?.name}"/>
+            </td>
+          </tr>
+
+          <div class="buttons">
+            <span class="button"><g:actionSubmit class="save" action="addBill" value="${message(code: 'default.button.save.label', default: 'Save')}"/></span>
+          </div>
           </tbody>
         </table>
       </div>

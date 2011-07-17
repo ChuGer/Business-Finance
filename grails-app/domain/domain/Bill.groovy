@@ -1,4 +1,7 @@
 package domain
+
+import domain.auth.SecUser
+
 class Bill {
 
   String name
@@ -6,7 +9,7 @@ class Bill {
   Currency currency
   Boolean isHidden
   Boolean isChecked
-  static belongsTo = [ category:CategoryBill ]
+  static belongsTo = [ category:CategoryBill , user : SecUser  ]
   static hasMany = [operations: Operation]
   static constraints = {
     name()

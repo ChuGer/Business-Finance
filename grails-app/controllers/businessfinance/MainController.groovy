@@ -16,6 +16,7 @@ class MainController {
   def categoryService
 
   def index = {
+    println  categoryService.usersSelectedBillsIds()
 //    println g.message(code: "menu.main.title", null, default: "Missing message", encodeAs: "HTML")
     if (springSecurityService.getCurrentUser())
     [treeData: categoryService.getCategoryTree() as JSON]

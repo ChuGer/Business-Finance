@@ -12,6 +12,8 @@ class CategoryService {
     def inn = [:]
     inn.put('data', bill.name)
     inn.put('attr', [id: 'o' + bill.id, type: 'opr', chkd: bill.isChecked, color: bill.category.color])
+    inn.put('metadata', [id: bill.id])
+    inn.put('icon', '../images/treei/script-office.png')
     data.add(inn)
     data
   }
@@ -21,6 +23,7 @@ class CategoryService {
     def inn = [:]
     inn.put('data', bill.name)
     inn.put('attr', [id: 'b' + bill.id, type: 'bil', chkd: bill.isChecked, color: bill.category.color])
+    inn.put('icon', '../images/treei/script-office.png')
     data.add(inn)
     data
   }
@@ -107,9 +110,31 @@ class CategoryService {
     def childs2 = parseCtgOData(c)
     inn2.put('children', childs2)
     data.add(inn2)
-//    println data
+    println data
     data
   }
+
+  def checkCtgB(CategoryBill ctg) {
+
+    ctg.bills?.each { bill ->
+      bill.isChecked = bill.category.isChecked
+    }
+    ctg.categories?.each { bill ->
+      ctg.isChecked = bill.category.isChecked
+      checkCtgB(bill)
+    }
+  }
+
+  def checkCtgO(CategoryOp ctg) {
+    ctg.operations.each { bill ->
+      bill.isChecked = ctg.isChecked
+    }
+    ctg.categories.each { bill ->
+      ctg.isChecked = bill.category.isChecked
+      checkCtgO(bill)
+    }
+  }
+
 
   def persistCheckEvent(def params) {
     if (params.type == 'bil') {
@@ -123,9 +148,7 @@ class CategoryService {
     else if (params.type == 'ctb') {
       def ctg = CategoryBill.findById(params.id[1..-1])
       ctg.isChecked = !ctg.isChecked
-      ctg.bills.each { bill ->
-        bill.isChecked = ctg.isChecked
-      }
+      checkCtgB(ctg)
     }
     else if (params.type == 'cto') {
       def ctg = CategoryOp.findById(params.id[1..-1])
@@ -139,32 +162,22 @@ class CategoryService {
 
   def usersSelectedBillsIds() {
     def billsIds = []
-    def user = springSecurityService.getCurrentUser()
-    user?.categoriesB?.each {c ->
-      c.bills.each { bill ->
-        if (bill.isChecked) {
-          billsIds.add(bill.id)
-        }
-      }
-    }
+    SecUser user = springSecurityService.getCurrentUser()
+    List<Bill> bills = Bill.findAllByUser(user)
+    bills.each { b ->  if(b.isChecked) billsIds.add(b.id)}
     billsIds
   }
 
   def usersSelectedOpsIds() {
     def opsIds = []
-    def user = springSecurityService.getCurrentUser()
-    user?.categoriesO?.each {c ->
-      c.operations.each { bill ->
-        if (bill.isChecked) {
-          opsIds.add(bill.id)
-        }
-      }
-    }
+    SecUser user = springSecurityService.getCurrentUser()
+    List<Operation> ops = Operation.findAllByUser(user)
+    ops.each { o ->  if(o.isChecked) opsIds.add(o.id)}
     opsIds
   }
 
   def initRegisteredUser(def user) {
-
+     // TODO inject from bootsra4
     //Creating categories
     def ctg1 = new CategoryBill(name: 'Cards', isChecked: true, color: 'red',).save(failOnError: true)
     def ctg2 = new CategoryBill(name: 'Debentures', isChecked: true, color: 'magenta').save(failOnError: true)

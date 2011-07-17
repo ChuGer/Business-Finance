@@ -48,13 +48,13 @@ class BootStrap {
       def ctg7 = new CategoryOp(name: 'Pay2', isChecked: true, color: 'red').save(failOnError: true)
 
       //Creating Bills
-      def bill1 = new Bill(name: 'Card1', currency: cur1, balance: 1000, category: ctg1, isChecked: true).save(failOnError: true)
-      def bill2 = new Bill(name: 'Card2', currency: cur2, balance: 4040, category: ctg1, isChecked: true).save(failOnError: true)
-      def bill3 = new Bill(name: 'iCard', currency: cur2, balance: 4020, category: ctg1, isChecked: true).save(failOnError: true)
-      def bill4 = new Bill(name: 'bCard', currency: cur3, balance: 7000, category: ctg1, isChecked: true).save(failOnError: true)
-      def bill5 = new Bill(name: 'sCard', currency: cur2, balance: 9040, category: ctg1, isChecked: true).save(failOnError: true)
-      def bill6 = new Bill(name: 'Dep1', currency: cur3, balance: 1040, category: ctg1, isChecked: true).save(failOnError: true)
-      def bill7 = new Bill(name: 'Dep2', currency: cur1, balance:  40, category: ctg1, isChecked: true).save(failOnError: true)
+      def bill1 = new Bill(name: 'Card1', currency: cur1, balance: 1000, category: ctg1, isChecked: true, user : user).save(failOnError: true)
+      def bill2 = new Bill(name: 'Card2', currency: cur2, balance: 4040, category: ctg1, isChecked: true, user : user).save(failOnError: true)
+      def bill3 = new Bill(name: 'iCard', currency: cur2, balance: 4020, category: ctg1, isChecked: true, user : user).save(failOnError: true)
+      def bill4 = new Bill(name: 'bCard', currency: cur3, balance: 7000, category: ctg1, isChecked: true, user : user).save(failOnError: true)
+      def bill5 = new Bill(name: 'sCard', currency: cur2, balance: 9040, category: ctg1, isChecked: true, user : user).save(failOnError: true)
+      def bill6 = new Bill(name: 'Dep1', currency: cur3, balance: 1040, category: ctg1, isChecked: true, user : user).save(failOnError: true)
+      def bill7 = new Bill(name: 'Dep2', currency: cur1, balance:  40, category: ctg1, isChecked: true, user : user).save(failOnError: true)
 
       //Creating operations
       def op1 = new Operation(name: 'Колбасы', user: user, category: ctg7, type: 2, bill: bill1, startDate: new Date(111, 6, 7), endDate: new Date(111, 6, 10)).save(failOnError: true)
