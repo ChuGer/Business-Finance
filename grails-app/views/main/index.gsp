@@ -452,24 +452,6 @@
             <td valign="top" class="name">
               <label for="type"><g:message code="operation.type.label" default="Type"/></label>
             </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
-              <g:select name="type" from="${operationInstance.constraints.type.inList}" value="${fieldValue(bean: operationInstance, field: 'type')}" valueMessagePrefix="operation.type"/>
-            </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="bill.id"><g:message code="operation.bill.label" default="Bill"/></label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'bill', 'errors')}">
-              <g:select name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
-            </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="category.id"><g:message code="operation.category.label" default="Category"/></label>
-            </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'category', 'errors')}">
               <g:select name="category.id" from="${domain.CategoryOp.list()}" optionKey="id" value="${operationInstance?.category?.id}"/>
             </td>

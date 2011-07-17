@@ -14,24 +14,28 @@
   <img src="${resource(dir: 'images', file: 'spinner.gif')}" alt="${message(code: 'spinner.alt', default: 'Loading...')}"/>
 </div>
 <br/>
- <div id="lang" style=" float: right;">
-   <langs:selector langs="  en_US, ru" />
-  </div>
+
 <div id="menu">
-  <div style="width: 500px; float: left;">
+  <div style="display:inline-block;">
     <nav:render group="tabs"/>
   </div>
-  <div style="position: relative; float: right; margin:10px 0px;">
+  <div style="display:inline-block; float: right; margin-top:20px;">
+  <div style="display:inline-block;">
     <sec:ifNotLoggedIn>
-      <g:link controller="login" action="auth">[=Login=]</g:link>
+    <g:link controller="login" action="auth"><g:message code="main.login"/> </g:link>
     </sec:ifNotLoggedIn>
     <sec:ifAllGranted roles="ROLE_USER">
-      <h2><sec:username/></h2>  <g:link controller="logout">[=Logout=]</g:link>
+      <h2><sec:username/></h2>
+      </div>
+      <div style="display:inline-block;">
+        <g:link controller="logout"><g:message code="main.logout"/></g:link>
+      </div>
+      <div id="lang" style="display:inline-block;">
+        <langs:selector langs="en_US, ru"/>
+      </div>
     </sec:ifAllGranted>
   </div>
 </div>
-<div style="margin-top:50px;">
-  <g:layoutBody/>
-</div>
+<g:layoutBody/>
 </body>
 </html>

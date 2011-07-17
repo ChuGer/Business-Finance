@@ -16,7 +16,6 @@ class MainController {
 
   def index = {
     def operationInstance = new Operation()
-    operationInstance.properties = params
     def billInstance = new Bill()
     billInstance.properties = params
     if (springSecurityService.getCurrentUser())
@@ -55,6 +54,7 @@ class MainController {
     operation.category = CategoryOp.findById(params?.category?.id)
     operation.type = params.type.toInteger()
     operation.user = springSecurityService.getCurrentUser()
+    operation.sum = Float.parseFloat(params.sum)
     if (!operation.save()) {
       operation.errors.each {
         println it
@@ -101,20 +101,26 @@ class MainController {
   def events = {
     def data = []
     def opsIds = categoryService.usersSelectedOpsIds()
-//    def billIds = categoryService.usersSelectedBillsIds()
-//    println opsIds + ' ' +  billIds
+    def billIds = categoryService.usersSelectedBillsIds()
+    println opsIds + ' ' +  billIds
     Operation.list().each {o ->
-      if (opsIds.contains(o.id)) {
+      if (o.id in opsIds) {
         def map = [:]
         map.put('id', o.id)
         map.put('title', o.name)
-        map.put('start', o?.startDate)
+        map.put('start', o.startDate)
         map.put('end', o?.endDate)
-        map.put('allDay', false)
-        map.put('color', o?.bill?.category.color);
+        map.put('allDay', true)
+        map.put('color', o.category.color);
         data.add(map)
       }
     }
     render data as JSON
+  }
+
+  def locale = {
+    def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE';
+    def locale = [locale: code]
+    render locale as JSON
   }
 }

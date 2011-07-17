@@ -157,18 +157,20 @@ class CategoryService {
 
 
   def usersSelectedBillsIds() {
-    def billsIds = []
-    SecUser user = springSecurityService.getCurrentUser()
-    List<Bill> bills = Bill.findAllByUserAndIsChecked(user, true)
-    bills.each { b ->    billsIds.add(b.id)}
+    //TODO: SQL
+    Set billsIds = []
+    SecUser user = (SecUser)springSecurityService.getCurrentUser()
+    List<Bill> bills = Bill.findAllByUserAndIsChecked(user,true)
+    bills.each { b ->  billsIds.add(b.id)}
     billsIds
   }
 
   def usersSelectedOpsIds() {
-    def opsIds = []
-    SecUser user = springSecurityService.getCurrentUser()
-    List<Operation> ops = Operation.findAllByUserAndIsChecked(user, true)
-    ops.each { o ->    opsIds.add(o.id)}
+    //TODO: SQL
+    Set opsIds = []
+    SecUser user = (SecUser)springSecurityService.getCurrentUser()
+    List<Operation> ops = Operation.findAllByUserAndIsChecked(user,true)
+    ops.each { o -> opsIds.add(o.id)}
     opsIds
   }
   def parseBillById(def id){

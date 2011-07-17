@@ -3,11 +3,12 @@ package domain
 import domain.auth.SecUser
 
 class Operation {
-  static belongsTo = [ category:CategoryOp, user : SecUser ]
+  static belongsTo = [category: CategoryOp, user: SecUser]
   String name
   String ico = 'oprDef.png'
   Long period
   Long times
+  Float sum
   Date startDate
   Date endDate
   Boolean isChecked = true
@@ -19,16 +20,19 @@ class Operation {
   static hasOne = Note
   static constraints = {
     name(blank: false, unique: true)
-    isRepeatable(nullable: true)
-    isCommitted(nullable: true)
-    note(nullable: true)
-    period(nullable: true)
-    times(nullable: true)
+    bill()
+    sum(blank: false)
+    type()
     startDate(nullable: false)
     endDate(nullable: true)
-    type(inList: [0, 1])
+    note(nullable: true)
+    isRepeatable(nullable: true)
+    isCommitted(nullable: true)
+    period(nullable: true)
+    times(nullable: true)
   }
-  public String toString(){
+
+  public String toString() {
     "${name} ${startDate}-${endDate}"
   }
 }
