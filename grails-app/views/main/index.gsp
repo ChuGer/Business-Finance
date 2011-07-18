@@ -69,6 +69,8 @@
       $("#" + newcid).click(function() {
         $("#ctb-form").dialog("open");
       });
+
+          cel.css("background-color", node.attr("color"));
     }
     function createOprCategoryButtons(node) {
       //add bill button
@@ -90,6 +92,8 @@
       $("#" + newcid).click(function() {
         $("#cto-form").dialog("open");
       });
+      cel.css("background-color", node.attr("color"));
+
     }
 
     function createBillnode(data, textStatus) {
