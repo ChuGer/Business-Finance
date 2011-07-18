@@ -130,7 +130,6 @@ class MainController {
     def data = []
     def opsIds = categoryService.usersSelectedOpsIds()
     def billIds = categoryService.usersSelectedBillsIds()
-    println opsIds + ' ' +  billIds
     Operation.list().each {o ->
       if (o.id in opsIds) {
         def map = [:]

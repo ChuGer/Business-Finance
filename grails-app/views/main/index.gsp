@@ -18,14 +18,13 @@
   <script type="text/javascript" src="../js/utils.js"></script>
   <script type="text/javascript" src="../js/layout.js"></script>
   <script type="text/javascript" src="../js/colorpicker.js"></script>
-
-
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-ru.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-en-US.js"></script>
   <script type="text/javascript">
 
     $(function() {
       createTree();
-      drawCalendar();
-      dialog();
+      createCalendars();
       createColor();
       var lastHoveredNodeId;
     });
@@ -39,7 +38,7 @@
 //          $('#bilPicker').ColorPickerHide();
         }
       })
-       $('#oprPicker').ColorPicker({
+      $('#oprPicker').ColorPicker({
         flat : true,
         color: '#0000ff',
         onSubmit: function(hsb, hex, rgb) {
@@ -69,7 +68,7 @@
         $("#ctb-form").dialog("open");
       });
 
-          cel.css("background-color", node.attr("color"));
+      cel.css("background-color", node.attr("color"));
     }
     function createOprCategoryButtons(node) {
       //add bill button
@@ -108,7 +107,7 @@
     function createOprnode(data, textStatus) {
       var parentNodeId = '#d' + $("#crOprcid").val();
       var nodeData = data[1];
-      $("#treeDiv").jstree('create',  '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
+      $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
 
     }
     function createCtgOprnode(data, textStatus) {
@@ -259,9 +258,14 @@
       $("#treeDiv").jstree("check_all");
     }
 
-    function dialog() {
-      $("#startDate").datepicker();
-      $("#endDate").datepicker();
+    function createCalendars() {
+      $.getJSON("locale", function(json) {
+        regional = $.datepicker.regional[json.locale];
+        $("#startDate").datepicker(regional);
+        $("#endDate").datepicker(regional);
+        drawCalendar(regional);
+      });
+
       $("#opr-form").dialog({
         autoOpen: false,
         height: 400,
@@ -288,7 +292,6 @@
       });
     }
 
-
     function closeDialog() {
       $("#opr-form").dialog("close");
       $("#name").val('');
@@ -303,9 +306,8 @@
       $("#cto-form").dialog("close");
     }
 
-    function drawCalendar() {
+    function drawCalendar(regional) {
       var calendar = $('#calendar');
-      calendar.html('');
       calendar.fullCalendar({
         header: {
           left: '',
@@ -326,18 +328,6 @@
           $("#startDate").val($.format.date(start, "MM/dd/yyyy"));
           $("#endDate").val($.format.date(end, "MM/dd/yyyy"));
           $("#opr-form").dialog("open");
-//          var title = prompt('Title:');
-//          if (title) {
-//            calendar.fullCalendar('renderEvent',
-//            {
-//              title: title,
-//              start: start,
-//              end: end,
-//              allDay: allDay
-//            },
-//                    true // make the event "stick"
-//                    );
-//          }
           calendar.fullCalendar('unselect');
         },
         eventClick:  function(event, jsEvent, view) {
@@ -364,9 +354,6 @@
             data: {id: event.id, dayDelta: dayDelta},
             dataType: "json"
           });
-//          if (!confirm("Are you sure about this change?")) {
-//            revertFunc();
-//          }
         },
         eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
           console.log("The end date of " + event.title + "has been moved " +
@@ -377,9 +364,6 @@
             data: {id: event.id, dayDelta: dayDelta},
             dataType: "json"
           });
-//          if (!confirm("is this okay?")) {
-//            revertFunc();
-//          }
         },
         editable: true,
         events: 'events'
@@ -401,7 +385,9 @@
     <tr>
       <td width="200px;">
         <div id="treeDiv"></div>
-        <button id="selectAll" onclick="selectAll();">selectAll</button>
+         <button id="selectAll" onclick="selectAll();">
+           <g:message code="default.button.selectAll"/>
+         </button>
       </td>
       <td>
         <div style="width:800px;" id="calendar"></div>
@@ -541,12 +527,7 @@
             <td valign="top" class="name">
               <label for="oprPicker"><g:message code="ctgo.color.label" default="Color"/></label>
             </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
-              <g:radioGroup name="type" labels="['outcome','income']" values="[0,1]" value="${fieldValue(bean: operationInstance, field: 'type')}">
-                <div style="display:inline-block;">
-                  <p>${it.radio} <g:message code="operation.type.${it.label}"/></p>
-                </div>
-              </g:radioGroup>
+
             <td valign="top" class="value ${hasErrors(bean: ctgOInstance, field: 'color', 'errors')}">
               <g:hiddenField id="colorso" name="color"/>
               <div id="oprPicker"></div>
@@ -592,50 +573,18 @@
             </td>
           </tr>
 
-          %{--<tr class="prop">--}%
-          %{--<td valign="top" class="name">--}%
-          %{--<label for="isRepeatable"><g:message code="operation.isRepeatable.label" default="Is Repeatable"/></label>--}%
-          %{--</td>--}%
-          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isRepeatable', 'errors')}">--}%
-          %{--<g:checkBox name="isRepeatable" value="${operationInstance?.isRepeatable}"/>--}%
-          %{--</td>--}%
-          %{--</tr>--}%
-
-          %{--<tr class="prop">--}%
-          %{--<td valign="top" class="name">--}%
-          %{--<label for="isCommitted"><g:message code="operation.isCommitted.label" default="Is Committed"/></label>--}%
-          %{--</td>--}%
-          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isCommitted', 'errors')}">--}%
-          %{--<g:checkBox name="isCommitted" value="${operationInstance?.isCommitted}"/>--}%
-          %{--</td>--}%
-          %{--</tr>--}%
-
-          %{--<tr class="prop">--}%
-          %{--<td valign="top" class="name">--}%
-          %{--<label for="note"><g:message code="operation.note.label" default="Note"/></label>--}%
-          %{--</td>--}%
-          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'note', 'errors')}">--}%
-          %{--<g:select name="note.id" from="${domain.Note.list()}" optionKey="id" value="${operationInstance?.note?.id}" noSelection="['null': '']"/>--}%
-          %{--</td>--}%
-          %{--</tr>--}%
-
-          %{--<tr class="prop">--}%
-          %{--<td valign="top" class="name">--}%
-          %{--<label for="period"><g:message code="operation.period.label" default="Period"/></label>--}%
-          %{--</td>--}%
-          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'period', 'errors')}">--}%
-          %{--<g:textField name="period" value="${fieldValue(bean: operationInstance, field: 'period')}"/>--}%
-          %{--</td>--}%
-          %{--</tr>--}%
-
-          %{--<tr class="prop">--}%
-          %{--<td valign="top" class="name">--}%
-          %{--<label for="times"><g:message code="operation.times.label" default="Times"/></label>--}%
-          %{--</td>--}%
-          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'times', 'errors')}">--}%
-          %{--<g:textField name="times" value="${fieldValue(bean: operationInstance, field: 'times')}"/>--}%
-          %{--</td>--}%
-          %{--</tr>--}%
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="type"><g:message code="operation.type.label" default="Type"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
+              <g:radioGroup name="type" labels="['outcome','income']" values="[0,1]" value="${fieldValue(bean: operationInstance, field: 'type')}">
+                <div style="display:inline-block;">
+                  <p>${it.radio} <g:message code="operation.type.${it.label}"/></p>
+                </div>
+              </g:radioGroup>
+            </td>
+          </tr>
 
           <tr class="prop">
             <td valign="top" class="name">
@@ -664,23 +613,6 @@
             </td>
           </tr>
 
-          %{--<tr class="prop">--}%
-          %{--<td valign="top" class="name">--}%
-          %{--<label for="isChecked"><g:message code="operation.isChecked.label" default="Is Checked"/></label>--}%
-          %{--</td>--}%
-          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isChecked', 'errors')}">--}%
-          %{--<g:checkBox name="isChecked" value="${operationInstance?.isChecked}"/>--}%
-          %{--</td>--}%
-          %{--</tr>--}%
-
-          %{--<tr class="prop">--}%
-          %{--<td valign="top" class="name">--}%
-          %{--<label for="user"><g:message code="operation.user.label" default="User"/></label>--}%
-          %{--</td>--}%
-          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'user', 'errors')}">--}%
-          %{--<g:select name="user.id" from="${domain.auth.SecUser.list()}" optionKey="id" value="${operationInstance?.user?.id}"/>--}%
-          %{--</td>--}%
-          %{--</tr>--}%
           <g:hiddenField id="categoryb4" name="categoryb"/>
           <div class="buttons">
             <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.update.label', default: 'Update')}"/></span>

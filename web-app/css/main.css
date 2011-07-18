@@ -136,7 +136,6 @@ td.errors textarea {
 /* TABLES */
 
 table {
-    border: 1px solid #ccc;
     width: 100%
 }
 tr {
@@ -271,3 +270,4 @@ th.desc a {
     background: transparent url(../images/skin/database_save.png) 5px 50% no-repeat;
     padding-left: 28px;
 }
+
