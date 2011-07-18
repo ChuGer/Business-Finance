@@ -625,7 +625,7 @@
   </div>
 
 </div>
-<input type="text" maxlength="6" size="6" id="cpfR" value=""/>
+%{--<input type="text" maxlength="6" size="6" id="cpfR" value=""/>--}%
 
 </body>
 </html>
