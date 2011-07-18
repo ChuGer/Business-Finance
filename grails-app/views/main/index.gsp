@@ -18,6 +18,8 @@
   <script type="text/javascript" src="../js/utils.js"></script>
   <script type="text/javascript" src="../js/layout.js"></script>
   <script type="text/javascript" src="../js/colorpicker.js"></script>
+
+
   <script type="text/javascript">
 
     $(function() {
@@ -30,14 +32,22 @@
     });
     var isLoaded = false;
     function createColor() {
-      $('#cpfR').ColorPicker({
+      $('#bilPicker').ColorPicker({
+        flat : true,
+        color: '#0000ff',
         onSubmit: function(hsb, hex, rgb) {
-          $('#cpfR').val("#" + hex);
-          alert($('#cpfR').val());
-          $('#cpfR').css("background-color", "#" + hex);
-          $('#cpfR').ColorPickerHide();
+          $('#colorsb').val("#" + hex);
+//          $('#bilPicker').ColorPickerHide();
         }
       })
+       $('#oprPicker').ColorPicker({
+        flat : true,
+        color: '#0000ff',
+        onSubmit: function(hsb, hex, rgb) {
+          $('#colorso').val("#" + hex);
+        }
+      })
+
     }
     function createBillCategoryButtons(node) {
       //add bill button
@@ -263,14 +273,14 @@
       });
       $("#ctb-form").dialog({
         autoOpen: false,
-        height: 300,
-        width: 350,
+        height: 350,
+        width: 450,
         modal: true
       });
       $("#cto-form").dialog({
         autoOpen: false,
-        height: 300,
-        width: 350,
+        height: 350,
+        width: 450,
         modal: true
       });
     }
@@ -468,10 +478,11 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="cpf"><g:message code="ctgb.color.label" default="Color"/></label>
+              <label for="bilPicker"><g:message code="ctgb.color.label" default="Color"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: ctgBInstance, field: 'color', 'errors')}">
-              <g:textField id="cpf" name="color" value="${ctgBInstance?.color}"/>
+              <g:hiddenField id="colorsb" name="color"/>
+              <div id="bilPicker"></div>
             </td>
           </tr>
 
@@ -517,10 +528,11 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="ctgO.cpf"><g:message code="ctgo.color.label" default="Color"/></label>
+              <label for="oprPicker"><g:message code="ctgo.color.label" default="Color"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: ctgOInstance, field: 'color', 'errors')}">
-              <g:textField id="ctgO.cpf" name="color" value="${ctgOInstance?.color}"/>
+              <g:hiddenField id="colorso" name="color"/>
+              <div id="oprPicker"></div>
             </td>
           </tr>
 
@@ -665,6 +677,7 @@
 
 </div>
 <input type="text" maxlength="6" size="6" id="cpfR" value=""/>
+
 </body>
 </html>
 
