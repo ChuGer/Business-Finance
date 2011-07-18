@@ -14,8 +14,8 @@
   <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.2.custom.css"/>
 
   <script type="text/javascript">
-    google.load('visualization', '1', {packages: ['corechart']});
-    google.load('visualization', '1', {'packages':['annotatedtimeline']});
+    google.load('visualization', '1', {packages: ['corechart'], timeout: 5000});
+    google.load('visualization', '1', {packages: ['annotatedtimeline'], timeout: 5000});
   </script>
   <script type="text/javascript">
     $(function() {
@@ -30,7 +30,7 @@
     function drawLineChart() {
       // Parse JSON string to JSON object
       $.getJSON("lineChart", function(jsonData) {
-        var dataTable = createDataTableFromJSON(jsonData, [0,1,2]);
+        var dataTable = createDataTableFromJSON(jsonData);
         new google.visualization.AnnotatedTimeLine(document.getElementById('lineChart'))
                 .draw(dataTable, {displayAnnotations: true});
       })
@@ -38,27 +38,35 @@
 
     function drawPieChart() {
       $.getJSON("pieChart", function(jsonData) {
-      var dataTable = new google.visualization.DataTable(jsonData, 0.6);
-      // Create and draw the visualization.
-      new google.visualization.PieChart(document.getElementById('pieChart'))
-              .draw(dataTable, {title:"So, how was your day?", colors:['red','black','blue']});
+        var dataTable = new google.visualization.DataTable(jsonData.data, 0.6);
+
+        // Create and draw the visualization.
+        var pie = new google.visualization.PieChart(document.getElementById('pieChart'));
+        pie.draw(dataTable, {title: jsonData.title, colors: jsonData.colors, is3D: true});
+        google.visualization.events.addListener(pie, 'select', function() {
+          var selection = pie.getSelection();
+//          alert('You selected ' + selection[0].row);
+          $.getJSON('updatePie', {id: selection[0].row}, function() {
+            drawPieChart();
+          });
+        });
       })
     }
 
-    function createDataTableFromJSON(jsonData, columns) {
+    function createDataTableFromJSON(jsonData) {
       var table = new google.visualization.DataTable();
       table.addRows(jsonData[0].data.length);
       $.each(jsonData, function(i, item) {
-        if (columns.indexOf(i) != -1) {
-          table.addColumn(item.type, item.name);
-          $.each(item.data, function(j, cellValue) {
-            (cellValue instanceof Object && cellValue.length == 3) ? table.setValue(j, i, new Date(cellValue[0], cellValue[1], cellValue[2])) : table.setValue(j, i, cellValue);
-          });
-        }
+        table.addColumn(item.type, item.name);
+        $.each(item.data, function(j, cellValue) {
+          (cellValue instanceof Object && cellValue.length == 3) ? table.setValue(j, i, new Date(cellValue[0], cellValue[1], cellValue[2])) : table.setValue(j, i, cellValue);
+        });
       });
       return table;
     }
+
     google.setOnLoadCallback(drawVisualization);
+
   </script>
 </head>
 <body>
@@ -75,13 +83,24 @@
       <li><a href="#tabs-1" onclick="drawLineChart();"><g:message code="report.chart.line"/></a></li>
       <li><a href="#tabs-2" onclick="drawPieChart();"><g:message code="report.chart.pie"/></a></li>
     </ul>
-    <div id="tabs-1" style="width: 850px;" >
+    <div id="tabs-1" style="width: 850px;">
       <div id="lineChart" style="width: 800px; height: 240px;"></div>
     </div>
-    <div id="tabs-2">
+    <div id="tabs-2" >
       <div id="pieChart" style="min-width: 600px; height: 400px;"></div>
+      <div style="display:inline-block;">
+        <g:formRemote name="up" url="[action: 'up']" onSuccess="drawPieChart()">
+          <g:actionSubmit value="up"/>
+        </g:formRemote>
+      </div>
+      <div style="display:inline-block;">
+        <g:formRemote name="root" url="[action: 'root']" onSuccess="drawPieChart()">
+          <g:actionSubmit value="root"/>
+        </g:formRemote>
+      </div>
     </div>
   </div>
+
 </div>
 </body>
 </html>

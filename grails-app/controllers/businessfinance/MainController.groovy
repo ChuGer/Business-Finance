@@ -94,7 +94,7 @@ class MainController {
       if (o.id in opsIds) {
         def map = [:]
         map.put('id', o.id)
-        map.put('title', o.name)
+        map.put('title', o.name + ' ('+ (o.type==0 ?'-':'+') + o.sum + ') ')
         map.put('start', o.startDate)
         map.put('end', o?.endDate)
         map.put('allDay', true)
@@ -106,7 +106,7 @@ class MainController {
   }
 
   def locale = {
-    def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE';
+    def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'en_US'
     def locale = [locale: code]
     render locale as JSON
   }

@@ -23,7 +23,6 @@
   <script type="text/javascript">
 
     $(function() {
-
       createTree();
       createCalendars();
       createColor();
@@ -225,7 +224,9 @@
         dayNames: regional.dayNames,
         dayNamesShort: regional.dayNamesShort,
         firstDay: 1,
-
+        buttonText: {
+          today: regional.currentText
+        },
         select: function(start, end, allDay) {
           $("#startDate").val($.format.date(start, "MM/dd/yyyy"));
           $("#endDate").val($.format.date(end, "MM/dd/yyyy"));
@@ -398,7 +399,7 @@
               <label for="type"><g:message code="operation.type.label" default="Type"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
-              <g:radioGroup name="type" labels="['income','outcome']" values="[0,1]" value="${fieldValue(bean: operationInstance, field: 'type')}">
+              <g:radioGroup name="type" labels="['outcome','income']" values="[0,1]" value="${fieldValue(bean: operationInstance, field: 'type')}">
                 <div style="display:inline-block;">
                   <p>${it.radio} <g:message code="operation.type.${it.label}"/></p>
                 </div>
