@@ -173,6 +173,56 @@ class CategoryService {
     ops.each { o -> opsIds.add(o.id)}
     opsIds
   }
+  def parseBillById(def id){
+    def list = [[id : id] ]
+      def bill =  Bill.findById(id)
+      def data = []
+      def inn = [:]
+      inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
+      inn.put('attr', [id: 'b' + bill.id, type: 'bil', chkd: bill.isChecked, color: bill.category.color])
+      inn.put('metadata', [id: bill.id])
+      data.add(inn)
+      list.add(data)
+      list
+  }
+    def parseCtgBillById(def id){
+    def list = [[id : id] ]
+      def bill =  CategoryBill.findById(id)
+      def data = []
+      def inn = [:]
+      inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
+      inn.put('attr', [id: 'c' + bill.id, type: 'ctb', chkd: bill.isChecked, color: bill.color])
+      inn.put('metadata', [id: bill.id])
+      inn.put('children', [] )
+      data.add(inn)
+      list.add(data)
+      list
+  }
+  def parseOperById(def id){
+    def list = [[id : id] ]
+      def bill =  Operation.findById(id)
+      def data = []
+      def inn = [:]
+      inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
+      inn.put('attr', [id: 'o' + bill.id, type: 'opr', chkd: bill.isChecked, color: bill.category.color])
+      inn.put('metadata', [id: bill.id])
+      data.add(inn)
+      list.add(data)
+      list
+  }
+    def parseCtgOperById(def id){
+    def list = [[id : id] ]
+      def bill =  CategoryOp.findById(id)
+      def data = []
+      def inn = [:]
+      inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
+      inn.put('attr', [id: 'd' + bill.id, type: 'cto', chkd: bill.isChecked, color: bill.color])
+      inn.put('metadata', [id: bill.id])
+      inn.put('children', [] )
+      data.add(inn)
+      list.add(data)
+      list
+  }
 
   def initRegisteredUser(def user) {
     // TODO inject from bootsra4

@@ -36,7 +36,7 @@ class BootStrap {
       def cur3 = new Currency(code: 'eur', name: 'curencies.eur').save(failOnError: true)
 
       //Creating categories
-      def rootB = new CategoryBill(name: 'root.bill', isChecked: true, color: 'magenta', ico: 'smiley-mr-green.png').save(failOnError: true)
+      def rootB = new CategoryBill(name: 'root.bill', isChecked: true, color: 'lime', ico: 'smiley-mr-green.png').save(failOnError: true)
 
       def rootO = new CategoryOp(name: 'root.oper', isChecked: true, color: 'magenta', ico: 'script-office.png').save(failOnError: true)
 
@@ -44,7 +44,7 @@ class BootStrap {
       def ctg2 = new CategoryBill(name: 'BufBank', isChecked: true, color: 'magenta').save(failOnError: true)
       def ctg3 = new CategoryBill(name: 'subBu', isChecked: true, color: 'magenta').save(failOnError: true)
 
-      def ctg6 = new CategoryOp(name: 'Bo2l', isChecked: true, color: 'magenta').save(failOnError: true)
+      def ctg6 = new CategoryOp(name: 'Bo2l', isChecked: true ).save(failOnError: true)
       def ctg7 = new CategoryOp(name: 'Pay2', isChecked: true, color: 'red').save(failOnError: true)
 
       //Creating Bills

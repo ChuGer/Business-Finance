@@ -1,10 +1,8 @@
 package businessfinance
 
-import domain.Bill
-import domain.CategoryOp
-import domain.Operation
 import grails.converters.JSON
 import java.text.SimpleDateFormat
+import domain.*
 
 class MainController {
   static navigation = [
@@ -17,10 +15,12 @@ class MainController {
   def categoryService
 
   def index = {
-    println         request.getQueryString()
     def operationInstance = new Operation()
+    def billInstance = new Bill()
+    billInstance.properties = params
     if (springSecurityService.getCurrentUser())
-      [treeData: categoryService.getCategoryTree() as JSON, operationInstance: operationInstance]
+      [treeData: categoryService.getCategoryTree() as JSON, operationInstance: operationInstance,
+              billInstance: new Bill() , ctgBInstance : new CategoryBill(), ctgOInstance : new CategoryOp()]
     else {  // goes as demonstration tree data?
       def treeData = [
               [data: 'ExCateg1', attr: [id: '23'], children: [[[data: 'Bill1', attr: [id: '26']],
@@ -39,7 +39,8 @@ class MainController {
             [type: 'string', name: 'Task', data: 'Work'],
             [type: 'rf', name: 're', data: 'zo']
     ]
-    render tdata as JSON
+    def answer =  [id: '4' ]
+    render  answer as JSON
   }
 
   def addEvent = {
@@ -50,17 +51,57 @@ class MainController {
     operation.name = params.name
     operation.startDate = sdf.parse(params.startDate) + 1
     operation.endDate = sdf.parse(params.endDate) + 1
-    operation.bill = Bill.findById(params?.bill?.id)
+    operation.bill = Bill.findById(1)
     operation.category = CategoryOp.findById(params?.category?.id)
-    operation.type = params.type.toInteger()
+    operation.type = 1
     operation.user = springSecurityService.getCurrentUser()
-    operation.sum = Float.parseFloat(params.sum)
+    operation.sum = 111
     if (!operation.save()) {
-       operation.errors.each {
-            println it
-       }
+      operation.errors.each {
+        println it
+      }
     }
-    render('')
+    def answer =  categoryService.parseOperById(operation.id)
+    render answer as JSON
+  }
+  def addBill = {
+//    println params
+    def ctgId = params.categoryb[1..-1]
+    def billInstance = new Bill(name: params.name, balance: params.balance.toFloat(),user : springSecurityService.getCurrentUser(),
+                                currency: Currency.findById(params.currency), category : CategoryBill.findById(ctgId), isChecked: true)
+    if (billInstance.save()) {
+      flash.message = "${message(code: 'bill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
+      println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
+    }
+    def answer =  categoryService.parseBillById(billInstance.id)
+
+    render answer as JSON
+  }
+  def addBillCategory = {
+    println params
+    def ctgId = params.categoryb[1..-1]
+    def billInstance = new CategoryBill(name: params.name, color : params.color,
+                                  category : CategoryBill.findById(ctgId), isChecked: true)
+    if (billInstance.save()) {
+      flash.message = "${message(code: 'ctGbill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
+      println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
+    }
+    def answer =  categoryService.parseCtgBillById(billInstance.id)
+
+    render answer as JSON
+  }
+  def addOprCategory = {
+    println params
+    def ctgId = params.categoryb[1..-1]
+    def ctgOpInstance = new CategoryOp(name: params.name, color : params.color,
+                                  category : CategoryOp.findById(ctgId), isChecked: true)
+    if (ctgOpInstance.save()) {
+      flash.message = "${message(code: 'ctGbill.created.message', args: [message(code: 'bill.label', default: 'Bill'), ctgOpInstance.name])}"
+      println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), ctgOpInstance.id])}"
+    }
+    def answer =  categoryService.parseCtgOperById(ctgOpInstance.id)
+
+    render answer as JSON
   }
 
   def deleteEvent = {

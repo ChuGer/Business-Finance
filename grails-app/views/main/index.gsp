@@ -18,31 +18,103 @@
   <script type="text/javascript" src="../js/utils.js"></script>
   <script type="text/javascript" src="../js/layout.js"></script>
   <script type="text/javascript" src="../js/colorpicker.js"></script>
-  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-ru.js"></script>
-  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-en-US.js"></script>
+
+
   <script type="text/javascript">
 
     $(function() {
       createTree();
-      createCalendars();
+      drawCalendar();
+      dialog();
       createColor();
+      var lastHoveredNodeId;
     });
-
     var isLoaded = false;
     function createColor() {
-      $('#colorpickerHolder2').ColorPicker({
-        flat: true,
-        color: '#00ff00',
+      $('#bilPicker').ColorPicker({
+        flat : true,
+        color: '#0000ff',
         onSubmit: function(hsb, hex, rgb) {
-          $('#colorSelector2 div').css('backgroundColor', '#' + hex);
+          $('#colorsb').val("#" + hex);
+//          $('#bilPicker').ColorPickerHide();
         }
+      })
+       $('#oprPicker').ColorPicker({
+        flat : true,
+        color: '#0000ff',
+        onSubmit: function(hsb, hex, rgb) {
+          $('#colorso').val("#" + hex);
+        }
+      })
+
+    }
+    function createBillCategoryButtons(node) {
+      //add bill button
+      var newid = node.attr("id") + "p";
+      var el = $('#' + node.attr("id")).children('a');
+      el.append("<div id=" + newid + " style='  width: 25px; display: none; background-color: lime; '></div>");
+      $("#" + newid).append('[+]');
+
+      $("#" + newid).click(function() {
+        $("#bill-form").dialog("open");
+//              var node = $('#treeDiv .jstree-hovered').parent('li');
+//              console.log('plus cliked on node = ' + node.attr("id") + ' named ' + node.text())
       });
-      $('#colorpickerHolder2 div').css('position', 'absolute');
-      var widt = false;
-      $('#colorSelector2').bind('click', function() {
-        $('#colorpickerHolder2').stop().animate({height: widt ? 0 : 173}, 500);
-        widt = !widt;
+      //add category bill button
+      var newcid = node.attr("id") + "f";
+      var cel = $('#' + node.attr("id")).children('a');
+      cel.append("<div id=" + newcid + " style='  width: 25px; display: none; background-color: yellow; '></div>");
+      $("#" + newcid).append('[c]');
+      $("#" + newcid).click(function() {
+        $("#ctb-form").dialog("open");
       });
+
+          cel.css("background-color", node.attr("color"));
+    }
+    function createOprCategoryButtons(node) {
+      //add bill button
+      var newid = node.attr("id") + "p";
+      var el = $('#' + node.attr("id")).children('a');
+      el.append("<div id=" + newid + " style='  width: 25px; display: none; background-color: lime; '></div>");
+      $("#" + newid).append('[+]');
+
+      $("#" + newid).click(function() {
+        $("#opr-form").dialog("open");
+//              var node = $('#treeDiv .jstree-hovered').parent('li');
+//              console.log('plus cliked on node = ' + node.attr("id") + ' named ' + node.text())
+      });
+      //add category bill button
+      var newcid = node.attr("id") + "f";
+      var cel = $('#' + node.attr("id")).children('a');
+      cel.append("<div id=" + newcid + " style='  width: 25px; display: none; background-color: yellow; '></div>");
+      $("#" + newcid).append('[c]');
+      $("#" + newcid).click(function() {
+        $("#cto-form").dialog("open");
+      });
+      cel.css("background-color", node.attr("color"));
+
+    }
+
+    function createBillnode(data, textStatus) {
+      var nodeData = data[1];
+      $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
+
+    }
+    function createCtgBillnode(data, textStatus) {
+      var nodeData = data[1];
+      $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
+      createBillCategoryButtons($('#' + nodeData[0].attr.id));
+    }
+    function createOprnode(data, textStatus) {
+      var parentNodeId = '#d' + $("#crOprcid").val();
+      var nodeData = data[1];
+      $("#treeDiv").jstree('create',  '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
+
+    }
+    function createCtgOprnode(data, textStatus) {
+      var nodeData = data[1];
+      $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
+      createOprCategoryButtons($('#' + nodeData[0].attr.id));
     }
 
     function createTree() {
@@ -60,24 +132,24 @@
               alert('No element was hovered over when return was pressed');
             }
           }
-        },
-        "contextmenu" : {
-          "items" :{
-            "rename" : {
-              // The item label
-              "label"                : "RenBus",
-              // The function to execute upon a click
-              "action"            : function (obj) {
-                this.rename(obj);
-              },
-              // All below are optional
-              "_disabled"            : false,        // clicking the item won't do a thing
-              "_class"            : "class",    // class is applied to the item LI node
-              "separator_before"    : false,    // Insert a separator before the item
-              "separator_after"    : false
-            }
-          }
         }
+//        ,"contextmenu" : {
+//          "items" :{
+//            "rename" : {
+//              // The item label
+//              "label"                : "RenBus",
+//              // The function to execute upon a click
+//              "action"            : function (obj) {
+//                this.rename(obj);
+//              },
+//              // All below are optional
+//              "_disabled"            : false,        // clicking the item won't do a thing
+//              "_class"            : "class",    // class is applied to the item LI node
+//              "separator_before"    : false,    // Insert a separator before the item
+//              "separator_after"    : false
+//            }
+//          }
+//        }
 
       });
 
@@ -87,30 +159,32 @@
           //restoring check state
           if ($(this).attr("chkd") == 'true') {
             data.inst.check_node($(this));
+            if ($(this).attr("type").indexOf('ct') === 0) {
+              var cel = $('#' + $(this).attr("id")).children('a');
+              cel.css("background-color", $(this).attr("color"));
+            }
           }
           else {
             data.inst.uncheck_node($(this));
           }
           //adding [+] divs
-          if ($(this).attr("type").indexOf('ct') === 0) {
-            var newid = $(this).attr("id") + "p";
-//          var el = ($(this).attr("type") == "bill") ? $('#' + $(this).attr("id") + ' :last-child') : $('#' + $(this).attr("id") + ' :first-child')
-            var el = $('#' + $(this).attr("id")).children('a');
-            el.append("<div id=" + newid + " style='  width: 25px; display: none; background-color: lime; '></div>");
-            $("#" + newid).append('[+]');
-
-            $("#" + newid).click(function() {
-              var node = $('#treeDiv .jstree-hovered').parent('li');
-              console.log('plus cliked on node = ' + node.attr("id") + ' named ' + node.text())
-            });
+          if ($(this).attr("type").indexOf('ctb') === 0) {
+            createBillCategoryButtons($(this));
           }
+          else if ($(this).attr("type").indexOf('cto') === 0) {
+            createOprCategoryButtons($(this));
+          }
+
         });
         isLoaded = true;
       });
 
       tree.bind("check_node.jstree", function (e, d) {
+        if (d.rslt.obj.attr("type").indexOf('ct') === 0) {
+          var cel = $('#' + d.rslt.obj.attr("id")).children('a');
+          cel.css("background-color", d.rslt.obj.attr("color"));
+        }
         if (isLoaded) {
-          d.rslt.obj.css("background-color", "green");
           var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
           var sid = d.rslt.obj.attr("id");
           var stype = d.rslt.obj.attr("type");
@@ -123,20 +197,12 @@
           });
         }
       });
-      tree.bind("hover_node.jstree", function (e, d) {
-        var pid = d.rslt.obj.attr("id") + "p";
-        $("#" + pid).animate().css({display: "inline-block"})
-//          d.rslt.obj.css("background-color", d.rslt.obj.attr("color"));
-      });
-      tree.bind("dehover_node.jstree", function (e, d) {
-        var pid = d.rslt.obj.attr("id") + "p";
-        $("#" + pid).animate().css({display: "none"})
-
-//          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
-      });
       tree.bind("uncheck_node.jstree", function (e, d) {
+        if (d.rslt.obj.attr("type").indexOf('ct') === 0) {
+          var cel = $('#' + d.rslt.obj.attr("id")).children('a');
+          cel.css("background-color", "#f7fffd");
+        }
         if (isLoaded) {
-          d.rslt.obj.css("background-color", "red");
           var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
           var sid = d.rslt.obj.attr("id");
           var stype = d.rslt.obj.attr("type");
@@ -149,13 +215,33 @@
           });
         }
       });
+      tree.bind("hover_node.jstree", function (e, d) {
+        var pid = d.rslt.obj.attr("id") + "p";
+        var pid2 = d.rslt.obj.attr("id") + "f";
+        $("#" + pid).animate().css({display: "inline-block"})
+        $("#" + pid2).animate().css({display: "inline-block"})
+        lastHoveredNodeId = d.rslt.obj.attr("id");
+        $("#categoryb").val(lastHoveredNodeId);
+        $("#categoryb2").val(lastHoveredNodeId);
+        $("#categoryb3").val(lastHoveredNodeId);
+        $("#categoryb4").val(lastHoveredNodeId);
+      });
+      tree.bind("dehover_node.jstree", function (e, d) {
+        var pid = d.rslt.obj.attr("id") + "p";
+        var pid2 = d.rslt.obj.attr("id") + "f";
+        $("#" + pid).animate().css({display: "none"})
+        $("#" + pid2).animate().css({display: "none"})
+
+//          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
+      });
+
 
       tree.bind("rename.jstree", function(event, data) {
         alert(data.rslt.obj.attr("id") + "  " + data.rslt.new_name + " from " + data.rslt.old_name);
       });
 
       tree.bind("create.jstree", function(event, data) {
-        alert(data.rslt.obj.attr("id") + "  " + $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id")));
+//        alert(data.rslt.obj.attr("id") + "  " + $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id")));
       });
 
       tree.bind("select_node.jstree", function (e, d) {
@@ -169,18 +255,14 @@
     }
 
     function selectAll() {
+      // TODO fix selectAll btn
       $("#treeDiv").jstree("check_all");
     }
 
-    function createCalendars() {
-      $.getJSON("locale", function(json) {
-        regional = $.datepicker.regional[json.locale];
-        $("#startDate").datepicker(regional);
-        $("#endDate").datepicker(regional);
-        drawCalendar(regional);
-      });
-
-      $("#dialog-form").dialog({
+    function dialog() {
+      $("#startDate").datepicker();
+      $("#endDate").datepicker();
+      $("#opr-form").dialog({
         autoOpen: false,
         height: 400,
         width: 350,
@@ -192,25 +274,38 @@
         width: 350,
         modal: true
       });
+      $("#ctb-form").dialog({
+        autoOpen: false,
+        height: 350,
+        width: 450,
+        modal: true
+      });
+      $("#cto-form").dialog({
+        autoOpen: false,
+        height: 350,
+        width: 450,
+        modal: true
+      });
     }
+
 
     function closeDialog() {
-      $("#dialog-form").dialog("close");
+      $("#opr-form").dialog("close");
       $("#name").val('');
     }
-
     function closeBillDialog() {
       $("#bill-form").dialog("close");
-      $("#name").val('');
+    }
+    function closeCtgBillDialog() {
+      $("#ctb-form").dialog("close");
+    }
+    function closeOprBillDialog() {
+      $("#cto-form").dialog("close");
     }
 
-    function refetchEvents() {
-      $('#calendar').fullCalendar('refetchEvents');
-    }
-
-    function drawCalendar(regional) {
-
+    function drawCalendar() {
       var calendar = $('#calendar');
+      calendar.html('');
       calendar.fullCalendar({
         header: {
           left: '',
@@ -230,7 +325,19 @@
         select: function(start, end, allDay) {
           $("#startDate").val($.format.date(start, "MM/dd/yyyy"));
           $("#endDate").val($.format.date(end, "MM/dd/yyyy"));
-          $("#dialog-form").dialog("open");
+          $("#opr-form").dialog("open");
+//          var title = prompt('Title:');
+//          if (title) {
+//            calendar.fullCalendar('renderEvent',
+//            {
+//              title: title,
+//              start: start,
+//              end: end,
+//              allDay: allDay
+//            },
+//                    true // make the event "stick"
+//                    );
+//          }
           calendar.fullCalendar('unselect');
         },
         eventClick:  function(event, jsEvent, view) {
@@ -244,9 +351,9 @@
               calendar.fullCalendar('removeEvents', event.id);
             }
           });
-//          if (!confirm("Want to revert deleted event?")) {
-//            revertFunc();
-//          }
+          if (!confirm("Want to revert deleted event?")) {
+            revertFunc();
+          }
         },
         eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
           console.log(event.id + " " + event.title + " was moved " +
@@ -277,8 +384,6 @@
         editable: true,
         events: 'events'
       });
-
-
     }
 
   </script>
@@ -291,17 +396,12 @@
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-%{--<div id="customWidget">--}%
-%{--<div id="colorSelector2"></div>--}%
-%{--<div id="colorpickerHolder2"></div>--}%
-%{--</div>--}%
+
   <table>
     <tr>
       <td width="200px;">
         <div id="treeDiv"></div>
-        <button id="selectAll" onclick="selectAll();">
-          <g:message code="default.button.selectAll"/>
-        </button>
+        <button id="selectAll" onclick="selectAll();">selectAll</button>
       </td>
       <td>
         <div style="width:800px;" id="calendar"></div>
@@ -315,38 +415,48 @@
         <g:renderErrors bean="${billInstance}" as="list"/>
       </div>
     </g:hasErrors>
-    <g:formRemote name="createBillForm" method="post" url="[action: 'addBill']" onComplete="closeBillDialog(); ">
+    <g:formRemote name="createBillForm" url="[action: 'addBill']" onSuccess="createBillnode(data,textStatus);" onComplete="closeBillDialog()">
       <div class="dialog">
         <table>
           <tbody>
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="name"><g:message code="bill.name.label" default="Name"/></label>
+              <label for="billName"><g:message code="bill.name.label" default="Name"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'name', 'errors')}">
-              <g:textField id="name" name="name" value="${billInstance?.name}"/>
+              <g:textField id="billName" name="name" value="${billInstance?.name}"/>
             </td>
           </tr>
 
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="bill.id"><g:message code="bill.currency.label" default="Currency"/></label>
+              <label for="currency"><g:message code="bill.currency.label" default="Currency"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'currency', 'errors')}">
-              <g:select name="bill.id" from="${domain.Currency.list()}" optionKey="id" value="${billInstance?.currency?.id}"/>
+              <g:select name="currency" from="${domain.Currency.list()}" optionKey="id" value="${billInstance?.currency?.id}"/>
             </td>
           </tr>
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="name"><g:message code="bill.balance.label" default="Balance"/></label>
+              <label for="balance"><g:message code="bill.balance.label" default="Balance"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'balance', 'errors')}">
               <g:textField id="balance" name="balance" value="${billInstance?.name}"/>
             </td>
           </tr>
 
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="icon"><g:message code="bill.ico.label" default="Icon"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'ico', 'errors')}">
+              <g:textField id="icon" name="ico" value="${billInstance?.ico}"/>
+            </td>
+          </tr>
+          <g:hiddenField id="categoryb2" name="categoryb"/>
           <div class="buttons">
             <span class="button"><g:actionSubmit class="save" action="addBill" value="${message(code: 'default.button.save.label', default: 'Save')}"/></span>
           </div>
@@ -356,13 +466,119 @@
     </g:formRemote>
   </div>
 
-  <div id="dialog-form" title="<g:message code="operation.create"/>">
+  <div id="ctb-form" title="<g:message code="ctgb.create"/>">
+    <g:hasErrors bean="${ctgBInstance}">
+      <div class="errors">
+        <g:renderErrors bean="${ctgBInstance}" as="list"/>
+      </div>
+    </g:hasErrors>
+    <g:formRemote name="createCategoryBForm" url="[action: 'addBillCategory']" onSuccess="createCtgBillnode(data,textStatus);" onComplete="closeCtgBillDialog()">
+      <div class="dialog">
+        <table>
+          <tbody>
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="billName"><g:message code="ctgb.name.label" default="Name"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: ctgBInstance, field: 'name', 'errors')}">
+              <g:textField id="billName" name="name" value="${ctgBInstance?.name}"/>
+            </td>
+          </tr>
+
+
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="bilPicker"><g:message code="ctgb.color.label" default="Color"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: ctgBInstance, field: 'color', 'errors')}">
+              <g:hiddenField id="colorsb" name="color"/>
+              <div id="bilPicker"></div>
+            </td>
+          </tr>
+
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="icon"><g:message code="ctgb.ico.label" default="Icon"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: ctgBInstance, field: 'ico', 'errors')}">
+              <g:textField id="icon" name="ico" value="${ctgBInstance?.ico}"/>
+            </td>
+          </tr>
+          <g:hiddenField id="categoryb" name="categoryb"/>
+          <div class="buttons">
+            <span class="button"><g:actionSubmit class="save" action="addBillCategory" value="${message(code: 'default.button.save.label', default: 'Save')}"/></span>
+          </div>
+          </tbody>
+        </table>
+      </div>
+    </g:formRemote>
+  </div>
+
+  <div id="cto-form" title="<g:message code="ctgo.create"/>">
+    <g:hasErrors bean="${ctgOInstance}">
+      <div class="errors">
+        <g:renderErrors bean="${ctgOInstance}" as="list"/>
+      </div>
+    </g:hasErrors>
+    <g:formRemote name="createCategoryOForm" url="[action: 'addOprCategory']" onSuccess="createCtgOprnode(data,textStatus);" onComplete="closeCtgOprDialog()">
+      <div class="dialog">
+        <table>
+          <tbody>
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="ctgO.Name"><g:message code="ctgo.name.label" default="Name"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: ctgBInstance, field: 'name', 'errors')}">
+              <g:textField id="ctgO.Name" name="name" value="${ctgOInstance?.name}"/>
+            </td>
+          </tr>
+
+
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="oprPicker"><g:message code="ctgo.color.label" default="Color"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
+              <g:radioGroup name="type" labels="['outcome','income']" values="[0,1]" value="${fieldValue(bean: operationInstance, field: 'type')}">
+                <div style="display:inline-block;">
+                  <p>${it.radio} <g:message code="operation.type.${it.label}"/></p>
+                </div>
+              </g:radioGroup>
+            <td valign="top" class="value ${hasErrors(bean: ctgOInstance, field: 'color', 'errors')}">
+              <g:hiddenField id="colorso" name="color"/>
+              <div id="oprPicker"></div>
+            </td>
+          </tr>
+
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="ctgO.icon"><g:message code="ctgo.ico.label" default="Icon"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: ctgOInstance, field: 'ico', 'errors')}">
+              <g:textField id="ctgO.icon" name="ico" value="${ctgOInstance?.ico}"/>
+            </td>
+          </tr>
+          <g:hiddenField id="categoryb3" name="categoryb"/>
+          <div class="buttons">
+            <span class="button"><g:actionSubmit class="save" action="addBillCategory" value="${message(code: 'default.button.save.label', default: 'Save')}"/></span>
+          </div>
+          </tbody>
+        </table>
+      </div>
+    </g:formRemote>
+  </div>
+
+  <div id="opr-form" title="<g:message code="operation.create"/>">
     <g:hasErrors bean="${operationInstance}">
       <div class="errors">
         <g:renderErrors bean="${operationInstance}" as="list"/>
       </div>
     </g:hasErrors>
-    <g:formRemote name="createForm" method="post" url="[action: 'addEvent']" onComplete="closeDialog();refetchEvents();">
+    <g:formRemote name="createForm" method="post" url="[action: 'addEvent']" onSuccess="createOprnode(data,textStatus);" onComplete="closeDialog();drawCalendar();">
       <div class="dialog">
         <table>
           <tbody>
@@ -372,38 +588,7 @@
               <label for="name"><g:message code="operation.name.label" default="Name"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'name', 'errors')}">
-              <g:textField id="name" name="name" value="${operationInstance?.name}"/>
-            </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="bill.id"><g:message code="operation.bill.label" default="Bill"/></label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'bill', 'errors')}">
-              <g:select name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
-            </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="sum"><g:message code="operation.sum.label" default="Sum"/></label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'sum', 'errors')}">
-              <g:textField name="sum" value="${fieldValue(bean: operationInstance, field: 'sum')}"/>
-            </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="type"><g:message code="operation.type.label" default="Type"/></label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'type', 'errors')}">
-              <g:radioGroup name="type" labels="['outcome','income']" values="[0,1]" value="${fieldValue(bean: operationInstance, field: 'type')}">
-                <div style="display:inline-block;">
-                  <p>${it.radio} <g:message code="operation.type.${it.label}"/></p>
-                </div>
-              </g:radioGroup>
+              <g:textField name="name" value="${operationInstance?.name}"/>
             </td>
           </tr>
 
@@ -472,13 +657,31 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="category.id"><g:message code="operation.category.label" default="Category"/></label>
+              <label for="category.id"><g:message code="operation.type.label" default="Type"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'category', 'errors')}">
-              <g:select name="category.id" from="${domain.CategoryOp.list()}" optionKey="id" value="${operationInstance?.category?.id}"/>
+              <g:select id="crOprcid" name="category.id" from="${domain.CategoryOp.list()}" optionKey="id" value="${operationInstance?.category?.id}"/>
             </td>
           </tr>
 
+          %{--<tr class="prop">--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="isChecked"><g:message code="operation.isChecked.label" default="Is Checked"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'isChecked', 'errors')}">--}%
+          %{--<g:checkBox name="isChecked" value="${operationInstance?.isChecked}"/>--}%
+          %{--</td>--}%
+          %{--</tr>--}%
+
+          %{--<tr class="prop">--}%
+          %{--<td valign="top" class="name">--}%
+          %{--<label for="user"><g:message code="operation.user.label" default="User"/></label>--}%
+          %{--</td>--}%
+          %{--<td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'user', 'errors')}">--}%
+          %{--<g:select name="user.id" from="${domain.auth.SecUser.list()}" optionKey="id" value="${operationInstance?.user?.id}"/>--}%
+          %{--</td>--}%
+          %{--</tr>--}%
+          <g:hiddenField id="categoryb4" name="categoryb"/>
           <div class="buttons">
             <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.update.label', default: 'Update')}"/></span>
             <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/></span>
@@ -490,6 +693,8 @@
   </div>
 
 </div>
+<input type="text" maxlength="6" size="6" id="cpfR" value=""/>
+
 </body>
 </html>
 
