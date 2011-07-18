@@ -146,7 +146,7 @@ class MainController {
   }
 
   def locale = {
-    def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'en_US'
+    def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
     def locale = [locale: code]
     render locale as JSON
   }
