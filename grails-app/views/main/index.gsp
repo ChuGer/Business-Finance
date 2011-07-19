@@ -270,6 +270,7 @@
       });
 
       tree.bind("select_node.jstree", function (e, d) {
+//        createTree();
 //        d.rslt.obj.css("background-color", "green")
         var newid = d.rslt.obj.attr("id") + "p";
 //        $('#treeDiv .jstree-hovered').append("<div id="+newid+" style='  width: 15px; text-align: right'></div>");

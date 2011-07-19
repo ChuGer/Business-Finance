@@ -113,7 +113,11 @@ class MainController {
 
   def deleteEvent = {
     println "deleteEvent with id: ${params.id}"
-    Operation.findById(params.id).delete()
+    def opr = Operation.findById(params.id)
+    if(opr){
+      opr.bill.balance -=  (opr.type == 1)? opr.sum : - opr.sum
+      opr.delete()
+    }
     render('')
   }
 
