@@ -411,9 +411,9 @@
     <tr>
       <td width="250px;">
         <div id="treeDiv"></div>
-        <button id="selectAll" onclick="selectAll();">
-          <g:message code="default.button.selectAll"/>
-        </button>
+        %{--<button id="selectAll" onclick="selectAll();">--}%
+          %{--<g:message code="default.button.selectAll"/>--}%
+        %{--</button>--}%
       </td>
       <td>
         <div style="width:800px;" id="calendar"></div>
@@ -497,8 +497,6 @@
             </td>
           </tr>
 
-
-
           <tr class="prop">
             <td valign="top" class="name">
               <label for="bilPicker"><g:message code="ctgb.color.label" default="Color"/></label>
@@ -508,7 +506,6 @@
               <div id="bilPicker"></div>
             </td>
           </tr>
-
 
           <tr class="prop">
             <td valign="top" class="name">
@@ -547,19 +544,15 @@
             </td>
           </tr>
 
-
-
           <tr class="prop">
             <td valign="top" class="name">
               <label for="oprPicker"><g:message code="ctgo.color.label" default="Color"/></label>
             </td>
-
             <td valign="top" class="value ${hasErrors(bean: ctgOInstance, field: 'color', 'errors')}">
               <g:hiddenField id="colorso" name="color" value="${ctgOInstance?.color}"/>
               <div id="oprPicker"></div>
             </td>
           </tr>
-
 
           <tr class="prop">
             <td valign="top" class="name">
@@ -660,8 +653,7 @@
 
           <g:hiddenField id="categoryb4" name="categoryb"/>
           <div class="buttons">
-            <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.update.label', default: 'Update')}"/></span>
-            <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/></span>
+            <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.save.label', default: 'Update')}"/></span>
           </div>
           </tbody>
         </table>

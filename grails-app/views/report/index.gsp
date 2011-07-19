@@ -12,6 +12,7 @@
   <script type="text/javascript" src="../js/jquery/jquery-ui-1.8.1.min.js"></script>
   <script type="text/javascript" src="http://www.google.com/jsapi"></script>
   <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.2.custom.css"/>
+  <export:resource />
 
   <script type="text/javascript">
     google.load('visualization', '1', {packages: ['corechart'], timeout: 5000});
@@ -91,16 +92,17 @@
       <div id="pieChart" style="min-width: 600px; height: 400px;"></div>
       <div style="display:inline-block;">
         <g:formRemote name="up" url="[action: 'up']" onSuccess="drawPieChart()">
-          <g:actionSubmit value="up"/>
+          <button><g:message code="chart.pie.up"/></button>
         </g:formRemote>
       </div>
       <div >
         <g:formRemote name="root" url="[action: 'root']" onSuccess="drawPieChart()">
-          <g:actionSubmit value="root"/>
+          <button><g:message code="chart.pie.root"/></button>
         </g:formRemote>
       </div>
     </div>
   </div>
+  <export:formats />
 
 </div>
 </body>

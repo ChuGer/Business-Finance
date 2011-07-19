@@ -4,6 +4,7 @@ import grails.converters.JSON
 import domain.Operation
 import domain.CategoryOp
 import org.apache.commons.lang.StringUtils
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
 class ReportController {
   static navigation = [
@@ -12,7 +13,28 @@ class ReportController {
           title: "report",
           action: 'index'
   ]
-  def index = {}
+
+  // Export service provided by Export plugin
+  def exportService
+
+  def index = {
+    if (!params.max) params.max = 10
+
+    if (params?.format && params.format != "html") {
+      response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
+      response.setHeader("Content-disposition", "attachment; filename=books.${params.extension}")
+      def fields = ["name", "startDate","sum","type","bill"]
+      def labels = [:]
+      fields.each { f->
+        labels.put(f, getMessage(f))
+      }
+      exportService.export(params.format, response.outputStream, Operation.findAll(), fields, labels, [:],[:])
+    }
+  }
+
+  def getMessage(code){
+     g.message(code: 'operation.'+code+'.label')
+  }
 
   def lineChart = {
     //dateMap contains startDate and map of two values by type 0 - outcome sum, 1 - income sum
@@ -22,7 +44,7 @@ class ReportController {
       def titleKey = o.type == 1 ? 'inT' : 'outT'
       def date = o.startDate
       def sum = o.sum
-      def title =  o.name
+      def title = o.name
 
       if (dateMap.containsKey(date)) {
         def map = dateMap.get(date)
@@ -30,7 +52,7 @@ class ReportController {
           def oldSum = map.get(key)
           def oldTitle = map.get(titleKey)
           map.put(key, oldSum + sum)
-          map.put(titleKey, oldTitle +' '+ title)
+          map.put(titleKey, oldTitle + ' ' + title)
         } else {
           map.put(key, sum)
           map.put(titleKey, title)
@@ -38,7 +60,7 @@ class ReportController {
         println map
         dateMap.put(date, map)
       } else {
-        dateMap.put(date, [(key): sum, (titleKey) : title])
+        dateMap.put(date, [(key): sum, (titleKey): title])
       }
     }
 
