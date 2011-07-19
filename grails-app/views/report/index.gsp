@@ -92,12 +92,12 @@
       <div id="pieChart" style="min-width: 600px; height: 400px;"></div>
       <div style="display:inline-block;">
         <g:formRemote name="up" url="[action: 'up']" onSuccess="drawPieChart()">
-          <button>up</button>
+          <button><g:message code="chart.pie.up"/></button>
         </g:formRemote>
       </div>
       <div >
         <g:formRemote name="root" url="[action: 'root']" onSuccess="drawPieChart()">
-          <button>root</button>
+          <button><g:message code="chart.pie.root"/></button>
         </g:formRemote>
       </div>
     </div>
