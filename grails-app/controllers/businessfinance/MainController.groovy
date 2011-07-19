@@ -32,14 +32,15 @@ class MainController {
   }
 
   def treeCheck = {
-
     categoryService.persistCheckEvent(params)
+     def answer = []
+      answer   = categoryService.reflectedOpBillCkeck(params.type, params.id[1..-1])
     // TODO: select all persist problem
     def tdata = [
             [type: 'string', name: 'Task', data: 'Work'],
             [type: 'rf', name: 're', data: 'zo']
     ]
-    def answer =  [id: '4' ]
+
     render  answer as JSON
   }
 
@@ -51,12 +52,13 @@ class MainController {
     operation.name = params.name
     operation.startDate = sdf.parse(params.startDate) + 1
     operation.endDate = sdf.parse(params.endDate) + 1
-    operation.bill = Bill.findById(1)
-    operation.category = CategoryOp.findById(params?.category?.id)
-    operation.type = 1
+    operation.bill = Bill.findById(params.bill.id)
+    operation.category = CategoryOp.findById(params?.categoryb[1..-1])   // TODO synchronize inlist with hovered
+    operation.type = params.type
+    operation.isChecked = true
     operation.user = springSecurityService.getCurrentUser()
-    operation.sum = 111
-    if (!operation.save()) {
+    operation.sum = params.sum.toFloat()
+    if (!operation.save(failOnError: true)) {
       operation.errors.each {
         println it
       }
@@ -128,8 +130,9 @@ class MainController {
 
   def events = {
     def data = []
-    def opsIds = categoryService.usersSelectedOpsIds()
-    def billIds = categoryService.usersSelectedBillsIds()
+    def opsIds
+    opsIds = categoryService.usersSelectedOpsIds()
+//    def billIds = categoryService.usersSelectedBillsIds()
     Operation.list().each {o ->
       if (o.id in opsIds) {
         def map = [:]
@@ -142,6 +145,7 @@ class MainController {
         data.add(map)
       }
     }
+    println  opsIds
     render data as JSON
   }
 

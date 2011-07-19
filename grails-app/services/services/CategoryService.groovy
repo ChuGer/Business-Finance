@@ -21,7 +21,7 @@ class CategoryService {
     def data = []
     def inn = [:]
     inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
-    inn.put('attr', [id: 'b' + bill.id, type: 'bil', chkd: bill.isChecked, color: bill.category.color])
+    inn.put('attr', [id: 'b' + bill.id, type: 'bil', chkd: bill.isChecked, color: bill.category.color, class: 'jstree-checked'])
     data.add(inn)
     data
   }
@@ -133,6 +133,7 @@ class CategoryService {
 
 
   def persistCheckEvent(def params) {
+
     if (params.type == 'bil') {
       def bill = Bill.findById(params.id[1..-1])
       bill.isChecked = !bill.isChecked
@@ -159,69 +160,109 @@ class CategoryService {
   def usersSelectedBillsIds() {
     //TODO: SQL
     Set billsIds = []
-    SecUser user = (SecUser)springSecurityService.getCurrentUser()
-    List<Bill> bills = Bill.findAllByUserAndIsChecked(user,true)
+    SecUser user = (SecUser) springSecurityService.getCurrentUser()
+    List<Bill> bills = Bill.findAllByUserAndIsChecked(user, true)
     bills.each { b ->  billsIds.add(b.id)}
     billsIds
   }
 
   def usersSelectedOpsIds() {
+    println 'st1'
+
     //TODO: SQL
     Set opsIds = []
-    SecUser user = (SecUser)springSecurityService.getCurrentUser()
-    List<Operation> ops = Operation.findAllByUserAndIsChecked(user,true)
+    SecUser user = (SecUser) springSecurityService.getCurrentUser()
+    List<Operation> ops = Operation.findAllByUserAndIsChecked(user, true)
     ops.each { o -> opsIds.add(o.id)}
+    println 'st2'
     opsIds
   }
-  def parseBillById(def id){
-    def list = [[id : id] ]
-      def bill =  Bill.findById(id)
-      def data = []
-      def inn = [:]
-      inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
-      inn.put('attr', [id: 'b' + bill.id, type: 'bil', chkd: bill.isChecked, color: bill.category.color])
-      inn.put('metadata', [id: bill.id])
-      data.add(inn)
-      list.add(data)
-      list
+
+  def parseBillById(def id) {
+    def list = [[id: id]]
+    def bill = Bill.findById(id)
+    def data = []
+    def inn = [:]
+    inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
+    inn.put('attr', [id: 'b' + bill.id, type: 'bil', chkd: bill.isChecked, color: bill.category.color])
+    inn.put('metadata', [id: bill.id])
+    data.add(inn)
+    list.add(data)
+    list
   }
-    def parseCtgBillById(def id){
-    def list = [[id : id] ]
-      def bill =  CategoryBill.findById(id)
-      def data = []
-      def inn = [:]
-      inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
-      inn.put('attr', [id: 'c' + bill.id, type: 'ctb', chkd: bill.isChecked, color: bill.color])
-      inn.put('metadata', [id: bill.id])
-      inn.put('children', [] )
-      data.add(inn)
-      list.add(data)
-      list
+
+  def parseCtgBillById(def id) {
+    def list = [[id: id]]
+    def bill = CategoryBill.findById(id)
+    def data = []
+    def inn = [:]
+    inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
+    inn.put('attr', [id: 'c' + bill.id, type: 'ctb', chkd: bill.isChecked, color: bill.color])
+    inn.put('metadata', [id: bill.id])
+    inn.put('children', [])
+    data.add(inn)
+    list.add(data)
+    list
   }
-  def parseOperById(def id){
-    def list = [[id : id] ]
-      def bill =  Operation.findById(id)
-      def data = []
-      def inn = [:]
-      inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
-      inn.put('attr', [id: 'o' + bill.id, type: 'opr', chkd: bill.isChecked, color: bill.category.color])
-      inn.put('metadata', [id: bill.id])
-      data.add(inn)
-      list.add(data)
-      list
+
+  def parseOperById(def id) {
+    def list = [[id: id]]
+    def bill = Operation.findById(id)
+    def data = []
+    def inn = [:]
+    inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
+    inn.put('attr', [id: 'o' + bill.id, type: 'opr', chkd: bill.isChecked, color: bill.category.color])
+    inn.put('metadata', [id: bill.id])
+    data.add(inn)
+    list.add(data)
+    list
   }
-    def parseCtgOperById(def id){
-    def list = [[id : id] ]
-      def bill =  CategoryOp.findById(id)
-      def data = []
-      def inn = [:]
-      inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
-      inn.put('attr', [id: 'd' + bill.id, type: 'cto', chkd: bill.isChecked, color: bill.color])
-      inn.put('metadata', [id: bill.id])
-      inn.put('children', [] )
-      data.add(inn)
-      list.add(data)
-      list
+
+  def parseCtgOperById(def id) {
+    def list = [[id: id]]
+    def bill = CategoryOp.findById(id)
+    def data = []
+    def inn = [:]
+    inn.put('data', [title: bill.name, icon: '../images/treei/' + bill.ico])
+    inn.put('attr', [id: 'd' + bill.id, type: 'cto', chkd: bill.isChecked, color: bill.color])
+    inn.put('metadata', [id: bill.id])
+    inn.put('children', [])
+    data.add(inn)
+    list.add(data)
+    list
+  }
+
+  private def ctgReflect(def ctb) {
+    def data = []
+    ctb.bills.each { b ->
+      Operation.findAllByBill(b).each {op ->
+        op.isChecked = b.isChecked
+        data.add(op.id)
+      }
+    }
+    ctb.categories.each { c ->
+       data = data + ctgReflect(ctb)
+    }
+    data
+  }
+
+  def reflectedOpBillCkeck(def type, def id) {
+    def data = []
+    if (type == 'bil' || type == 'ctb')
+      return data
+    if (type == 'bil') {
+      def bill = Bill.findById(id)
+      Operation.findAllByBill(bill).each {op ->
+        data.add(op.id)
+        op.isChecked = bill.isChecked
+      }
+    }
+    else if (type == 'ctb') {
+      def ctb = CategoryBill.findById(id)
+     data = data + ctgReflect(ctb)
+    }
+    print data
+    data
   }
 
   def initRegisteredUser(def user) {

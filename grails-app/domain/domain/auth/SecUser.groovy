@@ -1,10 +1,6 @@
 package domain.auth
 
-import domain.Bill
-import domain.Operation
-import domain.Settings
-import domain.CategoryBill
-import domain.CategoryOp
+import domain.*
 
 class SecUser {
   String username
@@ -15,6 +11,7 @@ class SecUser {
   boolean accountExpired
   boolean accountLocked
   boolean passwordExpired
+  boolean fetchReady = true
   String email
   Settings settings
   CategoryBill categoriesB

@@ -26,7 +26,7 @@
       createTree();
       createCalendars();
       createColor();
-      var lastHoveredNodeId;
+      var lastHoveredNodeId = 'd1';
     });
     var isLoaded = false;
     function createColor() {
@@ -108,7 +108,9 @@
       var parentNodeId = '#d' + $("#crOprcid").val();
       var nodeData = data[1];
       $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
+//      $("#treeDiv").jstree('check_node',($('#' + nodeData[0].attr.id)) );
 
+       refetchEvents();
     }
     function createCtgOprnode(data, textStatus) {
       var nodeData = data[1];
@@ -156,6 +158,7 @@
         tree.jstree("open_all");
         data.inst.get_container().find('li').each(function(i) {
           //restoring check state
+
           if ($(this).attr("chkd") == 'true') {
             data.inst.check_node($(this));
             if ($(this).attr("type").indexOf('ct') === 0) {
@@ -166,6 +169,8 @@
           else {
             data.inst.uncheck_node($(this));
           }
+
+
           //adding [+] divs
           if ($(this).attr("type").indexOf('ctb') === 0) {
             createBillCategoryButtons($(this));
@@ -192,7 +197,7 @@
             type: "POST",
             data: {name: sname, id: sid, type: stype, ch : 1},
             dataType: "json",
-            complete: drawCalendar()
+            success:function(){ refetchEvents(); }
           });
         }
       });
@@ -210,7 +215,7 @@
             type: "POST",
             data: {name: sname, id: sid, type: stype, ch : 0},
             dataType: "json",
-            complete: drawCalendar()
+            success:function(){ refetchEvents(); }
           });
         }
       });
@@ -305,7 +310,10 @@
     function closeOprBillDialog() {
       $("#cto-form").dialog("close");
     }
-
+    function refetchEvents( ) {
+//      console.lod(d[0].type)
+      $('#calendar').fullCalendar('refetchEvents');
+    }
     function drawCalendar(regional) {
       var calendar = $('#calendar');
       calendar.fullCalendar({
@@ -458,7 +466,7 @@
         <g:renderErrors bean="${ctgBInstance}" as="list"/>
       </div>
     </g:hasErrors>
-    <g:formRemote name="createCategoryBForm" url="[action: 'addBillCategory']" onSuccess="createCtgBillnode(data,textStatus);" onComplete="closeCtgBillDialog()">
+    <g:formRemote name="createCategoryBForm" url="[action: 'addBillCategory']" onSuccess="createCtgBillnode(data,textStatus);" onComplete="closeCtgBillDialog();">
       <div class="dialog">
         <table>
           <tbody>
@@ -559,7 +567,7 @@
         <g:renderErrors bean="${operationInstance}" as="list"/>
       </div>
     </g:hasErrors>
-    <g:formRemote name="createForm" method="post" url="[action: 'addEvent']" onSuccess="createOprnode(data,textStatus);" onComplete="closeDialog();drawCalendar();">
+    <g:formRemote name="createForm" method="post" url="[action: 'addEvent']" onSuccess="createOprnode(data,textStatus);" onComplete="closeDialog();">
       <div class="dialog">
         <table>
           <tbody>
@@ -572,6 +580,25 @@
               <g:textField name="name" value="${operationInstance?.name}"/>
             </td>
           </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="bill.id"><g:message code="operation.bill.label" default="Bill"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'bill', 'errors')}">
+              <g:select name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
+            </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="sum"><g:message code="operation.sum.label" default="Sum"/></label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'sum', 'errors')}">
+              <g:textField name="sum" value="${fieldValue(bean: operationInstance, field: 'sum')}"/>
+            </td>
+          </tr>
+
 
           <tr class="prop">
             <td valign="top" class="name">
@@ -606,7 +633,7 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="category.id"><g:message code="operation.type.label" default="Type"/></label>
+              <label for="category.id"><g:message code="operation.category.label" default="Category"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'category', 'errors')}">
               <g:select id="crOprcid" name="category.id" from="${domain.CategoryOp.list()}" optionKey="id" value="${operationInstance?.category?.id}"/>
@@ -625,7 +652,6 @@
   </div>
 
 </div>
-%{--<input type="text" maxlength="6" size="6" id="cpfR" value=""/>--}%
 
 </body>
 </html>
