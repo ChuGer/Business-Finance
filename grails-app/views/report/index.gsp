@@ -32,7 +32,7 @@
       $.getJSON("lineChart", function(jsonData) {
         var dataTable = createDataTableFromJSON(jsonData);
         new google.visualization.AnnotatedTimeLine(document.getElementById('lineChart'))
-                .draw(dataTable, {displayAnnotations: true});
+                .draw(dataTable, {displayAnnotations: true, colors: ['red', 'green']});
       })
     }
 
@@ -59,7 +59,8 @@
       $.each(jsonData, function(i, item) {
         table.addColumn(item.type, item.name);
         $.each(item.data, function(j, cellValue) {
-          (cellValue instanceof Object && cellValue.length == 3) ? table.setValue(j, i, new Date(cellValue[0], cellValue[1], cellValue[2])) : table.setValue(j, i, cellValue);
+          var value = (i == 0) ? new Date(cellValue) : cellValue;
+          table.setValue(j, i, value);
         });
       });
       return table;
@@ -83,8 +84,8 @@
       <li><a href="#tabs-1" onclick="drawLineChart();"><g:message code="report.chart.line"/></a></li>
       <li><a href="#tabs-2" onclick="drawPieChart();"><g:message code="report.chart.pie"/></a></li>
     </ul>
-    <div id="tabs-1" style="width: 850px;">
-      <div id="lineChart" style="width: 800px; height: 240px;"></div>
+    <div id="tabs-1">
+      <div id="lineChart" style="width: 1000px; height: 500px;"></div>
     </div>
     <div id="tabs-2" >
       <div id="pieChart" style="min-width: 600px; height: 400px;"></div>
@@ -93,7 +94,7 @@
           <g:actionSubmit value="up"/>
         </g:formRemote>
       </div>
-      <div style="display:inline-block;">
+      <div >
         <g:formRemote name="root" url="[action: 'root']" onSuccess="drawPieChart()">
           <g:actionSubmit value="root"/>
         </g:formRemote>

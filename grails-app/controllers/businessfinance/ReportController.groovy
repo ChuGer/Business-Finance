@@ -15,11 +15,56 @@ class ReportController {
   def index = {}
 
   def lineChart = {
+    //dateMap contains startDate and map of two values by type 0 - outcome sum, 1 - income sum
+    def dateMap = [:]
+    Operation.findAll().each { o ->
+      def key = o.type == 1 ? 'in' : 'out'
+      def titleKey = o.type == 1 ? 'inT' : 'outT'
+      def date = o.startDate
+      def sum = o.sum
+      def title =  o.name
+
+      if (dateMap.containsKey(date)) {
+        def map = dateMap.get(date)
+        if (map.containsKey(key)) {
+          def oldSum = map.get(key)
+          def oldTitle = map.get(titleKey)
+          map.put(key, oldSum + sum)
+          map.put(titleKey, oldTitle +' '+ title)
+        } else {
+          map.put(key, sum)
+          map.put(titleKey, title)
+        }
+        println map
+        dateMap.put(date, map)
+      } else {
+        dateMap.put(date, [(key): sum, (titleKey) : title])
+      }
+    }
+
+    // creating 3 lists for JSON storage
+    def dateList = []
+    def outcomeList = []
+    def outcomeTitleList = []
+    def incomeList = []
+    def incomeTitleList = []
+    dateMap.each { o ->
+      dateList.add(o.key)
+      outcomeList.add(o.value.get('out'))
+      outcomeTitleList.add(o.value.get('outT'))
+      incomeList.add(o.value.get('in'))
+      incomeTitleList.add(o.value.get('inT'))
+    }
+
     def lineChart = [
-            [type: 'date', name: 'Data', data: [[2008, 1, 1], [2008, 2, 1], [2008, 3, 1]]],
-            [type: 'number', name: 'Hours per Day', data: [11, 34, 465]],
-            [type: 'number', name: 'Sales', data: [345, 3, 465]]
+            [type: 'date', name: 'Operation Date', data: dateList],
+            [type: 'number', name: g.message(code: 'operation.type.outcome'), data: outcomeList],
+            [type: 'string', name: 'outcomeTitle', data: outcomeTitleList],
+            [type: 'number', name: g.message(code: 'operation.type.income'), data: incomeList],
+            [type: 'string', name: 'incomeTitle', data: incomeTitleList],
     ];
+
+    println lineChart
     render lineChart as JSON
   }
 
@@ -53,8 +98,8 @@ class ReportController {
     // clicked row in pieChart
     def typeId = params.id.toInteger()
     // catView - type of operation (0 - outcome, 1 - income)
-    if (session.catView ==null)
-    session.catView = typeId
+    if (session.catView == null)
+      session.catView = typeId
     def clickedCatId = session.cat.get(typeId)
     recreatePieChart(clickedCatId)
     render session.pieChart as JSON
