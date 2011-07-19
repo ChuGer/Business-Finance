@@ -15,12 +15,6 @@ class ReportController {
   def index = {}
 
   def lineChart = {
-//    def lineChart = [
-//            [type: 'date', name: 'Data', data: [[2008, 1, 1], [2008, 2, 1], [2008, 3, 1]]],
-//            [type: 'number', name: 'Hours per Day', data: [11, 34, 465]],
-//            [type: 'number', name: 'Sales', data: [345, 3, 465]]
-//    ];
-
     //dateMap contains startDate and map of two values by type 0 - outcome sum, 1 - income sum
     def dateMap = [:]
     Operation.findAll().each { o ->
@@ -47,18 +41,6 @@ class ReportController {
         dateMap.put(date, [(key): sum, (titleKey) : title])
       }
     }
-//
-//    Operation.findAllByType(1).each { o ->
-//      def sumList = [:]
-//      if (dateMap.containsKey(o.startDate)) {
-//        sumList = dateMap.get(o.startDate)
-//        sumList.put('in', o.sum)
-//      } else {
-//        // out: undefined or null or so
-//        sumList = [in: o.sum]
-//      }
-//      dateMap.put(o.startDate, sumList)
-//    }
 
     // creating 3 lists for JSON storage
     def dateList = []
@@ -81,11 +63,7 @@ class ReportController {
             [type: 'number', name: g.message(code: 'operation.type.income'), data: incomeList],
             [type: 'string', name: 'incomeTitle', data: incomeTitleList],
     ];
-//    def lineChart = [
-//      [type:'date', name: 'Operation Date', data:[new Date(2011,6,5), new Date(2011,7,5)]],
-//      [type:'number', name:'Расход', data:[1000.0, 2000.0]],
-//      [type:'number', name:'Доход', data:[3000.0, 2000.0]]
-//      ]
+
     println lineChart
     render lineChart as JSON
   }
