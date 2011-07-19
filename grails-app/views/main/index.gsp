@@ -352,8 +352,8 @@
           today: regional.currentText
         },
         select: function(start, end, allDay) {
-          $("#startDate").val($.format.date(start, "MM/dd/yyyy"));
-          $("#endDate").val($.format.date(end, "MM/dd/yyyy"));
+          $("#startDate").val($.format.date(start, "dd/MM/yyyy"));
+          $("#endDate").val($.format.date(end, "dd/MM/yyyy"));
           $("#opr-form").dialog("open");
           calendar.fullCalendar('unselect');
         },
