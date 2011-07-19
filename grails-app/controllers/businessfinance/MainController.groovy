@@ -47,7 +47,7 @@ class MainController {
   def addEvent = {
     println params
     //TODO : something more simply?
-    def sdf = new SimpleDateFormat("MM/dd/yyyy");
+    def sdf = new SimpleDateFormat("dd/MM/yyyy");
     def operation = new Operation()
     operation.name = params.name
     operation.startDate = sdf.parse(params.startDate) + 1
@@ -63,6 +63,7 @@ class MainController {
         println it
       }
     }
+    println 'created : ' +  (operation  as JSON)
     def answer =  categoryService.parseOperById(operation.id)
     render answer as JSON
   }
@@ -130,10 +131,10 @@ class MainController {
 
   def events = {
     def data = []
-    def opsIds
+    def opsIds = []
     opsIds = categoryService.usersSelectedOpsIds()
 //    def billIds = categoryService.usersSelectedBillsIds()
-    Operation.list().each {o ->
+    Operation.findAllByIdInList(opsIds).each {o ->
       if (o.id in opsIds) {
         def map = [:]
         map.put('id', o.id)

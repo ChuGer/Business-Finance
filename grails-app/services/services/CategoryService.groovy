@@ -167,14 +167,11 @@ class CategoryService {
   }
 
   def usersSelectedOpsIds() {
-    println 'st1'
-
-    //TODO: SQL
+ //TODO: SQL
     Set opsIds = []
     SecUser user = (SecUser) springSecurityService.getCurrentUser()
     List<Operation> ops = Operation.findAllByUserAndIsChecked(user, true)
     ops.each { o -> opsIds.add(o.id)}
-    println 'st2'
     opsIds
   }
 
