@@ -56,7 +56,7 @@ class MainController {
       params.categoryb = 'd1'
     operation.bill = bill
     operation.category = CategoryOp.findById(params?.categoryb[1..-1])   // TODO synchronize inlist with hovered
-    operation.type = params.type
+    operation.type = Integer.parseInt(params.type)
     operation.isChecked = true
     operation.user = springSecurityService.getCurrentUser()
     operation.sum = params.sum.toFloat()
