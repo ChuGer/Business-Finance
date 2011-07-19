@@ -20,6 +20,23 @@
   <script type="text/javascript" src="../js/colorpicker.js"></script>
   <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-ru.js"></script>
   <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-en-US.js"></script>
+  <style type="text/css">
+  .addCatButton {
+    width: 24px;
+    background-image: url('../images/tree/layer--plus.png');
+    background-repeat: no-repeat;
+    display: none;
+    text-indent:-300px;
+  }
+
+  .addButton {
+    width: 24px;
+    background-image: url('../images/tree/plus.png');
+    background-repeat: no-repeat;
+    display: none;
+    text-indent:-300px;
+  }
+  </style>
   <script type="text/javascript">
 
     $(function() {
@@ -51,8 +68,7 @@
       //add bill button
       var newid = node.attr("id") + "p";
       var el = $('#' + node.attr("id")).children('a');
-      el.append("<div id=" + newid + " style='  width: 25px; display: none; background-color: lime; '></div>");
-      $("#" + newid).append('[+]');
+      el.append("<div id=" + newid + " class='addButton'>.</div>");
 
       $("#" + newid).click(function() {
         $("#bill-form").dialog("open");
@@ -62,20 +78,19 @@
       //add category bill button
       var newcid = node.attr("id") + "f";
       var cel = $('#' + node.attr("id")).children('a');
-      cel.append("<div id=" + newcid + " style='  width: 25px; display: none; background-color: yellow; '></div>");
-      $("#" + newcid).append('[c]');
+      cel.append("<div id=" + newcid + " class='addCatButton'>.</div>");
       $("#" + newcid).click(function() {
         $("#ctb-form").dialog("open");
       });
 
       cel.css("background-color", node.attr("color"));
+      cel.css("background", "-moz-linear-gradient(left," + node.attr("color") + " 0%, white 70%)");
     }
     function createOprCategoryButtons(node) {
       //add bill button
       var newid = node.attr("id") + "p";
       var el = $('#' + node.attr("id")).children('a');
-      el.append("<div id=" + newid + " style='  width: 25px; display: none; background-color: lime; '></div>");
-      $("#" + newid).append('[+]');
+      el.append("<div id=" + newid + " class='addButton'>.</div>");
 
       $("#" + newid).click(function() {
         $("#opr-form").dialog("open");
@@ -85,12 +100,12 @@
       //add category bill button
       var newcid = node.attr("id") + "f";
       var cel = $('#' + node.attr("id")).children('a');
-      cel.append("<div id=" + newcid + " style='  width: 25px; display: none; background-color: yellow; '></div>");
-      $("#" + newcid).append('[c]');
+      cel.append("<div id=" + newcid + " class='addCatButton'>.</div>");
       $("#" + newcid).click(function() {
         $("#cto-form").dialog("open");
       });
       cel.css("background-color", node.attr("color"));
+      cel.css("background", "-moz-linear-gradient(left," + node.attr("color") + " 0%, white 70%)");
 
     }
 
@@ -110,7 +125,7 @@
       $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
 //      $("#treeDiv").jstree('check_node',($('#' + nodeData[0].attr.id)) );
 
-       refetchEvents();
+      refetchEvents();
     }
     function createCtgOprnode(data, textStatus) {
       var nodeData = data[1];
@@ -197,7 +212,9 @@
             type: "POST",
             data: {name: sname, id: sid, type: stype, ch : 1},
             dataType: "json",
-            success:function(){ refetchEvents(); }
+            success:function() {
+              refetchEvents();
+            }
           });
         }
       });
@@ -215,7 +232,9 @@
             type: "POST",
             data: {name: sname, id: sid, type: stype, ch : 0},
             dataType: "json",
-            success:function(){ refetchEvents(); }
+            success:function() {
+              refetchEvents();
+            }
           });
         }
       });
@@ -310,7 +329,7 @@
     function closeOprBillDialog() {
       $("#cto-form").dialog("close");
     }
-    function refetchEvents( ) {
+    function refetchEvents() {
 //      console.lod(d[0].type)
       $('#calendar').fullCalendar('refetchEvents');
     }
@@ -388,11 +407,11 @@
 
   <table>
     <tr>
-      <td width="200px;">
+      <td width="250px;">
         <div id="treeDiv"></div>
-         <button id="selectAll" onclick="selectAll();">
-           <g:message code="default.button.selectAll"/>
-         </button>
+        <button id="selectAll" onclick="selectAll();">
+          <g:message code="default.button.selectAll"/>
+        </button>
       </td>
       <td>
         <div style="width:800px;" id="calendar"></div>
