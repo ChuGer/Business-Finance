@@ -59,7 +59,7 @@ class BootStrap {
       def op4 = new Operation(name: 'Thief', sum: 4000, user: user, category: ctg5, type: 1, bill: bill3, startDate: new Date(111, 6, 13)).save(failOnError: true)
       def op5 = new Operation(name: 'Work', sum: 1000, user: user, category: ctg5, type: 1, bill: bill3, startDate: new Date(111, 6, 4)).save(failOnError: true)
       def op6 = new Operation(name: 'Gifts', sum: 1000, user: user, category: ctg7, type: 1, bill: bill1, startDate: new Date(111, 6, 27)).save(failOnError: true)
-      def op7 = new Operation(name: 'Rent', sum: 2000, user: user, category: ctg7, type: 1, bill: bill2, startDate: new Date(111, 6, 8)).save(failOnError: true)
+      def op7 = new Operation(name: 'Rent', sum: 3000, user: user, category: ctg7, type: 1, bill: bill2, startDate: new Date(111, 6, 8)).save(failOnError: true)
       def op8 = new Operation(name: 'Post', sum: 5000, user: user, category: ctg6, type: 0, bill: bill3, startDate: new Date(111, 6, 12)).save(failOnError: true)
       def op9 = new Operation(name: 'Medicine', sum: 4000, user: user, category: ctg6, type: 0, bill: bill3, startDate: new Date(111, 6, 29)).save(failOnError: true)
 
