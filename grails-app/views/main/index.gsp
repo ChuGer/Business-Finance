@@ -26,7 +26,7 @@
     background-image: url('../images/tree/layer--plus.png');
     background-repeat: no-repeat;
     display: none;
-    text-indent:-300px;
+    text-indent: -300px;
   }
 
   .addButton {
@@ -34,7 +34,7 @@
     background-image: url('../images/tree/plus.png');
     background-repeat: no-repeat;
     display: none;
-    text-indent:-300px;
+    text-indent: -300px;
   }
   </style>
   <script type="text/javascript">
@@ -93,6 +93,8 @@
       el.append("<div id=" + newid + " class='addButton'>.</div>");
 
       $("#" + newid).click(function() {
+        $("#startDate").val($.format.date(new Date(), "dd/MM/yyyy"));
+        $("#endDate").val($.format.date(new Date(), "dd/MM/yyyy"));
         $("#opr-form").dialog("open");
 //              var node = $('#treeDiv .jstree-hovered').parent('li');
 //              console.log('plus cliked on node = ' + node.attr("id") + ' named ' + node.text())

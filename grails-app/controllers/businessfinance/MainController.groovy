@@ -15,7 +15,7 @@ class MainController {
   def categoryService
 
   def index = {
-    def operationInstance = new Operation()
+    def operationInstance = new Operation(type : 1)
     def billInstance = new Bill()
     billInstance.properties = params
     if (springSecurityService.getCurrentUser())
