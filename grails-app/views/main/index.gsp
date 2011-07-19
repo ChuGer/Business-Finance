@@ -465,7 +465,7 @@
               <label for="icon"><g:message code="bill.ico.label" default="Icon"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: billInstance, field: 'ico', 'errors')}">
-              <g:textField id="icon" name="ico" value="${billInstance?.ico}"/>
+              <g:textField id="icon" name="ico" value="${billInstance?.ico}" readonly="true"/>
             </td>
           </tr>
           <g:hiddenField id="categoryb2" name="categoryb"/>
@@ -504,7 +504,7 @@
               <label for="bilPicker"><g:message code="ctgb.color.label" default="Color"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: ctgBInstance, field: 'color', 'errors')}">
-              <g:hiddenField id="colorsb" name="color"/>
+              <g:hiddenField id="colorsb" name="color" value="${ctgOInstance?.color}"/>
               <div id="bilPicker"></div>
             </td>
           </tr>
@@ -515,7 +515,7 @@
               <label for="icon"><g:message code="ctgb.ico.label" default="Icon"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: ctgBInstance, field: 'ico', 'errors')}">
-              <g:textField id="icon" name="ico" value="${ctgBInstance?.ico}"/>
+              <g:textField id="icon" name="ico" value="${ctgBInstance?.ico}" readonly="true"/>
             </td>
           </tr>
           <g:hiddenField id="categoryb" name="categoryb"/>
@@ -555,7 +555,7 @@
             </td>
 
             <td valign="top" class="value ${hasErrors(bean: ctgOInstance, field: 'color', 'errors')}">
-              <g:hiddenField id="colorso" name="color"/>
+              <g:hiddenField id="colorso" name="color" value="${ctgOInstance?.color}"/>
               <div id="oprPicker"></div>
             </td>
           </tr>

@@ -258,7 +258,7 @@ class CategoryService {
       def ctb = CategoryBill.findById(id)
      data = data + ctgReflect(ctb)
     }
-    print data
+//    print data
     data
   }
 

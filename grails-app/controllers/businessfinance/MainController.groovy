@@ -45,14 +45,16 @@ class MainController {
   }
 
   def addEvent = {
-    println params
     //TODO : something more simply?
     def sdf = new SimpleDateFormat("dd/MM/yyyy");
     def operation = new Operation()
     operation.name = params.name
     operation.startDate = sdf.parse(params.startDate) + 1
     operation.endDate = sdf.parse(params.endDate) + 1
-    operation.bill = Bill.findById(params.bill.id)
+    def bill = Bill.findById(params.bill.id)
+    if(! params.categoryb)
+      params.categoryb = 'd1'
+    operation.bill = bill
     operation.category = CategoryOp.findById(params?.categoryb[1..-1])   // TODO synchronize inlist with hovered
     operation.type = params.type
     operation.isChecked = true
@@ -63,7 +65,9 @@ class MainController {
         println it
       }
     }
-    println 'created : ' +  (operation  as JSON)
+    else{
+      bill.balance += (operation.type == 1)? operation.sum : - operation.sum
+    }
     def answer =  categoryService.parseOperById(operation.id)
     render answer as JSON
   }
@@ -81,7 +85,7 @@ class MainController {
     render answer as JSON
   }
   def addBillCategory = {
-    println params
+//    println params
     def ctgId = params.categoryb[1..-1]
     def billInstance = new CategoryBill(name: params.name, color : params.color,
                                   category : CategoryBill.findById(ctgId), isChecked: true)
@@ -94,7 +98,7 @@ class MainController {
     render answer as JSON
   }
   def addOprCategory = {
-    println params
+//    println params
     def ctgId = params.categoryb[1..-1]
     def ctgOpInstance = new CategoryOp(name: params.name, color : params.color,
                                   category : CategoryOp.findById(ctgId), isChecked: true)

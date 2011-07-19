@@ -110,9 +110,9 @@ grails.plugins.springsecurity.interceptUrlMap = [         //TODO == map all  pag
         '/logout/**': ['IS_AUTHENTICATED_ANONYMOUSLY'],
         '/js/**': ['IS_AUTHENTICATED_ANONYMOUSLY']
 ]
-grails.plugins.springsecurity.secureChannel.definition = [
-        '/**': 'REQUIRES_SECURE_CHANNEL'
-]
+//grails.plugins.springsecurity.secureChannel.definition = [
+//        '/**': 'REQUIRES_SECURE_CHANNEL'
+//]
 
 //Mail settings
 //grails.plugins.springsecurity.ui.register.postRegisterUrl = '/welcome'

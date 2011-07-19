@@ -19,7 +19,7 @@ class Operation {
   Note note
   static hasOne = Note
   static constraints = {
-    name(blank: false, unique: true)
+    name(blank: false, unique: false)
     bill()
     sum(blank: false)
     type()
