@@ -349,9 +349,6 @@
               calendar.fullCalendar('removeEvents', event.id);
             }
           });
-          if (!confirm("Want to revert deleted event?")) {
-            revertFunc();
-          }
         },
         eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
           console.log(event.id + " " + event.title + " was moved " +
