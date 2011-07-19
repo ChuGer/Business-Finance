@@ -86,18 +86,18 @@
       <li><a href="#tabs-2" onclick="drawPieChart();"><g:message code="report.chart.pie"/></a></li>
     </ul>
     <div id="tabs-1">
-      <div id="lineChart" style="width: 1000px; height: 500px;"></div>
+      <div id="lineChart" style="min-width: 1000px; height: 450px;"></div>
     </div>
-    <div id="tabs-2" >
-      <div id="pieChart" style="min-width: 600px; height: 400px;"></div>
+    <div id="tabs-2">
+      <div id="pieChart" style="min-width: 1000px; height: 450px;"></div>
       <div style="display:inline-block;">
-        <g:formRemote name="up" url="[action: 'up']" onSuccess="drawPieChart()">
-          <button><g:message code="chart.pie.up"/></button>
+        <g:formRemote name="root" url="[action: 'root']" onSuccess="drawPieChart()">
+          <button style="width:150px"><g:message code="chart.pie.root"/></button>
         </g:formRemote>
       </div>
-      <div >
-        <g:formRemote name="root" url="[action: 'root']" onSuccess="drawPieChart()">
-          <button><g:message code="chart.pie.root"/></button>
+      <div style="display:inline-block;">
+        <g:formRemote name="up" url="[action: 'up']" onSuccess="drawPieChart()">
+          <button style="width:150px"><g:message code="chart.pie.up"/></button>
         </g:formRemote>
       </div>
     </div>

@@ -23,17 +23,17 @@ class ReportController {
     if (params?.format && params.format != "html") {
       response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
       response.setHeader("Content-disposition", "attachment; filename=books.${params.extension}")
-      def fields = ["name", "startDate","sum","type","bill"]
+      def fields = ["name", "startDate", "sum", "type", "bill"]
       def labels = [:]
-      fields.each { f->
+      fields.each { f ->
         labels.put(f, getMessage(f))
       }
-      exportService.export(params.format, response.outputStream, Operation.findAll(), fields, labels, [:],[:])
+      exportService.export(params.format, response.outputStream, Operation.findAll(), fields, labels, [:], [:])
     }
   }
 
-  def getMessage(code){
-     g.message(code: 'operation.'+code+'.label')
+  def getMessage(code) {
+    g.message(code: 'operation.' + code + '.label')
   }
 
   def lineChart = {
@@ -57,7 +57,6 @@ class ReportController {
           map.put(key, sum)
           map.put(titleKey, title)
         }
-        println map
         dateMap.put(date, map)
       } else {
         dateMap.put(date, [(key): sum, (titleKey): title])
@@ -106,7 +105,8 @@ class ReportController {
               colors: ['red', 'green']
       ]
 
-    session.cat = session.cat ?: [0: 1, 1: 1]
+    session.visibleCats = session.visibleCats ?: [1L, 1L]
+    session.historyCats = session.historyCats ?: []
     render pieChart as JSON
   }
 
@@ -122,9 +122,13 @@ class ReportController {
     // catView - type of operation (0 - outcome, 1 - income)
     if (session.catView == null)
       session.catView = typeId
-    def clickedCatId = session.cat.get(typeId)
-    recreatePieChart(clickedCatId)
-    render session.pieChart as JSON
+    def clickedCatId = session.visibleCats.get(typeId)
+    if ('undef'.equals(clickedCatId))
+      redirect(action: up)
+    else {
+      recreatePieChart(clickedCatId)
+      render session.pieChart as JSON
+    }
   }
 
   def recursiveSum(CategoryOp cat, sum) {
@@ -132,18 +136,18 @@ class ReportController {
       if (o.type == session.catView)
         sum += o.sum
     }
-    cat.categories.each {c ->
+    cat.categories.each { c ->
       sum += recursiveSum(c, 0)
     }
     sum
   }
 
   def up = {
-    def parentCatId = session.cat.get(0)
-    def parentCat = CategoryOp.findById(parentCatId)
-    if (parentCat.category != null) {
-      recreatePieChart(parentCat.category.id)
-      render session.pieChart as JSON
+    def list = session.historyCats
+    if (list.size() > 1) {
+      list.pop()
+      recreatePieChart(list.pop())
+      render('')
     } else {
       redirect(action: root)
     }
@@ -152,21 +156,22 @@ class ReportController {
   def root = {
     session.pieChart = null
     session.catView = null
-    session.cat = null
+    session.visibleCats = null
+    session.historyCats = null
     render('')
   }
 
   def recreatePieChart(clickedCatId) {
     if (!clickedCatId.equals('undef')) {
+      session.historyCats.add(clickedCatId)
       def clickedCat = CategoryOp.findById(clickedCatId)
       def dataMap = [:]
-      session.cat = [:]
+      session.visibleCats = []
       def colors = []
 
-      def index = 0
       clickedCat.operations.each {o ->
         if (o.type == session.catView) {
-          session.cat.put(index++, o.category.id)
+          session.visibleCats.add('undef')
           dataMap.put(o.name, o.sum)
           colors.add('gray')
         }
@@ -174,7 +179,7 @@ class ReportController {
       clickedCat.categories.each {c ->
         def sum = recursiveSum(c, 0)
         if (sum != 0) {
-          session.cat.put(index++, c.id)
+          session.visibleCats.add(c.id)
           dataMap.put(c.name, sum)
           colors.add(c.color)
         }
