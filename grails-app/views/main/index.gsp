@@ -338,6 +338,7 @@
     }
     function drawCalendar(regional) {
       var calendar = $('#calendar');
+
       calendar.fullCalendar({
         header: {
           left: '',
@@ -393,7 +394,18 @@
           });
         },
         editable: true,
-        events: 'events'
+        events:
+        function(start, end, callback) {
+          var view = $('#calendar').fullCalendar('getView');
+          $.ajax({
+            url: 'events',
+            dataType: "json",
+            type: "POST",
+            data: {start: view.start.getTime(), end: view.end.getTime(), title:view.title},
+            success: function(events) {
+              callback(events);
+          }})
+        }
       });
     }
 
@@ -413,7 +425,7 @@
       <td width="250px;">
         <div id="treeDiv"></div>
         %{--<button id="selectAll" onclick="selectAll();">--}%
-          %{--<g:message code="default.button.selectAll"/>--}%
+        %{--<g:message code="default.button.selectAll"/>--}%
         %{--</button>--}%
       </td>
       <td>
