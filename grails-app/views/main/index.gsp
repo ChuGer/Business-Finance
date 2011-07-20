@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="layout" content="main"/>
+  <meta name="layout" content="nemain"/>
   <title><g:message code="menu.main.title"/></title>
   <g:javascript library="jquery" plugin="jquery"/>
   <jsTree:resources/>
@@ -42,9 +42,22 @@
     $(function() {
       createTree();
       createCalendars();
+      createStatistics();
       createColor();
       var lastHoveredNodeId = 'd1';
     });
+
+    function createStatistics() {
+      jQuery.ajax({
+        url: 'renderStat',
+        type: "POST",
+        dataType: "json",
+        complete: function(data) {
+          $('#statForm').html(data.responseText);
+        }
+      });
+    }
+
     var isLoaded = false;
     function createColor() {
       $('#bilPicker').ColorPicker({
@@ -136,7 +149,7 @@
       var nodeData = data[1];
       $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
       createOprCategoryButtons($('#' + nodeData[0].attr.id));
-       $("#crOprcid").append("<option value=" + data[0].id +" >"+nodeData[0].data[0].title+"</option>");
+      $("#crOprcid").append("<option value=" + data[0].id + " >" + nodeData[0].data[0].title + "</option>");
     }
 
     function createTree() {
@@ -246,29 +259,26 @@
       });
       tree.bind("hover_node.jstree", function (e, d) {
         var prefix = d.rslt.obj.attr("id").substr(0, 1);
+        var pid = d.rslt.obj.attr("id") + "p";
+        var pid2 = d.rslt.obj.attr("id") + "f";
+        $("#" + pid).animate().css({display: "inline-block"})
+        $("#" + pid2).animate().css({display: "inline-block"})
         if (prefix == 'd' || prefix == 'c') {
-          var pid = d.rslt.obj.attr("id") + "p";
-          var pid2 = d.rslt.obj.attr("id") + "f";
-          $("#" + pid).animate().css({display: "inline-block"})
-          $("#" + pid2).animate().css({display: "inline-block"})
           lastHoveredNodeId = d.rslt.obj.attr("id");
           $("#categoryb").val(lastHoveredNodeId);
           $("#categoryb2").val(lastHoveredNodeId);
           $("#categoryb3").val(lastHoveredNodeId);
           $("#categoryb4").val(lastHoveredNodeId);
         }
-        if (prefix == 'd')
+        if (prefix == 'd') {
           $("select#crOprcid").val(lastHoveredNodeId.substr(1, lastHoveredNodeId.length));
+        }
       });
       tree.bind("dehover_node.jstree", function (e, d) {
-        var prefix = d.rslt.obj.attr("id").substr(0, 1);
-        if (prefix == 'd' || prefix == 'c') {
           var pid = d.rslt.obj.attr("id") + "p";
           var pid2 = d.rslt.obj.attr("id") + "f";
           $("#" + pid).animate().css({display: "none"})
           $("#" + pid2).animate().css({display: "none"})
-        }
-//          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
       });
 
 
@@ -283,17 +293,18 @@
       tree.bind("select_node.jstree", function (e, d) {
 //        createTree();
 //        d.rslt.obj.css("background-color", "green")   $("select#crOprcid").val( lastHoveredNodeId.substr(1,lastHoveredNodeId.length));
-        var newid = d.rslt.obj.attr("id")  ;
-        if(newid.substr(0,1) == 'b'){
-        jQuery.ajax({
+        var newid = d.rslt.obj.attr("id");
+        if (newid.substr(0, 1) == 'b') {
+          jQuery.ajax({
             url: 'clickEvent',
             type: "POST",
             data: {id: newid},
-            dataType: "json"
-//            ,success:function() {
-//              refetchEvents();
-//            }
-          });
+            dataType: "json",
+            complete: function(data) {
+              $('#statForm').html(data.responseText);
+            }
+          }
+                  );
         }
 //        $('#treeDiv .jstree-hovered').append("<div id="+newid+" style='  width: 15px; text-align: right'></div>");
 //        $("#"+newid).append('z.');
@@ -443,34 +454,9 @@
   </g:if>
 
   <div>
-    <div id="treeDiv" style="width:220px;float:left; margin:10px;"></div>
-    <div style="min-width:800px; display: inline-block;margin:10px;" id="calendar"></div>
-    <div style="min-width:400px; float: right; background-color:#f5f5f5; border-radius:10px; margin:10px;">
-      <h1 style="text-align:center;">${stat.bill.name}</h1>
-      <g:message code="main.stat.balance"/>: ${stat.bill.balance}<br/><br/>
-      <table>
-        <tr>
-          <th><g:message code="main.stat.category.name"/></th>
-          <th><g:message code="main.stat.category.income"/></th>
-          <th><g:message code="main.stat.category.outcome"/></th>
-          <th><g:message code="main.stat.category.result"/></th>
-        </tr>
-        <g:each in="${stat.categories}" var="i">
-          <tr>
-            <td>${i.categoryName}</td>
-            <td>${i.income}</td>
-            <td>${i.outcome}</td>
-            <td>${i.result}</td>
-          </tr>
-        </g:each>
-         <tr style="background-color:#e6e6fa;">
-            <td>${stat.result.categoryName}</td>
-            <td>${stat.result.income}</td>
-            <td>${stat.result.outcome}</td>
-            <td>${stat.result.result}</td>
-          </tr>
-      </table>
-    </div>
+    <div id="treeDiv" style="min-width:220px; float :left; margin:10px;"></div>
+    <div id="calendar" style="min-width:700px; display: inline-block;margin:10px;"></div>
+    <div id="statForm" style="min-width:150px; float: right; background-color:#f5f5f5; border-radius:10px; margin:10px;"></div>
   </div>
 
 
@@ -483,7 +469,6 @@
   <g:render template="ctbForm" bean="${ctgBInstance}"/>
 
 </div>
-
 </body>
 </html>
 

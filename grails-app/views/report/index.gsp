@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="layout" content="main"/>
+  <meta name="layout" content="nemain"/>
   <title><g:message code="menu.report.title"/></title>
   <g:javascript library="jquery" plugin="jquery"/>
   <script type="text/javascript" src="../js/jquery/jquery-1.6.1.js"></script>
