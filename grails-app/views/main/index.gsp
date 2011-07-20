@@ -85,6 +85,8 @@
 
       cel.css("background-color", node.attr("color"));
       cel.css("background", "-moz-linear-gradient(left," + node.attr("color") + " 0%, white 70%)");
+//      -webkit-gradient(linear, left top, right top, color-stop(0%,#fefefd), color-stop(42%,#dce3c4), color-stop(100%,#aebf76))
+//      cel.css("background", "-webkit-gradient(linear, left top, right top, color-stop(0%," + node.attr("color") + "), color-stop(70%,white)");
     }
     function createOprCategoryButtons(node) {
       //add bill button

@@ -125,13 +125,16 @@ class MainController {
     def op = Operation.findById(params.id)
     def dayDelta = params.dayDelta.toInteger()
     op.startDate += dayDelta
-    op.endDate += dayDelta
+    if (op.endDate)
+      op.endDate += dayDelta
     op.save()
     render('')
   }
 
   def resizeEvent = {
     def op = Operation.findById(params.id)
+    if (!op.endDate)
+      op.endDate = op.startDate
     op.endDate += params.dayDelta.toInteger()
     op.save()
     render('')
