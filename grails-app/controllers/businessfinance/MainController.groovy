@@ -3,6 +3,8 @@ package businessfinance
 import grails.converters.JSON
 import java.text.SimpleDateFormat
 import domain.*
+import utils.BillStatHelper
+import utils.BillStatCollector
 
 class MainController {
   static navigation = [
@@ -18,9 +20,42 @@ class MainController {
     def operationInstance = new Operation(type: 1)
     def billInstance = new Bill()
     billInstance.properties = params
-    if (springSecurityService.getCurrentUser())
-      [treeData: categoryService.getCategoryTree() as JSON, operationInstance: operationInstance,
-              billInstance: new Bill(), ctgBInstance: new CategoryBill(), ctgOInstance: new CategoryOp()]
+
+    //TODO : re-create list using SQL and start-end dates TOO HEAVY
+    def BillStatCollector stat = new BillStatCollector()
+    stat.bill =  Bill.findById(3);
+    stat.result = new BillStatHelper(categoryName: g.message(code: 'main.stat.category.result'))
+
+    CategoryOp.findAll().each { c ->
+      def newHelper = new BillStatHelper(categoryName: c.name)
+      c.operations.each {o ->
+        if (o.bill.equals(stat.bill)) {
+          if (o.type == 1) {
+            newHelper.income += o.sum
+          } else {
+            newHelper.outcome += o.sum
+          }
+        }
+      }
+      if (newHelper.income != 0 || newHelper.outcome != 0) {
+        newHelper.result = newHelper.income-newHelper.outcome
+        stat.result.income += newHelper.income
+        stat.result.outcome += newHelper.outcome
+        stat.result.result += newHelper.result
+        stat.categories.add(newHelper)
+      }
+    }
+
+    if (springSecurityService.getCurrentUser()) {
+      [
+              treeData: categoryService.getCategoryTree() as JSON,
+              operationInstance: operationInstance,
+              billInstance: new Bill(),
+              ctgBInstance: new CategoryBill(),
+              ctgOInstance: new CategoryOp(),
+              stat: stat,
+      ]
+    }
     else {  // goes as demonstration tree data?
       def treeData = [
               [data: 'ExCateg1', attr: [id: '23'], children: [[[data: 'Bill1', attr: [id: '26']],
