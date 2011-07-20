@@ -112,7 +112,7 @@ class MainController {
   }
 
   def deleteEvent = {
-    println "deleteEvent with id: ${params.id}"
+//    println "deleteEvent with id: ${params.id}"
     def opr = Operation.findById(params.id)
     if(opr){
       opr.bill.balance -=  (opr.type == 1)? opr.sum : - opr.sum
@@ -136,7 +136,11 @@ class MainController {
     op.save()
     render('')
   }
-
+  def cliclEvent = {
+    session.clickedId = params.id    // TODO : got 'b'-bill/'o'-opr/'c'-ctgBill/'d'-ctgOp letter prefix
+    println   session.clickedId + ' id clicked '
+    render('')
+  }
   def events = {
     def data = []
     def opsIds = []
@@ -154,7 +158,7 @@ class MainController {
         data.add(map)
       }
     }
-    println  opsIds
+//    println  opsIds
     render data as JSON
   }
 

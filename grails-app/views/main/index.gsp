@@ -140,7 +140,7 @@
       console.log(treeData);
       var tree = $("#treeDiv").jstree({
         "json_data" : {"data" : [treeData]},
-        "plugins" : [ "themes", "checkbox", "json_data", "ui" ,"contextmenu","crrm" , "hotkeys"],
+        "plugins" : [ "themes", "checkbox", "json_data", "ui" ,"crrm" ],    //, "hotkeys"  ,"contextmenu"
         hotkeys: {
           "return" : function () {
             $hovered = $('#treeDiv .jstree-hovered');
@@ -272,7 +272,16 @@
       tree.bind("select_node.jstree", function (e, d) {
 //        createTree();
 //        d.rslt.obj.css("background-color", "green")
-        var newid = d.rslt.obj.attr("id") + "p";
+        var newid = d.rslt.obj.attr("id")  ;
+        jQuery.ajax({
+            url: 'cliclEvent',
+            type: "POST",
+            data: {id: newid},
+            dataType: "json"
+//            ,success:function() {
+//              refetchEvents();
+//            }
+          });
 //        $('#treeDiv .jstree-hovered').append("<div id="+newid+" style='  width: 15px; text-align: right'></div>");
 //        $("#"+newid).append('z.');
 

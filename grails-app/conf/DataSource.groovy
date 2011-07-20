@@ -19,14 +19,16 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "update"
+            dbCreate = "create-drop"
             url = "jdbc:mysql://localhost/finance"
         }
     }
     production {
         dataSource {
-            dbCreate = "update"
-            url = "jdbc:hsqldb:file:prodDb;shutdown=true"
+            username = "pbx"
+            password = "finance"
+            dbCreate = "create-drop"
+            url = "jdbc:mysql://localhost/pbx"
         }
     }
 }
