@@ -2,9 +2,9 @@ package businessfinance
 
 import grails.converters.JSON
 import java.text.SimpleDateFormat
-import domain.*
-import utils.BillStatHelper
 import utils.BillStatCollector
+import utils.BillStatHelper
+import domain.*
 
 class MainController {
   static navigation = [
@@ -175,8 +175,10 @@ class MainController {
     render('')
   }
   def cliclEvent = {
-    session.clickedId = params.id    // TODO : got 'b'-bill/'o'-opr/'c'-ctgBill/'d'-ctgOp letter prefix
+    if(params.id[0] == 'b')  {
+    session.clickedId = params.id[1..-1]    // TODO : got 'b'-bill/'o'-opr/'c'-ctgBill/'d'-ctgOp letter prefix
     println   session.clickedId + ' id clicked '
+    }
     render('')
   }
   def events = {
