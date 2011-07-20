@@ -245,23 +245,30 @@
         }
       });
       tree.bind("hover_node.jstree", function (e, d) {
-        var pid = d.rslt.obj.attr("id") + "p";
-        var pid2 = d.rslt.obj.attr("id") + "f";
-        $("#" + pid).animate().css({display: "inline-block"})
-        $("#" + pid2).animate().css({display: "inline-block"})
-        lastHoveredNodeId = d.rslt.obj.attr("id");
-        $("#categoryb").val(lastHoveredNodeId);
-        $("#categoryb2").val(lastHoveredNodeId);
-        $("#categoryb3").val(lastHoveredNodeId);
-        $("#categoryb4").val(lastHoveredNodeId);
-        $("select#crOprcid").val( lastHoveredNodeId.substr(1,lastHoveredNodeId.length));
+        var prefix = d.rslt.obj.attr("id").substr(0, 1);
+        if (prefix == 'd' || prefix == 'c') {
+          var pid = d.rslt.obj.attr("id") + "p";
+          var pid2 = d.rslt.obj.attr("id") + "f";
+          var prefix = d.rslt.obj.attr("id").substr(0, 1);
+          $("#" + pid).animate().css({display: "inline-block"})
+          $("#" + pid2).animate().css({display: "inline-block"})
+          lastHoveredNodeId = d.rslt.obj.attr("id");
+          $("#categoryb").val(lastHoveredNodeId);
+          $("#categoryb2").val(lastHoveredNodeId);
+          $("#categoryb3").val(lastHoveredNodeId);
+          $("#categoryb4").val(lastHoveredNodeId);
+        }
+        if (prefix == 'd')
+          $("select#crOprcid").val(lastHoveredNodeId.substr(1, lastHoveredNodeId.length));
       });
       tree.bind("dehover_node.jstree", function (e, d) {
-        var pid = d.rslt.obj.attr("id") + "p";
-        var pid2 = d.rslt.obj.attr("id") + "f";
-        $("#" + pid).animate().css({display: "none"})
-        $("#" + pid2).animate().css({display: "none"})
-
+        var prefix = d.rslt.obj.attr("id").substr(0, 1);
+        if (prefix == 'd' || prefix == 'c') {
+          var pid = d.rslt.obj.attr("id") + "p";
+          var pid2 = d.rslt.obj.attr("id") + "f";
+          $("#" + pid).animate().css({display: "none"})
+          $("#" + pid2).animate().css({display: "none"})
+        }
 //          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
       });
 
