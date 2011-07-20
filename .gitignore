@@ -9,7 +9,6 @@
 /devDb.properties
 /devDb.script
 /stacktrace.log
-/.idea
 /.idea/workspace.xml
 /.idea/copyright
 /.idea/.name
@@ -25,7 +24,7 @@
 /.settings/org.codehaus.groovy.eclipse.preferences.prefs
 /.classpath
 /.project
-/.idea
 /.settings
-
 /.idea/copyright/profiles_settings.xml
+/Business-Finance.iml
+/Business-Finance-grailsPlugins.iml

@@ -5,7 +5,7 @@ class CategoryOp {
   String name
   String ico = 'ctoDef.png'
   static hasMany = [operations: Operation, categories: CategoryOp]
-  String color  = '#7598ff'
+  String color = '#7598ff'
   Boolean isChecked
   static belongsTo = [category: CategoryOp]
   static constraints = {

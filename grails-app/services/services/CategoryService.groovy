@@ -167,7 +167,7 @@ class CategoryService {
   }
 
   def usersSelectedOpsIds() {
- //TODO: SQL
+    //TODO: SQL
     Set opsIds = []
     SecUser user = (SecUser) springSecurityService.getCurrentUser()
     List<Operation> ops = Operation.findAllByUserAndIsChecked(user, true)
@@ -238,7 +238,7 @@ class CategoryService {
       }
     }
     ctb.categories.each { c ->
-       data = data + ctgReflect(ctb)
+      data = data + ctgReflect(ctb)
     }
     data
   }
@@ -256,7 +256,7 @@ class CategoryService {
     }
     else if (type == 'ctb') {
       def ctb = CategoryBill.findById(id)
-     data = data + ctgReflect(ctb)
+      data = data + ctgReflect(ctb)
     }
 //    print data
     data
