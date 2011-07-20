@@ -12,7 +12,7 @@
   <script type="text/javascript" src="../js/jquery/jquery-ui-1.8.1.min.js"></script>
   <script type="text/javascript" src="http://www.google.com/jsapi"></script>
   <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.2.custom.css"/>
-  <export:resource />
+  <export:resource/>
 
   <script type="text/javascript">
     google.load('visualization', '1', {packages: ['corechart'], timeout: 5000});
@@ -102,7 +102,7 @@
       </div>
     </div>
   </div>
-  <export:formats />
+  <export:formats/>
 
 </div>
 </body>

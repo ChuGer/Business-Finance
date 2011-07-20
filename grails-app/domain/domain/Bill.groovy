@@ -10,7 +10,7 @@ class Bill {
   Currency currency
   Boolean isHidden
   Boolean isChecked
-  static belongsTo = [ category:CategoryBill , user : SecUser  ]
+  static belongsTo = [category: CategoryBill, user: SecUser]
   static hasMany = [operations: Operation]
   static constraints = {
     name()

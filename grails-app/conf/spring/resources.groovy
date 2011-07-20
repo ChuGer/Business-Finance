@@ -7,21 +7,21 @@ import org.springframework.security.web.access.channel.ChannelDecisionManagerImp
 
 beans = {
 
-	// -------------------------------------------------------------------------
-	// -------------------------------------------------------------------------
-	// SPRING SECURITY (CHANNEL SECURITY)
-	channelDecisionManager(ChannelDecisionManagerImpl) {
-		channelProcessors = [new SecureChannelProcessor(),
-							new InsecureChannelProcessor()]
-	}
-	securityMetadataSource(DefaultFilterInvocationSecurityMetadataSource,
-							new AntUrlPathMatcher(),
-							ChannelConfig.getChannelConfig()) {
-		stripQueryStringFromUrls = true
-	}
-	channelProcessingFilter(ChannelProcessingFilter) {
-		channelDecisionManager = ref("channelDecisionManager")
-		securityMetadataSource = ref("securityMetadataSource")
-	}
+  // -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // SPRING SECURITY (CHANNEL SECURITY)
+  channelDecisionManager(ChannelDecisionManagerImpl) {
+    channelProcessors = [new SecureChannelProcessor(),
+            new InsecureChannelProcessor()]
+  }
+  securityMetadataSource(DefaultFilterInvocationSecurityMetadataSource,
+          new AntUrlPathMatcher(),
+          ChannelConfig.getChannelConfig()) {
+    stripQueryStringFromUrls = true
+  }
+  channelProcessingFilter(ChannelProcessingFilter) {
+    channelDecisionManager = ref("channelDecisionManager")
+    securityMetadataSource = ref("securityMetadataSource")
+  }
 
 }

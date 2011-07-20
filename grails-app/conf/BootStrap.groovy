@@ -39,7 +39,7 @@ class BootStrap {
 
       //Creating categories
       def rootB = new CategoryBill(name: 'Bills', isChecked: true, color: 'lime', ico: 'smiley-mr-green.png').save(failOnError: true)
-      def rootO = new CategoryOp(name: 'Operations' , isChecked: true, color: 'magenta', ico: 'script-office.png').save(failOnError: true)
+      def rootO = new CategoryOp(name: 'Operations', isChecked: true, color: 'magenta', ico: 'script-office.png').save(failOnError: true)
 
       def ctg1 = new CategoryBill(name: 'Virtual', isChecked: true, color: 'blue').save(failOnError: true)
 
@@ -48,9 +48,9 @@ class BootStrap {
       def ctg7 = new CategoryOp(name: 'Clothes', isChecked: true, color: 'red').save(failOnError: true)
 
       //Creating Bills
-      def bill1 = new Bill(name: 'Webmoney', currency: cur2, balance: 1000, category: ctg1, isChecked: true, user : user).save(failOnError: true)
-      def bill2 = new Bill(name: 'Visa', currency: cur3, balance: 2000, category: ctg1, isChecked: true, user : user).save(failOnError: true)
-      def bill3 = new Bill(name: 'Cash', currency: cur1, balance: 100000, category: rootB, isChecked: true, user : user, ico: 'user.png').save(failOnError: true)
+      def bill1 = new Bill(name: 'Webmoney', currency: cur2, balance: 1000, category: ctg1, isChecked: true, user: user).save(failOnError: true)
+      def bill2 = new Bill(name: 'Visa', currency: cur3, balance: 2000, category: ctg1, isChecked: true, user: user).save(failOnError: true)
+      def bill3 = new Bill(name: 'Cash', currency: cur1, balance: 100000, category: rootB, isChecked: true, user: user, ico: 'user.png').save(failOnError: true)
 
       //Creating operations
       def op1 = new Operation(name: 'Party', sum: 1000, user: user, category: ctg5, type: 0, bill: bill1, startDate: new Date(111, 6, 7)).save(failOnError: true)

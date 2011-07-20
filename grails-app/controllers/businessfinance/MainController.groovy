@@ -141,8 +141,8 @@ class MainController {
   }
 
   def events = {
-    println  new Date(Long.parseLong(params.start))
-    println  new Date(Long.parseLong(params.end))
+    println new Date(Long.parseLong(params.start))
+    println new Date(Long.parseLong(params.end))
     def data = []
     def opsIds = []
     opsIds = categoryService.usersSelectedOpsIds()

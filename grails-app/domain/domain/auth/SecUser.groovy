@@ -16,16 +16,13 @@ class SecUser {
   Settings settings
   CategoryBill categoriesB
   CategoryOp categoriesO
-  static hasMany =
-  [       bills: Bill,
-          operations: Operation
-  ]
+  static hasMany = [bills: Bill, operations: Operation]
   static constraints = {
     username blank: false, unique: true
     realname nullable: true
     surname nullable: true
     password blank: false
-    email(blank: false,email: true)
+    email(blank: false, email: true)
     password(password: true)
     settings nullable: true
     categoriesB nullable: true

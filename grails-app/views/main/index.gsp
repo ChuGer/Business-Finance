@@ -406,7 +406,7 @@
             data: {start: view.start.getTime(), end: view.end.getTime(), title:view.title},
             success: function(events) {
               callback(events);
-          }})
+            }})
         }
       });
     }
