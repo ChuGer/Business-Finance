@@ -139,8 +139,9 @@
     function createOprnode(data, textStatus) {
       var parentNodeId = '#d' + $("#crOprcid").val();
       var nodeData = data[1];
-      $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
-//      $("#treeDiv").jstree('check_node',($('#' + nodeData[0].attr.id)) );
+      $("#treeDiv").jstree('create', parentNodeId, 'inside', nodeData[0], false, true);
+
+//      $("#treeDiv").jstree('check_node',($('#' + nodeData[0].attr.id)) );  <option value="1">Operations</option>
 
       refetchEvents();
     }
@@ -148,6 +149,7 @@
       var nodeData = data[1];
       $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
       createOprCategoryButtons($('#' + nodeData[0].attr.id));
+       $("#crOprcid").append("<option value=" + data[0].id +" >"+nodeData[0].data[0].title+"</option>");
     }
 
     function createTree() {
@@ -256,22 +258,30 @@
         }
       });
       tree.bind("hover_node.jstree", function (e, d) {
-        var pid = d.rslt.obj.attr("id") + "p";
-        var pid2 = d.rslt.obj.attr("id") + "f";
-        $("#" + pid).animate().css({display: "inline-block"})
-        $("#" + pid2).animate().css({display: "inline-block"})
-        lastHoveredNodeId = d.rslt.obj.attr("id");
-        $("#categoryb").val(lastHoveredNodeId);
-        $("#categoryb2").val(lastHoveredNodeId);
-        $("#categoryb3").val(lastHoveredNodeId);
-        $("#categoryb4").val(lastHoveredNodeId);
+        var prefix = d.rslt.obj.attr("id").substr(0, 1);
+        if (prefix == 'd' || prefix == 'c') {
+          var pid = d.rslt.obj.attr("id") + "p";
+          var pid2 = d.rslt.obj.attr("id") + "f";
+          var prefix = d.rslt.obj.attr("id").substr(0, 1);
+          $("#" + pid).animate().css({display: "inline-block"})
+          $("#" + pid2).animate().css({display: "inline-block"})
+          lastHoveredNodeId = d.rslt.obj.attr("id");
+          $("#categoryb").val(lastHoveredNodeId);
+          $("#categoryb2").val(lastHoveredNodeId);
+          $("#categoryb3").val(lastHoveredNodeId);
+          $("#categoryb4").val(lastHoveredNodeId);
+        }
+        if (prefix == 'd')
+          $("select#crOprcid").val(lastHoveredNodeId.substr(1, lastHoveredNodeId.length));
       });
       tree.bind("dehover_node.jstree", function (e, d) {
-        var pid = d.rslt.obj.attr("id") + "p";
-        var pid2 = d.rslt.obj.attr("id") + "f";
-        $("#" + pid).animate().css({display: "none"})
-        $("#" + pid2).animate().css({display: "none"})
-
+        var prefix = d.rslt.obj.attr("id").substr(0, 1);
+        if (prefix == 'd' || prefix == 'c') {
+          var pid = d.rslt.obj.attr("id") + "p";
+          var pid2 = d.rslt.obj.attr("id") + "f";
+          $("#" + pid).animate().css({display: "none"})
+          $("#" + pid2).animate().css({display: "none"})
+        }
 //          d.rslt.obj.css("background-color", 'rgb(110,140,112)');
       });
 
@@ -286,8 +296,9 @@
 
       tree.bind("select_node.jstree", function (e, d) {
 //        createTree();
-//        d.rslt.obj.css("background-color", "green")
+//        d.rslt.obj.css("background-color", "green")   $("select#crOprcid").val( lastHoveredNodeId.substr(1,lastHoveredNodeId.length));
         var newid = d.rslt.obj.attr("id");
+        if(newid.substr(0,1) == 'b'){
         jQuery.ajax({
           url: 'clickEvent',
           type: "POST",
@@ -298,6 +309,7 @@
           }
         }
                 );
+        }
 //        $('#treeDiv .jstree-hovered').append("<div id="+newid+" style='  width: 15px; text-align: right'></div>");
 //        $("#"+newid).append('z.');
 
