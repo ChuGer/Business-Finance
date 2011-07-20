@@ -20,40 +20,13 @@ class MainController {
     def operationInstance = new Operation(type: 1)
     def billInstance = new Bill()
     billInstance.properties = params
-
-    //TODO : re-create list using SQL and start-end dates TOO HEAVY
-    def BillStatCollector stat = new BillStatCollector()
-    stat.bill =  Bill.findById(3);
-    stat.result = new BillStatHelper(categoryName: g.message(code: 'main.stat.category.result'))
-
-    CategoryOp.findAll().each { c ->
-      def newHelper = new BillStatHelper(categoryName: c.name)
-      c.operations.each {o ->
-        if (o.bill.equals(stat.bill)) {
-          if (o.type == 1) {
-            newHelper.income += o.sum
-          } else {
-            newHelper.outcome += o.sum
-          }
-        }
-      }
-      if (newHelper.income != 0 || newHelper.outcome != 0) {
-        newHelper.result = newHelper.income-newHelper.outcome
-        stat.result.income += newHelper.income
-        stat.result.outcome += newHelper.outcome
-        stat.result.result += newHelper.result
-        stat.categories.add(newHelper)
-      }
-    }
-
     if (springSecurityService.getCurrentUser()) {
       [
               treeData: categoryService.getCategoryTree() as JSON,
               operationInstance: operationInstance,
               billInstance: new Bill(),
               ctgBInstance: new CategoryBill(),
-              ctgOInstance: new CategoryOp(),
-              stat: stat,
+              ctgOInstance: new CategoryOp()
       ]
     }
     else {  // goes as demonstration tree data?
@@ -174,20 +147,48 @@ class MainController {
     op.save()
     render('')
   }
-  def cliclEvent = {
-    if(params.id[0] == 'b')  {
-    session.clickedId = params.id[1..-1]    // TODO : got 'b'-bill/'o'-opr/'c'-ctgBill/'d'-ctgOp letter prefix
-    println   session.clickedId + ' id clicked '
+
+  def clickEvent = {
+    if (params.id[0] == 'b') {
+      session.clickedId = params.id[1..-1]    // TODO : got 'b'-bill/'o'-opr/'c'-ctgBill/'d'-ctgOp letter prefix
+      println session.clickedId + ' id clicked'
     }
-    render('')
+    redirect action: renderStat
   }
+
+  def renderStat = {
+    def BillStatCollector stat = new BillStatCollector()
+    stat.bill = Bill.findById(session?.clickedId?.toInteger() ?: 1);
+    stat.result = new BillStatHelper(categoryName: g.message(code: 'main.stat.category.result'))
+
+    CategoryOp.findAll().each { c ->
+      def newHelper = new BillStatHelper(categoryName: c.name)
+      c.operations.each {o ->
+        if (o.bill.equals(stat.bill)) {
+          if (o.type == 1) {
+            newHelper.income += o.sum
+          } else {
+            newHelper.outcome += o.sum
+          }
+        }
+      }
+      if (newHelper.income != 0 || newHelper.outcome != 0) {
+        newHelper.result = newHelper.income - newHelper.outcome
+        stat.result.income += newHelper.income
+        stat.result.outcome += newHelper.outcome
+        stat.result.result += newHelper.result
+        stat.categories.add(newHelper)
+      }
+    }
+    render(template: 'statForm', model: [stat: stat])
+  }
+
   def events = {
     println new Date(Long.parseLong(params.start))
     println new Date(Long.parseLong(params.end))
     def data = []
     def opsIds = []
     opsIds = categoryService.usersSelectedOpsIds()
-//    def billIds = categoryService.usersSelectedBillsIds()
     Operation.findAllByIdInList(opsIds).each {o ->
       if (o.id in opsIds) {
         def map = [:]
@@ -200,7 +201,6 @@ class MainController {
         data.add(map)
       }
     }
-//    println  opsIds
     render data as JSON
   }
 

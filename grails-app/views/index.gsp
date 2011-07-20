@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Welcome to Grails</title>
-  <meta name="layout" content="main"/>
+  <meta name="layout" content="nemain"/>
   <style type="text/css" media="screen">
 
   #nav {

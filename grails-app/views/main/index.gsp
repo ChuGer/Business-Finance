@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="layout" content="main"/>
+  <meta name="layout" content="nemain"/>
   <title><g:message code="menu.main.title"/></title>
   <g:javascript library="jquery" plugin="jquery"/>
   <jsTree:resources/>
@@ -42,9 +42,22 @@
     $(function() {
       createTree();
       createCalendars();
+      createStatistics();
       createColor();
       var lastHoveredNodeId = 'd1';
     });
+
+    function createStatistics() {
+      jQuery.ajax({
+        url: 'renderStat',
+        type: "POST",
+        dataType: "json",
+        complete: function(data) {
+          $('#statForm').html(data.responseText);
+        }
+      });
+    }
+
     var isLoaded = false;
     function createColor() {
       $('#bilPicker').ColorPicker({
@@ -274,16 +287,17 @@
       tree.bind("select_node.jstree", function (e, d) {
 //        createTree();
 //        d.rslt.obj.css("background-color", "green")
-        var newid = d.rslt.obj.attr("id")  ;
+        var newid = d.rslt.obj.attr("id");
         jQuery.ajax({
-            url: 'cliclEvent',
-            type: "POST",
-            data: {id: newid},
-            dataType: "json"
-//            ,success:function() {
-//              refetchEvents();
-//            }
-          });
+          url: 'clickEvent',
+          type: "POST",
+          data: {id: newid},
+          dataType: "json",
+          complete: function(data) {
+            $('#statForm').html(data.responseText);
+          }
+        }
+                );
 //        $('#treeDiv .jstree-hovered').append("<div id="+newid+" style='  width: 15px; text-align: right'></div>");
 //        $("#"+newid).append('z.');
 
@@ -432,34 +446,9 @@
   </g:if>
 
   <div>
-    <div id="treeDiv" style="width:220px;float:left; margin:10px;"></div>
-    <div style="min-width:800px; display: inline-block;margin:10px;" id="calendar"></div>
-    <div style="min-width:400px; float: right; background-color:#f5f5f5; border-radius:10px; margin:10px;">
-      <h1 style="text-align:center;">${stat.bill.name}</h1>
-      <g:message code="main.stat.balance"/>: ${stat.bill.balance}<br/><br/>
-      <table>
-        <tr>
-          <th><g:message code="main.stat.category.name"/></th>
-          <th><g:message code="main.stat.category.income"/></th>
-          <th><g:message code="main.stat.category.outcome"/></th>
-          <th><g:message code="main.stat.category.result"/></th>
-        </tr>
-        <g:each in="${stat.categories}" var="i">
-          <tr>
-            <td>${i.categoryName}</td>
-            <td>${i.income}</td>
-            <td>${i.outcome}</td>
-            <td>${i.result}</td>
-          </tr>
-        </g:each>
-         <tr style="background-color:#e6e6fa;">
-            <td>${stat.result.categoryName}</td>
-            <td>${stat.result.income}</td>
-            <td>${stat.result.outcome}</td>
-            <td>${stat.result.result}</td>
-          </tr>
-      </table>
-    </div>
+    <div id="treeDiv" style="min-width:220px; float :left; margin:10px;"></div>
+    <div id="calendar" style="min-width:700px; display: inline-block;margin:10px;"></div>
+    <div id="statForm" style="min-width:150px; float: right; background-color:#f5f5f5; border-radius:10px; margin:10px;"></div>
   </div>
 
   <div id="bill-form" title="<g:message code="bill.create"/>">
@@ -703,7 +692,6 @@
   </div>
 
 </div>
-
 </body>
 </html>
 
