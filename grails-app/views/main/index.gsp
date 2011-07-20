@@ -126,8 +126,9 @@
     function createOprnode(data, textStatus) {
       var parentNodeId = '#d' + $("#crOprcid").val();
       var nodeData = data[1];
-      $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
-//      $("#treeDiv").jstree('check_node',($('#' + nodeData[0].attr.id)) );
+      $("#treeDiv").jstree('create', parentNodeId, 'inside', nodeData[0], false, true);
+
+//      $("#treeDiv").jstree('check_node',($('#' + nodeData[0].attr.id)) );  <option value="1">Operations</option>
 
       refetchEvents();
     }
@@ -135,6 +136,7 @@
       var nodeData = data[1];
       $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
       createOprCategoryButtons($('#' + nodeData[0].attr.id));
+       $("#crOprcid").append("<option value=" + data[0].id +" >"+nodeData[0].data[0].title+"</option>");
     }
 
     function createTree() {
@@ -252,6 +254,7 @@
         $("#categoryb2").val(lastHoveredNodeId);
         $("#categoryb3").val(lastHoveredNodeId);
         $("#categoryb4").val(lastHoveredNodeId);
+        $("select#crOprcid").val( lastHoveredNodeId.substr(1,lastHoveredNodeId.length));
       });
       tree.bind("dehover_node.jstree", function (e, d) {
         var pid = d.rslt.obj.attr("id") + "p";
@@ -273,10 +276,11 @@
 
       tree.bind("select_node.jstree", function (e, d) {
 //        createTree();
-//        d.rslt.obj.css("background-color", "green")
+//        d.rslt.obj.css("background-color", "green")   $("select#crOprcid").val( lastHoveredNodeId.substr(1,lastHoveredNodeId.length));
         var newid = d.rslt.obj.attr("id")  ;
+        if(newid.substr(0,1) == 'b'){
         jQuery.ajax({
-            url: 'cliclEvent',
+            url: 'clickEvent',
             type: "POST",
             data: {id: newid},
             dataType: "json"
@@ -284,6 +288,7 @@
 //              refetchEvents();
 //            }
           });
+        }
 //        $('#treeDiv .jstree-hovered').append("<div id="+newid+" style='  width: 15px; text-align: right'></div>");
 //        $("#"+newid).append('z.');
 

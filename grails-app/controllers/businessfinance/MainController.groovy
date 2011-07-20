@@ -90,7 +90,7 @@ class MainController {
     if (!params.categoryb)
       params.categoryb = 'd1'
     operation.bill = bill
-    operation.category = CategoryOp.findById(params?.categoryb[1..-1])   // TODO synchronize inlist with hovered
+    operation.category = CategoryOp.findById(params.category.id)
     operation.type = Integer.parseInt(params.type)
     operation.isChecked = true
     operation.user = springSecurityService.getCurrentUser()
@@ -174,7 +174,7 @@ class MainController {
     op.save()
     render('')
   }
-  def cliclEvent = {
+  def clickEvent = {
     if(params.id[0] == 'b')  {
     session.clickedId = params.id[1..-1]    // TODO : got 'b'-bill/'o'-opr/'c'-ctgBill/'d'-ctgOp letter prefix
     println   session.clickedId + ' id clicked '
