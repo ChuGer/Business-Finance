@@ -9,7 +9,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 class ReportController {
   static navigation = [
           group: 'tabs',
-          order: 2,
+          order: 4,
           title: "report",
           action: 'index'
   ]

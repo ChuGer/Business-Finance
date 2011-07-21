@@ -3,13 +3,13 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="layout" content="nemain"/>
-  <title><g:message code="menu.main.title"/></title>
+  <title><g:message code="menu.statistics.title"/></title>
 </head>
 <body>
 <div class="nav">
 </div>
 <div class="body">
-  <h1><g:message code="menu.main.title"/></h1>
+  <h1><g:message code="menu.statistics.title"/></h1>
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>

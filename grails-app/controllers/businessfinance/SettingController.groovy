@@ -1,11 +1,19 @@
 package businessfinance
 
+import domain.auth.SecUser
+
 class SettingController {
   static navigation = [
           group: 'tabs',
-          order: 4,
+          order: 6,
           title: 'setting',
           action: 'index'
   ]
-  def index = { }
+
+  def springSecurityService
+
+  def index = {
+    SecUser user = springSecurityService.getCurrentUser();
+    [user : user]
+  }
 }

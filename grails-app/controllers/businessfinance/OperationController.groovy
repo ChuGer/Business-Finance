@@ -1,14 +1,11 @@
 package businessfinance
 
-
-class MainController {
+class OperationController {
   static navigation = [
           group: 'tabs',
-          order: 1,
-          title: "main",
+          order: 2,
+          title: "operation",
           action: 'index'
   ]
-  def index = {
-    }
-
+  def index = { }
 }

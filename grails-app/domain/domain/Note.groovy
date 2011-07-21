@@ -3,11 +3,16 @@ class Note {
 
   String name
   String value
-  static belongsTo = [operation: Operation]
+  Boolean isMade
+  Date endDate
+  Boolean isImportant
+
   static constraints = {
     name()
-    value(maxSize: 10000)
-    operation(nullable: true)
+    value(maxSize: 1000)
+    endDate()
+    isImportant()
+    isMade()
   }
 
   public String toString() {
