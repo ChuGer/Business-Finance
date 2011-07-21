@@ -25,8 +25,10 @@ environments {
   }
   production {
     dataSource {
+      username = "pbx"
+      password = "finance"
       dbCreate = "create-drop"
-      url = "jdbc:mysql://localhost/finance"
+      url = "jdbc:mysql://localhost/pbx"
     }
   }
 }
