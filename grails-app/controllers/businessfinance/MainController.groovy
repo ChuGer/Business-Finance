@@ -151,7 +151,6 @@ class MainController {
   def clickEvent = {
     if (params.id[0] == 'b') {
       session.clickedId = params.id[1..-1]    // TODO : got 'b'-bill/'o'-opr/'c'-ctgBill/'d'-ctgOp letter prefix
-      println session.clickedId + ' id clicked'
     }
     redirect action: renderStat
   }
@@ -184,8 +183,8 @@ class MainController {
   }
 
   def events = {
-    println new Date(Long.parseLong(params.start))
-    println new Date(Long.parseLong(params.end))
+//    println new Date(Long.parseLong(params.start))
+//    println new Date(Long.parseLong(params.end))
     def data = []
     def opsIds = []
     opsIds = categoryService.usersSelectedOpsIds()

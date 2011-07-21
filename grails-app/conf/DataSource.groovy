@@ -22,13 +22,11 @@ environments {
       dbCreate = "update"
       url = "jdbc:mysql://localhost/finance"
     }
-    production {
-        dataSource {
-            username = "pbx"
-            password = "finance"
-            dbCreate = "create-drop"
-            url = "jdbc:mysql://localhost/pbx"
-        }
+  }
+  production {
+    dataSource {
+      dbCreate = "create-drop"
+      url = "jdbc:mysql://localhost/finance"
     }
   }
 }
