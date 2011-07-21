@@ -61,15 +61,6 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="endDate"><g:message code="operation.endDate.label" default="End Date"/></label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'endDate', 'errors')}">
-              <g:textField name="endDate" id="endDate" precision="day" value="${operationInstance?.endDate}" default="none" noSelection="['': '']"/>
-            </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
               <label for="category.id"><g:message code="operation.category.label" default="Category"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'category', 'errors')}">

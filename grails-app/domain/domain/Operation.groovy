@@ -10,13 +10,11 @@ class Operation {
   Long times
   Float sum
   Date startDate
-  Date endDate
   Boolean isChecked = true
   Integer type
   Boolean isRepeatable
   Boolean isCommitted
   Bill bill
-  Note note
   static hasOne = Note
   static constraints = {
     name(blank: false, unique: false)
@@ -24,8 +22,6 @@ class Operation {
     sum(blank: false)
     type()
     startDate(nullable: false)
-    endDate(nullable: true)
-    note(nullable: true)
     isRepeatable(nullable: true)
     isCommitted(nullable: true)
     period(nullable: true)
@@ -33,6 +29,6 @@ class Operation {
   }
 
   public String toString() {
-    "${name} ${startDate}-${endDate}"
+    "${name} ${startDate}"
   }
 }
