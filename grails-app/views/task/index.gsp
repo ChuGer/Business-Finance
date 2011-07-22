@@ -418,9 +418,10 @@
         eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
           console.log("The end date of " + event.title + "has been moved " +
                   dayDelta + " days and " + minuteDelta + " minutes.");
-          revertFun();
+          revertFunc();
         },
         editable: true,
+        disableResizing: true,
         events:
         function(start, end, callback) {
           var view = $('#calendar').fullCalendar('getView');
