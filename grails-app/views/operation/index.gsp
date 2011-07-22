@@ -14,7 +14,6 @@
     <div class="message">${flash.message}</div>
   </g:if>
 
-
   <table>
     <tr>
       <th><h2><g:message code="operation.name.label"/></h2></th>
@@ -31,8 +30,7 @@
         <tr>
           <td>${io.name}</td>
           <td>${io.sum}</td>
-          %{--<td><%=new SimpleDateFormat("dd/MM/yyyy").format({io.startDate})%></td>--}%
-          <td>${io.startDate.dateString}</td>
+          <td><g:formatDate date="${io.startDate}" format="dd/MM/yyyy"/></td>
         </tr>
       </g:each>
       <g:each in="${i.categories}" var="ic">
