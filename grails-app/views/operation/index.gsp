@@ -10,11 +10,14 @@
   <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker.js"></script>
   <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-ru.js"></script>
   <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-en-US.js"></script>
+  <script type="text/javascript" src="../js/daterangepicker.jQuery.js"></script>
   <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.2.custom.css"/>
+  <link rel="stylesheet" href="../css/ui.daterangepicker.css" type="text/css"/>
   <script type="text/javascript">
 
     $(function() {
       createDialog();
+      $('input').daterangepicker({arrows:true});
     });
 
     function createDialog() {
@@ -39,6 +42,18 @@
       $("#opr-form").dialog("open");
     }
   </script>
+
+  <style type="text/css">
+  body {
+    font-size: 62.5%;
+  }
+
+  input {
+    width: 196px;
+    height: 1.1em;
+    display: block;
+  }
+  </style>
 </head>
 <body>
 <div class="nav">
@@ -48,6 +63,8 @@
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
+
+  <input type="text" value="4/23/99" id="rangeA"/>
 
   <table>
     <tr>
