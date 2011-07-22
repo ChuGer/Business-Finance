@@ -321,7 +321,6 @@
       $.getJSON("locale", function(json) {
         regional = $.datepicker.regional[json.locale];
         $("#startDate").datepicker(regional);
-        $("#endDate").datepicker(regional);
         drawCalendar(regional);
       });
 

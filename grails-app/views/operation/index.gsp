@@ -4,6 +4,41 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="layout" content="nemain"/>
   <title><g:message code="menu.operation.title"/></title>
+  <g:javascript library="jquery" plugin="jquery"/>
+  <script type="text/javascript" src="../js/jquery/jquery-ui-1.8.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.dateFormat-1.0.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-ru.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-en-US.js"></script>
+  <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.2.custom.css"/>
+  <script type="text/javascript">
+
+    $(function() {
+      createDialog();
+    });
+
+    function createDialog() {
+      $.getJSON("locale", function(json) {
+        regional = $.datepicker.regional[json.locale];
+        $("#startDate").datepicker(regional);
+      });
+
+      $("#opr-form").dialog({
+        autoOpen: false,
+        height: 400,
+        width: 350,
+        modal: true
+      });
+    }
+
+    function closeDialog() {
+      $("#opr-form").dialog("close");
+      $("#name").val('');
+    }
+    function showDialog() {
+      $("#opr-form").dialog("open");
+    }
+  </script>
 </head>
 <body>
 <div class="nav">
@@ -13,7 +48,6 @@
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-
 
   <table>
     <tr>
@@ -49,6 +83,9 @@
       </g:each>
     </g:each>
   </table>
+
+  <br/><br/><br/><a onclick="showDialog();"><g:message code="operation.add" default="Add transaction"/></a>
+  <g:render template="oprForm" bean="${operationInstance}"/>
 
 </div>
 </body>
