@@ -16,8 +16,7 @@ class SecUser {
   Settings settings
   CategoryBill categoriesB
   CategoryOp categoriesO
-  CategoryNote categoriesN
-  static hasMany = [bills: Bill, operations: Operation]
+  static hasMany = [bills: Bill, operations: Operation, notes : CategoryNote]
   static constraints = {
     username blank: false, unique: true
     realname nullable: true
@@ -28,7 +27,6 @@ class SecUser {
     settings nullable: true
     categoriesB nullable: true
     categoriesO nullable: true
-    categoriesN nullable: true
   }
 //  static searchable = [only: 'realname']     //Searchable Plugin
   static mapping = {

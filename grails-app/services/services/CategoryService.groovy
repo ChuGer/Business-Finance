@@ -87,7 +87,20 @@ class CategoryService {
     }
     data
   }
-
+  def getBillTree(){
+     def data = []
+    SecUser user = springSecurityService.getCurrentUser()
+    if (!user)
+      return data
+    def c = user.categoriesB
+    def inn = [:]
+    inn.put('data', [title: c.name, icon: '../images/treei/' + c.ico])
+    inn.put('attr', [id: 'c' + c.id, type: 'ctb', chkd: c.isChecked, color: c.color])
+    def childs = parseCtgBData(c)
+    inn.put('children', childs)
+    data.add(inn)
+    data
+  }
   def getCategoryTree() {
     def data = []
     SecUser user = springSecurityService.getCurrentUser()

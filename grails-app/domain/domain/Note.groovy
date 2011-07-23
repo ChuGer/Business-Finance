@@ -3,16 +3,14 @@ class Note {
 
   String name
   String value
-  Boolean isMade
+  Boolean isMade = false
   Date endDate
-  Boolean isImportant
+  Boolean isImportant  = false
 
   static constraints = {
     name()
     value(maxSize: 1000)
-    endDate()
-    isImportant()
-    isMade()
+    endDate( nullable: true)
   }
 
   public String toString() {

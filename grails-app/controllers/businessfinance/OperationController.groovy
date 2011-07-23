@@ -1,11 +1,12 @@
 package businessfinance
 
-import domain.auth.SecUser
+import domain.Bill
+import domain.CategoryBill
 import domain.CategoryOp
 import domain.Operation
-import java.text.SimpleDateFormat
-import domain.Bill
+import domain.auth.SecUser
 import grails.converters.JSON
+import java.text.SimpleDateFormat
 
 class OperationController {
   static navigation = [
@@ -21,10 +22,15 @@ class OperationController {
     SecUser user = springSecurityService.getCurrentUser()
     if (user) {
       def rootCat = user.categoriesO
+      def treeData = categoryService.getBillTree()
+      println  treeData
       def operationInstance = new Operation(type: 1)
       [
               operationInstance: operationInstance,
-              rootCat: rootCat
+              rootCat: rootCat,
+              billInstance: new Bill(),
+              ctgBInstance: new CategoryBill(),
+              treeData : treeData as JSON
       ]
     }
   }
@@ -69,7 +75,28 @@ class OperationController {
     def answer = categoryService.parseOperById(operation.id)
     render answer as JSON
   }
-
+    def addBill = {
+    def ctgId = params.categoryb[1..-1]
+    def billInstance = new Bill(name: params.name, balance: params.balance.toFloat(), user: springSecurityService.getCurrentUser(),
+            currency: Currency.findById(params.currency), category: CategoryBill.findById(ctgId), isChecked: true)
+    if (billInstance.save()) {
+      flash.message = "${message(code: 'bill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
+      println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
+    }
+    def answer = categoryService.parseBillById(billInstance.id)
+    render answer as JSON
+  }
+  def addBillCategory = {
+    def ctgId = params.categoryb[1..-1]
+    def billInstance = new CategoryBill(name: params.name, color: params.color,
+            category: CategoryBill.findById(ctgId), isChecked: true)
+    if (billInstance.save()) {
+      flash.message = "${message(code: 'ctGbill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
+      println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
+    }
+    def answer = categoryService.parseCtgBillById(billInstance.id)
+    render answer as JSON
+  }
   def locale = {
     def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
     def locale = [locale: code]

@@ -47,6 +47,18 @@ class BootStrap {
       def ctg6 = new CategoryOp(name: 'Food', isChecked: true, color: 'green').save(failOnError: true)
       def ctg7 = new CategoryOp(name: 'Clothes', isChecked: true, color: 'red').save(failOnError: true)
 
+      def rootN = new CategoryNote(name : 'root')
+
+      //creating notes
+      def ctn1 = new  CategoryNote(name : 'Payments')
+      def ctn2 = new  CategoryNote(name : 'Loclo')
+      def note1 = new Note(name : 'About Artup', value :'text text zozozohnanejn an nwoot tro ginuief gre ., ! g,eGER ')
+      def note2 = new Note(name : 'take corkt', value :'text text zgh  GG /g?$? r1?R GErG ?@4segweweG$ gsd seg, 3 ')
+      def note3 = new Note(name : 'Gofe nHio', value :'text text zGHD GHERKG EGQG M WG ')
+      def note4 = new Note(name : 'Kuziy pes', value :'СЕДьмао поораз атв выдоа волйое ицугоищ ')
+      ctn1.addToNotes(note1).addToNotes(note2)
+      ctn2.addToNotes(note3).addToNotes(note4)
+
       //Creating Bills
       def bill1 = new Bill(name: 'Webmoney', currency: cur2, balance: 1000, category: ctg1, isChecked: true, user: user).save(failOnError: true)
       def bill2 = new Bill(name: 'Visa', currency: cur3, balance: 2000, category: ctg1, isChecked: true, user: user).save(failOnError: true)
@@ -78,6 +90,7 @@ class BootStrap {
       rootO.addToCategories(ctg5).addToCategories(ctg6).addToCategories(ctg7)
       user.addToOperations(op1).addToOperations(op2).addToOperations(op3).addToOperations(op4).addToOperations(op5)
       user.addToOperations(op6).addToOperations(op7).addToOperations(op8).addToOperations(op9)
+      user.addToNotes(ctn1).addToNotes(ctn2)
 
     }
   }
