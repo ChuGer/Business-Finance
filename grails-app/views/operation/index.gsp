@@ -44,6 +44,8 @@
       createTree();
       createColor();
       $('input').daterangepicker({arrows:true});
+      $('#inputDate').daterangepicker({arrows:true});
+      refreshTable();
     });
     function createColor() {
       $('#bilPicker').ColorPicker({
@@ -55,7 +57,16 @@
         }
       })
 
+    function refreshTable() {
+      $.ajax({
+        url: 'createTable',
+        type: "POST",
+        complete: function(data) {
+          $('#table').html(data.responseText);
+        }
+      })
     }
+
     function createDialog() {
       $.getJSON("locale", function(json) {
         regional = $.datepicker.regional[json.locale];
@@ -118,7 +129,9 @@
     function closeDialog() {
       $("#opr-form").dialog("close");
       $("#name").val('');
+      refreshTable();
     }
+
     function showDialog() {
       $("#opr-form").dialog("open");
     }
@@ -190,18 +203,6 @@
     }
 
   </script>
-
-  <style type="text/css">
-  body {
-    font-size: 62.5%;
-  }
-
-  input {
-    width: 196px;
-    height: 1.1em;
-    display: block;
-  }
-  </style>
 </head>
 <body>
 <div class="nav">
@@ -212,47 +213,15 @@
     <div class="message">${flash.message}</div>
   </g:if>
   <div id="treeDiv"></div>
-  <input type="text" value="4/23/99" id="rangeA"/>
-
-  <table>
-    <tr>
-      <th><h2><g:message code="operation.name.label"/></h2></th>
-      <th><h2><g:message code="operation.sum.label"/></h2></th>
-      <th><h2><g:message code="operation.startDate.label"/></h2></th>
-    </tr>
-    <g:each in="${rootCat.categories}" var="i">
-      <tr>
-        <th style="background: ${i.color}; color: white;">
-          <h3>${i.name}</h3>
-        </th>
-      </tr>
-      <g:each in="${i.operations}" var="io">
-        <tr>
-          <td>${io.name}</td>
-          <td>${io.sum}</td>
-          %{--<td><%=new SimpleDateFormat("dd/MM/yyyy").format({io.startDate})%></td>--}%
-          <td>${io.startDate.dateString}</td>
-        </tr>
-      </g:each>
-      <g:each in="${i.categories}" var="ic">
-        <tr>
-          <th style="background: ${ic.color}; color: white;"><g:message code="all.space.formatter"/>${ic.name}</th>
-        </tr>
-        <g:each in="${i.operations}" var="ioi">
-          <tr>
-            <td><g:message code="all.space.formatter"/>${ioi.name}</td>
-            <td>${ioi.sum}</td>
-            <td>${ioi.startDate.dateString}</td>
-          </tr>
-        </g:each>
-      </g:each>
-    </g:each>
-  </table>
-
-  <br/><br/><br/><a onclick="showDialog();"><g:message code="operation.add" default="Add transaction"/></a>
+  <input id="inputDate" type="text" value="4/23/99"/>
   <g:render template="oprForm" bean="${operationInstance}"/>
   <g:render template="bilForm" bean="${billInstance}"/>
   <g:render template="ctbForm" bean="${ctgBInstance}"/>
+  <div id="table"></div>
+  <br/><br/>
+  <a onclick="showDialog();"><g:message code="operation.add" default="Add transaction"/></a>
+  <br/><br/>
+  <a onclick="refreshTable();"><g:message code="operation.add" default="Refresh table"/></a>
 
 </div>
 </body>

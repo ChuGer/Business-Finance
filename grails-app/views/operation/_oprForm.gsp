@@ -4,7 +4,7 @@
         <g:renderErrors bean="${operationInstance}" as="list"/>
       </div>
     </g:hasErrors>
-    <g:formRemote name="createForm" method="post" url="[action: 'addEvent']" onSuccess="createOprnode(data,textStatus);" onComplete="closeDialog();">
+    <g:formRemote name="createForm" method="post" url="[action: 'addEvent']" onSuccess="closeDialog();">
       <div class="dialog">
         <table>
           <tbody>
@@ -35,7 +35,6 @@
               <g:textField name="sum" value="${fieldValue(bean: operationInstance, field: 'sum')}"/>
             </td>
           </tr>
-
 
           <tr class="prop">
             <td valign="top" class="name">
@@ -68,7 +67,6 @@
             </td>
           </tr>
 
-          <g:hiddenField id="categoryb4" name="categoryb"/>
           <div class="buttons">
             <span class="button"><g:actionSubmit class="save" action="addEvent" value="${message(code: 'default.button.save.label', default: 'Update')}"/></span>
           </div>

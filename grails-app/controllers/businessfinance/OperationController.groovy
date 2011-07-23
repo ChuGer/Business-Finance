@@ -18,10 +18,8 @@ class OperationController {
 
   def springSecurityService
   def categoryService
+
   def index = {
-    SecUser user = springSecurityService.getCurrentUser()
-    if (user) {
-      def rootCat = user.categoriesO
       def treeData = categoryService.getBillTree()
       println  treeData
       def operationInstance = new Operation(type: 1)
@@ -40,7 +38,6 @@ class OperationController {
       c.operations.each {o ->
         if (o.type != 1) {
           c.removeFromOperations(o)
-          println 'remove op' + o
         }
       }
       c.categories.each {ch ->
@@ -55,25 +52,19 @@ class OperationController {
     def operation = new Operation()
     operation.name = params.name
     operation.startDate = sdf.parse(params.startDate) + 1
-    def bill = Bill.findById(params.bill.id)
-    if (!params.categoryb)
-      params.categoryb = 'd1'
-    operation.bill = bill
-    operation.category = CategoryOp.findById(params.category.id)
+    operation.bill = Bill.findById(params.bill.id)
+    def category = CategoryOp.findById(params.category.id)
+    operation.category = category
     operation.type = Integer.parseInt(params.type)
     operation.isChecked = true
     operation.user = springSecurityService.getCurrentUser()
     operation.sum = params.sum.toFloat()
-    if (!operation.save(failOnError: true)) {
+    if (!operation.save()) {
       operation.errors.each {
         println it
       }
     }
-    else {
-      bill.balance += (operation.type == 1) ? operation.sum : -operation.sum
-    }
-    def answer = categoryService.parseOperById(operation.id)
-    render answer as JSON
+    render('')
   }
     def addBill = {
     def ctgId = params.categoryb[1..-1]
@@ -101,5 +92,12 @@ class OperationController {
     def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
     def locale = [locale: code]
     render locale as JSON
+  }
+
+  def createTable = {
+    SecUser user = springSecurityService.currentUser
+    if (user) {
+      render(template: 'table', model: [rootCat: user.categoriesO])
+    }
   }
 }
