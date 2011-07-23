@@ -31,7 +31,7 @@ class OperationController {
               treeData : treeData as JSON
       ]
     }
-  }
+
 
   def recursiveRemoveOps(CategoryOp rootCat) {
     rootCat.categories.each {c ->

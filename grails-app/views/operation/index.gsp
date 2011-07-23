@@ -56,7 +56,7 @@
 //          $('#bilPicker').ColorPickerHide();
         }
       })
-
+    }
     function refreshTable() {
       $.ajax({
         url: 'createTable',
