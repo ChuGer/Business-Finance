@@ -20,30 +20,30 @@ class OperationController {
   def categoryService
 
   def index = {
-      def treeData = categoryService.getBillTree()
-      println  treeData
-      def operationInstance = new Operation(type: 1)
-      [
-              operationInstance: operationInstance,
-              rootCat: rootCat,
-              billInstance: new Bill(),
-              ctgBInstance: new CategoryBill(),
-              treeData : treeData as JSON
-      ]
-    }
-
+    def treeData = categoryService.getBillTree()
+    println treeData
+    def operationInstance = new Operation(type: 1)
+    [
+            operationInstance: operationInstance,
+            billInstance: new Bill(),
+            ctgBInstance: new CategoryBill(),
+            treeData: treeData as JSON
+    ]
+  }
 
   def recursiveRemoveOps(CategoryOp rootCat) {
     rootCat.categories.each {c ->
       c.operations.each {o ->
         if (o.type != 1) {
           c.removeFromOperations(o)
+          o.category = null
         }
       }
       c.categories.each {ch ->
-        recursiveRemoveOps(ch)
+        ch = recursiveRemoveOps(ch)
       }
     }
+    return rootCat
   }
 
   def addEvent = {
@@ -66,7 +66,8 @@ class OperationController {
     }
     render('')
   }
-    def addBill = {
+
+  def addBill = {
     def ctgId = params.categoryb[1..-1]
     def billInstance = new Bill(name: params.name, balance: params.balance.toFloat(), user: springSecurityService.getCurrentUser(),
             currency: Currency.findById(params.currency), category: CategoryBill.findById(ctgId), isChecked: true)
@@ -77,6 +78,7 @@ class OperationController {
     def answer = categoryService.parseBillById(billInstance.id)
     render answer as JSON
   }
+
   def addBillCategory = {
     def ctgId = params.categoryb[1..-1]
     def billInstance = new CategoryBill(name: params.name, color: params.color,
@@ -88,16 +90,63 @@ class OperationController {
     def answer = categoryService.parseCtgBillById(billInstance.id)
     render answer as JSON
   }
+
   def locale = {
     def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
     def locale = [locale: code]
     render locale as JSON
   }
 
-  def createTable = {
+  def incomeTable = {
     SecUser user = springSecurityService.currentUser
     if (user) {
-      render(template: 'table', model: [rootCat: user.categoriesO])
+      def billId = session.clickedId.toInteger() ?: 1
+      def newCat = createCategorySkilet(user.categoriesO, 1, billId)
+      render(template: 'table', model: [rootCat: newCat])
+    }
+  }
+
+  def outcomeTable = {
+    SecUser user = springSecurityService.currentUser
+    if (user) {
+      def billId = getClickedBillId()
+      def newCat = createCategorySkilet(user.categoriesO, 0, billId)
+      render(template: 'table', model: [rootCat: newCat])
+    }
+  }
+
+  def getClickedBillId() {
+     session.clickedId.toInteger() ?: 1
+  }
+
+  // TODO: SQL
+  def createCategorySkilet(rootCat, type, billId) {
+    def skilet = new CategoryOp()
+    skilet.name = rootCat.name
+    skilet.color = rootCat.color
+    skilet.categories = []
+    skilet.operations = []
+
+    rootCat.operations.each {o ->
+      if (o.type == type && o.bill.id == billId) {
+        skilet.operations.add(o);
+      }
+    }
+
+    if (!(skilet.operations.empty && rootCat.categories.empty)) {
+      rootCat.categories.each {cat ->
+        def subCat = createCategorySkilet(cat, type, billId)
+        if (subCat) {
+          skilet.categories.add(subCat)
+        }
+      }
+      skilet
+    }
+  }
+
+  def clickEvent = {
+    if (params.id[0] == 'b') {
+      session.clickedId = params.id[1..-1]    // TODO : got 'b'-bill/'o'-opr/'c'-ctgBill/'d'-ctgOp letter prefix
     }
   }
 }

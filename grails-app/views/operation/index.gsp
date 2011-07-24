@@ -43,7 +43,6 @@
       createDialog();
       createTree();
       createColor();
-      $('input').daterangepicker({arrows:true});
       $('#inputDate').daterangepicker({arrows:true});
       refreshTable();
     });
@@ -59,10 +58,17 @@
     }
     function refreshTable() {
       $.ajax({
-        url: 'createTable',
+        url: 'incomeTable',
         type: "POST",
         complete: function(data) {
-          $('#table').html(data.responseText);
+          $('#incomeTable').html(data.responseText);
+        }
+      })
+      $.ajax({
+        url: 'outcomeTable',
+        type: "POST",
+        complete: function(data) {
+          $('#outcomeTable').html(data.responseText);
         }
       })
     }
@@ -190,16 +196,10 @@
             type: "POST",
             data: {id: newid},
             dataType: "json",
-            complete: function(data) {
-              $('#statForm').html(data.responseText);
-            }
-          }
-                  );
+            success: refreshTable()
+          });
         }
-
-
       });
-
     }
 
   </script>
@@ -208,20 +208,31 @@
 <div class="nav">
 </div>
 <div class="body">
-  <h1><g:message code="menu.operation.title"/></h1>
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-  <div id="treeDiv"></div>
-  <input id="inputDate" type="text" value="4/23/99"/>
-  <g:render template="oprForm" bean="${operationInstance}"/>
-  <g:render template="bilForm" bean="${billInstance}"/>
-  <g:render template="ctbForm" bean="${ctgBInstance}"/>
-  <div id="table"></div>
-  <br/><br/>
-  <a onclick="showDialog();"><g:message code="operation.add" default="Add transaction"/></a>
-  <br/><br/>
-  <a onclick="refreshTable();"><g:message code="operation.add" default="Refresh table"/></a>
+  <div>
+    <div style="float:left;">
+      <h1><g:message code="tree.root.bills"/></h1>
+      <div id="treeDiv"></div>
+      <br/>
+    </div>
+    <div style="display:inline-block; margin-left: 50px; min-width:500px;">
+      <h1><g:message code="menu.operation.title"/></h1>
+      <div style="padding:5px; border-radius: 3px; background-color:#7cfc00; color: #00008b; font-size:larger; width:250px;" onclick="showDialog();">
+        <g:message code="operation.add" default="Add transaction"/>
+      </div>
+      <label for="inputDate"><g:message code="dateRange.select"/>:</label>
+      <input id="inputDate" type="text" value="4/23/99"/>
+      <g:render template="oprForm" bean="${operationInstance}"/>
+      <g:render template="bilForm" bean="${billInstance}"/>
+      <g:render template="ctbForm" bean="${ctgBInstance}"/>
+      <h1><g:message code="operation.type.income"/></h1>
+      <div id="incomeTable"></div>
+      <h1><g:message code="operation.type.outcome"/></h1>
+      <div id="outcomeTable"></div>
+    </div>
+  </div>
 
 </div>
 </body>
