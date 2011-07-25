@@ -1,4 +1,4 @@
-<table id="operationTable">
+<table>
 
   <g:each in="${rootCat.operations}" var="rio">
     <tr>

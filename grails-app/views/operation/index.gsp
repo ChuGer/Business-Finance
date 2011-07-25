@@ -43,7 +43,12 @@
       createDialog();
       createTree();
       createColor();
-      $('#inputDate').daterangepicker({arrows:true});
+      $('#inputDate').daterangepicker({
+        arrows:true,
+        onChange: function() {
+          dateRangeChange();
+        }
+      });
       refreshTable();
     });
     function createColor() {
@@ -196,8 +201,27 @@
             type: "POST",
             data: {id: newid},
             dataType: "json",
-            success: refreshTable()
+            complete: function() {
+              refreshTable();
+            }
           });
+        }
+      });
+    }
+
+    function dateRangeChange() {
+      var newDateRange = $('#inputDate').val();
+      var dateArray = newDateRange.split(' - ');
+      if (dateArray.length == 1) {
+        dateArray[1] = dateArray[0];
+      }
+      jQuery.ajax({
+        url: 'changeDateRange',
+        type: "POST",
+        data: {startDate: dateArray[0] , endDate: dateArray[1]},
+        dataType: "json",
+        success: function() {
+          refreshTable();
         }
       });
     }
@@ -223,7 +247,7 @@
         <g:message code="operation.add" default="Add transaction"/>
       </div>
       <label for="inputDate"><g:message code="dateRange.select"/>:</label>
-      <input id="inputDate" type="text" value="4/23/99"/>
+      <input id="inputDate" type="text" value="${new SimpleDateFormat("M/d/yyyy").format(new Date())}" readonly="true"/>
       <g:render template="oprForm" bean="${operationInstance}"/>
       <g:render template="bilForm" bean="${billInstance}"/>
       <g:render template="ctbForm" bean="${ctgBInstance}"/>

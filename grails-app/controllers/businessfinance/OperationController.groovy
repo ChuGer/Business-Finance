@@ -21,7 +21,6 @@ class OperationController {
 
   def index = {
     def treeData = categoryService.getBillTree()
-    println treeData
     def operationInstance = new Operation(type: 1)
     [
             operationInstance: operationInstance,
@@ -29,21 +28,6 @@ class OperationController {
             ctgBInstance: new CategoryBill(),
             treeData: treeData as JSON
     ]
-  }
-
-  def recursiveRemoveOps(CategoryOp rootCat) {
-    rootCat.categories.each {c ->
-      c.operations.each {o ->
-        if (o.type != 1) {
-          c.removeFromOperations(o)
-          o.category = null
-        }
-      }
-      c.categories.each {ch ->
-        ch = recursiveRemoveOps(ch)
-      }
-    }
-    return rootCat
   }
 
   def addEvent = {
@@ -68,7 +52,7 @@ class OperationController {
   }
 
   def addBill = {
-    def ctgId = params.categoryb[1..-1]
+    def ctgId = params.categoryb
     def billInstance = new Bill(name: params.name, balance: params.balance.toFloat(), user: springSecurityService.getCurrentUser(),
             currency: Currency.findById(params.currency), category: CategoryBill.findById(ctgId), isChecked: true)
     if (billInstance.save()) {
@@ -100,8 +84,7 @@ class OperationController {
   def incomeTable = {
     SecUser user = springSecurityService.currentUser
     if (user) {
-      def billId = session.clickedId.toInteger() ?: 1
-      def newCat = createCategorySkilet(user.categoriesO, 1, billId)
+      def newCat = createCategorySkilet(user.categoriesO, 1, getClickedBillId())
       render(template: 'table', model: [rootCat: newCat])
     }
   }
@@ -109,18 +92,21 @@ class OperationController {
   def outcomeTable = {
     SecUser user = springSecurityService.currentUser
     if (user) {
-      def billId = getClickedBillId()
-      def newCat = createCategorySkilet(user.categoriesO, 0, billId)
+      def newCat = createCategorySkilet(user.categoriesO, 0, getClickedBillId())
       render(template: 'table', model: [rootCat: newCat])
     }
   }
 
   def getClickedBillId() {
-     session.clickedId.toInteger() ?: 1
+    session.startDate = session.startDate ?: new Date()
+    session.endDate = session.endDate ?: new Date();
+    session.clickedId?.toInteger() ?: 1
   }
 
   // TODO: SQL
+
   def createCategorySkilet(rootCat, type, billId) {
+
     def skilet = new CategoryOp()
     skilet.name = rootCat.name
     skilet.color = rootCat.color
@@ -128,7 +114,7 @@ class OperationController {
     skilet.operations = []
 
     rootCat.operations.each {o ->
-      if (o.type == type && o.bill.id == billId) {
+      if (o.type == type && o.bill.id == billId && (o.startDate >= session.startDate && o.startDate <= session.endDate)) {
         skilet.operations.add(o);
       }
     }
@@ -148,5 +134,12 @@ class OperationController {
     if (params.id[0] == 'b') {
       session.clickedId = params.id[1..-1]    // TODO : got 'b'-bill/'o'-opr/'c'-ctgBill/'d'-ctgOp letter prefix
     }
+  }
+
+  def changeDateRange = {
+    def sdf = new SimpleDateFormat("M/d/yyyy")
+    session.startDate = sdf.parse(params.startDate)
+    session.endDate = sdf.parse(params.endDate)
+    render('')
   }
 }

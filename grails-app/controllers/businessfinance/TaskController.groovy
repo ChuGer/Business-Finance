@@ -171,13 +171,16 @@ class TaskController {
   }
 
   def events = {
-//    println new Date(Long.parseLong(params.start))
-//    println new Date(Long.parseLong(params.end))
+    def startDate = new Date(Long.parseLong(params.start))
+    def endDate =  new Date(Long.parseLong(params.end))
+    println(startDate)
+    println(endDate)
     def data = []
     def opsIds = []
+    //TODO: SQL
     opsIds = categoryService.usersSelectedOpsIds()
     Operation.findAllByIdInList(opsIds).each {o ->
-      if (o.id in opsIds) {
+      if (o.id in opsIds && (o.startDate >= startDate && o.startDate <= endDate)) {
         def map = [:]
         map.put('id', o.id)
         map.put('title', o.name + ' (' + (o.type == 0 ? '-' : '+') + o.sum + ') ')
