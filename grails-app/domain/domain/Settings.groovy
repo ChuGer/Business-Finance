@@ -3,6 +3,7 @@ package domain
 import domain.auth.SecUser
 
 class Settings {
+  static auditable = true
 
   static belongsTo = [user : SecUser]
   Currency currency

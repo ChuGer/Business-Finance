@@ -1,6 +1,7 @@
 package domain
 
 class CategoryBill {
+  static auditable = true
 
   String name
   String ico = 'ctbDef.png'

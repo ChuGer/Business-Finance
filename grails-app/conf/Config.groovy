@@ -138,3 +138,9 @@ grails {
 
   }
 }
+
+auditLog {
+   actorClosure = { request, session ->
+       request.applicationContext.springSecurityService.principal?.username
+   }
+}
