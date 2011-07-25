@@ -1,5 +1,3 @@
-<table>
-
   <g:each in="${rootCat.operations}" var="rio">
     <tr>
       <td>${rio.name}</td>
@@ -7,7 +5,6 @@
       <td><g:formatDate date="${rio.startDate}" format="dd/MM/yyyy"/></td>
     </tr>
   </g:each>
-
   <g:each in="${rootCat.categories}" var="i">
     <tr>
       <th style="background: ${i.color}; color: white;">
@@ -21,7 +18,6 @@
           <td><g:formatDate date="${io.startDate}" format="dd/MM/yyyy"/></td>
         </tr>
     </g:each>
-
     <g:each in="${i.categories}" var="ic">
       <tr>
         <th style="background: ${ic.color}; color: white;"><g:message code="all.space.formatter"/>${ic.name}</th>
@@ -35,4 +31,3 @@
       </g:each>
     </g:each>
   </g:each>
-</table>

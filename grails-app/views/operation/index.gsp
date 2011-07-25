@@ -66,14 +66,20 @@
         url: 'incomeTable',
         type: "POST",
         complete: function(data) {
-          $('#incomeTable').html(data.responseText);
+          var responseText = data.responseText;
+          $('#incomeTable').html(responseText);
+          //TODO: remove indus code responseText.length > 10
+          $('#incomeTableHeader').css('display', responseText.length > 10 ? 'block' : 'none');
         }
       })
       $.ajax({
         url: 'outcomeTable',
         type: "POST",
         complete: function(data) {
-          $('#outcomeTable').html(data.responseText);
+          var responseText = data.responseText;
+          $('#outcomeTable').html(responseText);
+          //TODO: remove indus code responseText.length > 10
+          $('#outcomeTableHeader').css('display', responseText.length > 10 ? 'block' : 'none');
         }
       })
     }
@@ -251,10 +257,12 @@
       <g:render template="oprForm" bean="${operationInstance}"/>
       <g:render template="bilForm" bean="${billInstance}"/>
       <g:render template="ctbForm" bean="${ctgBInstance}"/>
-      <h1><g:message code="operation.type.income"/></h1>
-      <div id="incomeTable"></div>
-      <h1><g:message code="operation.type.outcome"/></h1>
-      <div id="outcomeTable"></div>
+      <table>
+        <h1 id="incomeTableHeader"><g:message code="operation.type.income"/></h1>
+        <div id="incomeTable"></div>
+      <h1 id="outcomeTableHeader"><g:message code="operation.type.outcome"/></h1>
+        <div id="outcomeTable"></div>
+      </table>
     </div>
   </div>
 
