@@ -36,6 +36,14 @@
     display: none;
     text-indent: -300px;
   }
+
+  #addOperationButton {
+    display: inline-block;
+  }
+
+  td {
+    min-width: 150px;
+  }
   </style>
   <script type="text/javascript">
     $(function() {
@@ -248,19 +256,24 @@
       <br/>
     </div>
     <div style="display:inline-block; margin-left: 50px; min-width:500px;">
-      <h1><g:message code="menu.operation.title"/></h1>
-      <div style="padding:5px; border-radius: 3px; background-color:#7cfc00; color: #00008b; font-size:larger; width:250px;" onclick="showDialog();">
-        <g:message code="operation.add" default="Add transaction"/>
+      <div style="display:inline-block;">
+        <h1><g:message code="menu.operation.title"/></h1>
       </div>
-      <label for="inputDate"><g:message code="dateRange.select"/>:</label>
-      <input id="inputDate" type="text" value="${new SimpleDateFormat("M/d/yyyy").format(new Date())}" readonly="true"/>
+      <div id="addOperationButton" onclick="showDialog();">
+        <img src="../images/netvibes.png" style="width:24px;"/>
+      </div>
+      <br/>
+      <div>
+        <h3><label for="inputDate"><g:message code="dateRange.select"/>:</label></h3>
+        <input id="inputDate" type="text" value="${new SimpleDateFormat("M/d/yyyy").format(new Date())}" readonly="true"/>
+      </div>
       <g:render template="oprForm" bean="${operationInstance}"/>
       <g:render template="bilForm" bean="${billInstance}"/>
       <g:render template="ctbForm" bean="${ctgBInstance}"/>
       <table>
         <h1 id="incomeTableHeader"><g:message code="operation.type.income"/></h1>
         <div id="incomeTable"></div>
-      <h1 id="outcomeTableHeader"><g:message code="operation.type.outcome"/></h1>
+        <h1 id="outcomeTableHeader"><g:message code="operation.type.outcome"/></h1>
         <div id="outcomeTable"></div>
       </table>
     </div>
