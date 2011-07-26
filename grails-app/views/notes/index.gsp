@@ -239,11 +239,12 @@
     <input type="button" id="addCtn" value="${message(code: "note.button.addCtn", default: 'addCtn')}"/>
 
   </div>
-  <div id="notesHolder" class="notesInfo" style="display:inline-block;">
+  <div style="display:inline-block;">
     <input type="button" id="addNote" value="${message(code: "note.button.addNote", default: 'addNote')}"/>
-    <g:render template="noteslist" model="model"/>
+    <div id="notesHolder" class="notesInfo">
+      <g:render template="noteslist" model="model"/>
+    </div>
   </div>
-
 </div>
 
 <div id="noteFormHolder"><g:render template="note" bean="${noteInstance}"/></div>
