@@ -269,7 +269,7 @@
       <br/>
       <div>
         <h3><label for="inputDate"><g:message code="dateRange.select"/>:</label></h3>
-        <input id="inputDate" type="text" value="${new SimpleDateFormat("M/d/yyyy").format(new Date())}" readonly="true"/>
+        <input id="inputDate" type="text" value="1/1/2011 - ${new SimpleDateFormat("M/d/yyyy").format(new Date())}" readonly="true"/>
       </div>
       <g:render template="oprForm" bean="${operationInstance}"/>
       <g:render template="bilForm" bean="${billInstance}"/>

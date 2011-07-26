@@ -4,6 +4,7 @@ import domain.auth.SecUser
 import grails.converters.JSON
 import java.text.SimpleDateFormat
 import domain.*
+import utils.BillStatCollector
 
 class OperationController {
   static navigation = [
@@ -98,9 +99,9 @@ class OperationController {
   }
 
   def getClickedBillId() {
-    session.startDate = session.startDate ?: new Date()
+    session.startDate = session.startDate ?: new Date("1/1/2011")
     session.endDate = session.endDate ?: new Date();
-    session.clickedId?.toInteger() ?: 1
+    session.clickedId?.toInteger() ?: Bill.findByName("Cash")?.id
   }
 
   // TODO: SQL
