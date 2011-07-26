@@ -15,7 +15,7 @@
       <td id="noteName${i}" valign="top" class="notename" style="min-width:150px;">
         ${note.name}
       </td>
-      <td id="noteValue${i}"  valign="top" class="notevalue ${hasErrors(bean: Note, field: 'value', 'errors')}" style="min-width:150px;">
+      <td id="noteValue${i}" valign="top" class="notevalue ${hasErrors(bean: Note, field: 'value', 'errors')}" style="min-width:150px;">
         ${note.value[0..16]}..
       </td>
       <td id="noteDate${i}" valign="top" class="notedate ${hasErrors(bean: Note, field: 'endDate', 'errors')}" style="min-width:150px;">
@@ -23,23 +23,20 @@
         <g:else></g:else>
       </td>
       <td style="min-width:150px;">
-        <g:checkBox id="isMade${i}" name="isMade${i}" checked="${note.isMade}"
-                onclick="triggerAjaxIsMade(${note.id})"/>
-        <div id="e${note.id}" style="display: none; width: 24px;">[e]</div>
+        <g:checkBox id="isMade${i}" name="isMade${i}" checked="${note.isMade}" onclick="triggerAjaxIsMade(${note.id})"/>
+      </td>
+      <td>
+        <div id="e${note.id}" style="display: none; width: 24px;"><img src="../images/pencil.png" alt="[e]"></div>
       </td>
 
     </tr>
     <script type="text/javascript">
       bindNoteClickEvent(${note.id});
-      $("#noteRow${note.id}").hover(
-                                   function () {
-                                     $("#e" +${note.id}).animate().css({display: "inline-block"});
-                                   },
-                                   function () {
-                                     $("#e" +${note.id}).animate().css({display: "none"});
-
-                                   }
-              );
+      $("#noteRow${note.id}").hover(function () {
+        $("#e" +${note.id}).animate().css({display: "inline-block"});
+      }, function () {
+        $("#e" +${note.id}).animate().css({display: "none"});
+      });
     </script>
   </g:each>
 
