@@ -3,26 +3,84 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="layout" content="nemain"/>
-  <title><g:message code="menu.notes.title"/></title>
-   <g:javascript library="jquery" plugin="jquery"/>
+  <title><g:message code="menu.note.title"/></title>
+  <g:javascript library="jquery" plugin="jquery"/>
+  <script type="text/javascript" src="../js/jquery/jquery-ui-1.8.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-ru.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-en-US.js"></script>
+
+
+  <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.2.custom.css"/>
+  <script type="text/javascript" src="../js/jquery/jquery.dateFormat-1.0.js"></script>
+  <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker.js"></script>
+  %{--<link rel="stylesheet" media="screen" type="text/css" href="../css/layout.css"/>--}%
+
   <script type="text/javascript">
+
+
+
 
     $(function() {
       createDialog();
-      $('input').daterangepicker({arrows:true});
+      $.getJSON("locale", function(json) {
+        regional = $.datepicker.regional[json.locale];
+        $("#endDate").datepicker(regional);
+      });
+      setupGridAjax();
     });
+    function ctgClick(id) {
+      jQuery.ajax({
+        url: 'categorySelect',
+        type: "POST",
+        data: {id: id},
+        dataType: "json",
+        complete: function(data) {
+          $('#notesHolder').html(data.responseText);
+        }
+      }
+              );
+    }
 
-    function bindClickEvent(id) {
-      console.log('clikedBB ' );
+    function bindCtgClickEvent(id) {
+      console.log('clikedBB ');
       $('#ctgNote' + id).click(function() {
-        console.log('cliked '+id);
+        console.log('cliked ' + id);
+        ctgClick(id);
+      });
+    }
+    function closeNoteDialog() {
+      $("#note-form").dialog("close");
+    }
+
+    function bindNoteClickEvent(id) {
+      console.log('clikednn ');
+      $('#e' + id).click(function() {
+        console.log('cliked note ' + id);
         jQuery.ajax({
-          url: 'categorySelect',
+          url: 'getNode',
           type: "POST",
           data: {id: id},
           dataType: "json",
-          complete: function(data) {
-            $('#notesHolder').html(data.responseText);
+          complete: function(data, textStatus) {
+            var obj = jQuery.parseJSON(data.responseText)
+            $('#noteName').val(obj.name);
+            $('#noteValue').val(obj.value);
+            $('#noteId').val(obj.id);
+            if (String(obj.date) == 'null')
+              $("#endDate").val('');
+            else
+              $("#endDate").val($.format.date(new Date(obj.date), "dd/MM/yyyy"));
+
+            $('input[name=isMade]').attr('checked', obj.isMade);
+
+            $("input[name=_isMade]").attr('value', obj.isMade);
+            $("input[name=_isImportant]").attr('value', obj.isImportant);
+
+
+            $("select#ctnId").val(obj.ctg);
+            $('input[name=isImportant]').attr('checked', obj.isImportant);
+            $("#note-form").dialog("open");
+
           }
         }
                 );
@@ -40,6 +98,17 @@
         width: 350,
         modal: true
       });
+
+      $("input[name=_action_addNote]").click(function() {
+        $("#actName").val('add');
+      });
+      $("input[name=_action_saveNote]").click(function() {
+        $("#actName").val('save');
+      });
+      $("input[name=_action_deleteNote]").click(function() {
+        $("#actName").val('del');
+      });
+//      $("#note-form").dialog("open");
     }
 
     function closeDialog() {
@@ -49,13 +118,68 @@
     function showDialog() {
       $("#note-form").dialog("open");
     }
+    function noteLineHoverIn(id) {
+      $("#e" + id).animate().css({display: "inline-block"});
+    }
+    function noteLineHoverOut(id) {
+      $("#e" + id).animate().css({display: "none"});
+    }
+
+    function triggerIsMade() {
+      var obj = $("input[name=_isMade]");
+      var value = String(obj.attr('value'));
+
+      if (value == "true")
+        obj.attr('value', 'false');
+      else
+        obj.attr('value', 'true');
+    }
+    function triggerIsImp() {
+      var obj = $("input[name=_isImportant]");
+      var value = String(obj.attr('value'));
+
+      if (value == "true")
+        obj.attr('value', 'false');
+      else
+        obj.attr('value', 'true');
+    }
+    function triggerAjaxIsMade(id) {
+      jQuery.ajax({
+        url: 'isMadeTrigger',
+        type: "POST",
+        data: {id: id},
+        dataType: "json"
+      }
+              );
+    }
+    // Turn all sorting and paging links into ajax requests for the grid
+    function setupGridAjax() {
+      $("#notesHolder").find(".paginateButtons a, th.sortable a").live('click', function(event) {
+        event.preventDefault();
+        var url = $(this).attr('href');
+
+        var grid = $(this).parents("table.ajax");
+        $(grid).html($("#spinner").html());
+
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function(data) {
+            $(grid).fadeOut('fast', function() {
+              $(this).html(data).fadeIn('slow');
+            });
+          }
+        })
+      });
+    }
+
   </script>
 </head>
 <body>
 <div class="nav">
 </div>
 <div class="body">
-  <h1><g:message code="menu.notes.title"/></h1>
+  <h1><g:message code="menu.note.title"/></h1>
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
@@ -65,17 +189,22 @@
 
 <div id="categoriesHolder" class="ctnHolder">
 
-  <g:each in="${categories}" var="ctgNote" status="i"   >
+  <g:each in="${categories}" var="ctgNote" status="i">
 
-  <div id='ctgNote${i}' > ${ctgNote.name}</div>
+    <div id='ctgNote${ctgNote.id}'>${ctgNote.name}</div>
     <script type="text/javascript">
-       bindClickEvent(${i});
+      bindCtgClickEvent(${ctgNote.id});
     </script>
   </g:each>
 
 </div>
-<div id="notesHolder" class="notesInfo"></div>
-
+<div id="notesHolder" class="notesInfo">
+  <g:render template="noteslist" model="model"/>
+  %{--<g:if test="${table != '!'}">--}%
+  %{--${table}--}%
+  %{--</g:if>--}%
+</div>
+<div id="noteFormHolder"><g:render template="note" bean="${noteInstance}"/></div>
 </body>
 </html>
 
