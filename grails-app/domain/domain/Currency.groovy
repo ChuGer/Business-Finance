@@ -1,5 +1,6 @@
 package domain
 class Currency {
+  static auditable = true
 
   String name
   String code

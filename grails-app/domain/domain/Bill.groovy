@@ -3,6 +3,7 @@ package domain
 import domain.auth.SecUser
 
 class Bill {
+  static auditable = true
 
   String name
   String ico = 'billDef.png'

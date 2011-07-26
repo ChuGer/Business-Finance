@@ -1,5 +1,6 @@
 package domain
 class Note {
+  static auditable = true
 
   String name
   String value

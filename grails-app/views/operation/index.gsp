@@ -36,6 +36,14 @@
     display: none;
     text-indent: -300px;
   }
+
+  #addOperationButton {
+    display: inline-block;
+  }
+
+  td {
+    min-width: 150px;
+  }
   </style>
   <script type="text/javascript">
     $(function() {
@@ -43,8 +51,12 @@
       createDialog();
       createTree();
       createColor();
-      $('input').daterangepicker({arrows:true});
-      $('#inputDate').daterangepicker({arrows:true});
+      $('#inputDate').daterangepicker({
+        arrows:true,
+        onChange: function() {
+          dateRangeChange();
+        }
+      });
       refreshTable();
     });
     function createColor() {
@@ -59,10 +71,23 @@
     }
     function refreshTable() {
       $.ajax({
-        url: 'createTable',
+        url: 'incomeTable',
         type: "POST",
         complete: function(data) {
-          $('#table').html(data.responseText);
+          var responseText = data.responseText;
+          $('#incomeTable').html(responseText);
+          //TODO: remove indus code responseText.length > 10
+          $('#incomeTableHeader').css('display', responseText.length > 10 ? 'block' : 'none');
+        }
+      })
+      $.ajax({
+        url: 'outcomeTable',
+        type: "POST",
+        complete: function(data) {
+          var responseText = data.responseText;
+          $('#outcomeTable').html(responseText);
+          //TODO: remove indus code responseText.length > 10
+          $('#outcomeTableHeader').css('display', responseText.length > 10 ? 'block' : 'none');
         }
       })
     }
@@ -190,16 +215,29 @@
             type: "POST",
             data: {id: newid},
             dataType: "json",
-            complete: function(data) {
-              $('#statForm').html(data.responseText);
+            complete: function() {
+              refreshTable();
             }
-          }
-                  );
+          });
         }
-
-
       });
+    }
 
+    function dateRangeChange() {
+      var newDateRange = $('#inputDate').val();
+      var dateArray = newDateRange.split(' - ');
+      if (dateArray.length == 1) {
+        dateArray[1] = dateArray[0];
+      }
+      jQuery.ajax({
+        url: 'changeDateRange',
+        type: "POST",
+        data: {startDate: dateArray[0] , endDate: dateArray[1]},
+        dataType: "json",
+        success: function() {
+          refreshTable();
+        }
+      });
     }
 
   </script>
@@ -208,20 +246,38 @@
 <div class="nav">
 </div>
 <div class="body">
-  <h1><g:message code="menu.operation.title"/></h1>
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-  <div id="treeDiv"></div>
-  <input id="inputDate" type="text" value="4/23/99"/>
-  <g:render template="oprForm" bean="${operationInstance}"/>
-  <g:render template="bilForm" bean="${billInstance}"/>
-  <g:render template="ctbForm" bean="${ctgBInstance}"/>
-  <div id="table"></div>
-  <br/><br/>
-  <a onclick="showDialog();"><g:message code="operation.add" default="Add transaction"/></a>
-  <br/><br/>
-  <a onclick="refreshTable();"><g:message code="operation.add" default="Refresh table"/></a>
+  <div>
+    <div style="float:left;">
+      <h1><g:message code="tree.root.bills"/></h1>
+      <div id="treeDiv"></div>
+      <br/>
+    </div>
+    <div style="display:inline-block; margin-left: 50px; min-width:500px;">
+      <div style="display:inline-block;">
+        <h1><g:message code="menu.operation.title"/></h1>
+      </div>
+      <div id="addOperationButton" onclick="showDialog();">
+        <img src="../images/netvibes.png" style="width:24px;"/>
+      </div>
+      <br/>
+      <div>
+        <h3><label for="inputDate"><g:message code="dateRange.select"/>:</label></h3>
+        <input id="inputDate" type="text" value="${new SimpleDateFormat("M/d/yyyy").format(new Date())}" readonly="true"/>
+      </div>
+      <g:render template="oprForm" bean="${operationInstance}"/>
+      <g:render template="bilForm" bean="${billInstance}"/>
+      <g:render template="ctbForm" bean="${ctgBInstance}"/>
+      <table>
+        <h1 id="incomeTableHeader"><g:message code="operation.type.income"/></h1>
+        <div id="incomeTable"></div>
+        <h1 id="outcomeTableHeader"><g:message code="operation.type.outcome"/></h1>
+        <div id="outcomeTable"></div>
+      </table>
+    </div>
+  </div>
 
 </div>
 </body>

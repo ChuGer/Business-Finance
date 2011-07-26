@@ -1,6 +1,7 @@
 package domain
 
 class CategoryOp {
+  static auditable = true
 
   String name
   String ico = 'ctoDef.png'
