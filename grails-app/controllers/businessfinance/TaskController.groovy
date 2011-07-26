@@ -175,8 +175,6 @@ class TaskController {
   def events = {
     def startDate = new Date(Long.parseLong(params.start))
     def endDate =  new Date(Long.parseLong(params.end))
-    println(startDate)
-    println(endDate)
     def data = []
     def opsIds = []
     //TODO: SQL

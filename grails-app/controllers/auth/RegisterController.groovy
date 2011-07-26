@@ -70,7 +70,6 @@ class RegisterController extends AbstractS2UiController {
     RegistrationCode.withTransaction { status ->
       user = lookupUserClass().findByUsername(registrationCode.username)
       if (!user) {
-        println "f  r1 " + registrationCode.username
         return
       }
       user.accountLocked = false

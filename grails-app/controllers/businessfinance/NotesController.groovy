@@ -28,7 +28,6 @@ class NotesController {
     if (request.xhr) {
       def ctg = CategoryNote.findById(session.categoryNoteId)
       params.id = 8
-      println params
       def list = Note.findAllByCategory(ctg, params)
       def model = [noteList: list, notesTotal: list.count()]
       render(template: "noteslist", model: model)
@@ -36,7 +35,6 @@ class NotesController {
     if (user)
       categories = user.notes
 
-    println 'index'
     [categories: categories, noteInstance: new Note(endDate: new Date()), table: table, ctnInstance: new CategoryNote(),
             noteList: categories.asList().get(0).notes, notesTotal: categories.asList().get(0).notes.size(),categoryNoteList :ctgList]
   }
@@ -46,8 +44,6 @@ class NotesController {
     render locale as JSON
   }
   def categorySelect = {
-    println 'ctgsel'
-    println params
     if (params.id) {
       def list = CategoryNote.findById(params.id).notes
       session.categoryNoteId = params.id
@@ -64,8 +60,6 @@ class NotesController {
   }
 
   def manageNote = {
-    println 'ssaving'
-    println params
     def note = Note.findById(params.noteId)
     //TODO: if (note) {
     int cId = params.category.id.toInteger()
@@ -118,8 +112,6 @@ class NotesController {
     }
   }
   def addCtn = {
-     println 'add'
-    println params
     def ctg = new CategoryNote(name: params.name)
     ctg.save(failOnError: true)
     SecUser user = springSecurityService.getCurrentUser();
@@ -127,8 +119,6 @@ class NotesController {
     redirect action: index
   }
   def saveCtn = {
-    println 'sace'
-    println params
     def ctg = CategoryNote.findById(params.ctnId)
     if (ctg) {
       ctg.name = params.name
