@@ -15,18 +15,18 @@
       <td id="noteName${i}" valign="top" class="notename" style="min-width:150px;">
         ${note.name}
       </td>
-      <td id="noteValue${i}" valign="top" class="notevalue ${hasErrors(bean: Note, field: 'value', 'errors')}" style="min-width:150px;">
+      <td id="noteValue${i}" valign="top" class="notevalue ${hasErrors(bean: Note, field: 'value', 'errors')}" style="min-width:250px;">
          ${note.value.length() >15 ? note.value[0..16]+'..' : note.value }
       </td>
-      <td id="noteDate${i}" valign="top" class="notedate ${hasErrors(bean: Note, field: 'endDate', 'errors')}" style="min-width:150px;">
+      <td id="noteDate${i}" valign="top" class="notedate ${hasErrors(bean: Note, field: 'endDate', 'errors')}" style="min-width:100px;">
         <g:if test="${note.endDate}">${note.endDate?.dateString}</g:if>
         <g:else></g:else>
       </td>
-      <td style="min-width:150px;">
+      <td style="min-width:50px;">
         <g:checkBox id="isMade${i}" name="isMade${i}" checked="${note.isMade}" onclick="triggerAjaxIsMade(${note.id})"/>
       </td>
-      <td>
-        <div id="e${note.id}" style="display: none; width: 24px;"><img src="../images/pencil.png" alt="[e]"></div>
+      <td >
+        <div id="e${note.id}" style="background:none;display: none; width: 24px;"><img src="../images/pencil.png" alt="[e]"></div>
       </td>
 
     </tr>
