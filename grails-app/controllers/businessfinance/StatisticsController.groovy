@@ -14,6 +14,7 @@ class StatisticsController {
 
   def index = {
     SecUser user = springSecurityService.getCurrentUser()
+    params.max = params.max ?: 10
     if (user != null) {
       [logins: LoginStat.list(params) ]
     }

@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat
 
 class NotesController {
   def springSecurityService
-  def sdf = new SimpleDateFormat("dd/MM/yyyy");
+  def sdf = new SimpleDateFormat("d/M/yyyy");
   static navigation = [
           group: 'tabs',
           order: 5,
@@ -78,7 +78,7 @@ class NotesController {
         note.value = params.value
         note.isImportant = Boolean.parseBoolean(params._isImportant)
         note.isMade = Boolean.parseBoolean(params._isMade)
-        //if(params.endDate != '')note.endDate = sdf.parse(params.endDate) + 1  //TODO parse date
+        if(params.endDate != '') note.endDate = sdf.parse(params.endDate) + 1
         note.category = CategoryNote.findById(params.category.id)
         note.save(failOnError: true)
         break
@@ -88,14 +88,12 @@ class NotesController {
         note.value = params.value
         note.isImportant = Boolean.parseBoolean(params._isImportant)
         note.isMade = Boolean.parseBoolean(params._isMade)
-        //if(params.endDate != '')note.endDate = sdf.parse(params.endDate) + 1  //TODO parse date
+        if(params.endDate != '')note.endDate = sdf.parse(params.endDate) + 1
         note.category = CategoryNote.findById(params.category.id)
         note.save(failOnError: true)
         break
 
     }
-
-
     def answer = [cId: cId]
     render answer as JSON
   }

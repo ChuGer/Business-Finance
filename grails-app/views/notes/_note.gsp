@@ -1,4 +1,4 @@
-<div id="note-form">
+<div id="note-form" title="<g:message code="note.create" default="Note edit"/>">
 
   <g:formRemote name="noteForm" url="[controller: 'notes', action: 'manageNote']" onSuccess="ctgClick(data.cId)" onComplete="closeNoteDialog();">
     <div class="dialog">
@@ -24,7 +24,7 @@
 
         <tr class="prop">
           <td valign="top" class="name">
-            <label for="isImportant"><g:message code="operation.isImportant" default="isImportant"/></label>
+            <label for="isImportant"><g:message code="note.isImportant.label" default="isImportant"/></label>
           </td>
           <td valign="top" class="value ${hasErrors(bean: noteInstance, field: 'isImportant', 'errors')}">
             <g:checkBox id="isImportant" name="isImportant" value="true" checked="${noteInstance.isImportant}" onclick="triggerIsImp()"/>
@@ -52,7 +52,7 @@
 
         <tr class="prop">
           <td valign="top" class="name">
-            <label for="isMade"><g:message code="note.isMade" default="isMade"/></label>
+            <label for="isMade"><g:message code="note.isMade.label" default="isMade"/></label>
           </td>
           <td valign="top" class="value ${hasErrors(bean: noteInstance, field: 'isMade', 'errors')}">
             <g:checkBox id="isMade" name="isMade" value="true" checked="${noteInstance.isMade}" onclick="triggerIsMade()"/>

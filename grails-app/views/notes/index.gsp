@@ -46,7 +46,7 @@
   }
 
   #notesTable.ajax tbody tr td {
-    font-style:italic;
+    font-style: italic;
     text-align: center;
     vertical-align: middle;
   }
@@ -176,7 +176,7 @@
       $("#note-form").dialog({
         autoOpen: false,
         height: 400,
-        width: 350,
+        width: 450,
         modal: true,
         close: function(ev, ui) {
           $("input[name=_action_saveNote]").css({display: "inline-block"});
@@ -219,11 +219,11 @@
     function noteLineHoverOut(id) {
       $("#e" + id).animate().css({display: "none"});
     }
-    function categoryManage(id,val){
-       isSingleCreatingMode = true;
-        $("#ctnName").val(val);
-        $("#selectedId").val(id);
-        $("#noteCtgForm").dialog("open");
+    function categoryManage(id, val) {
+      isSingleCreatingMode = true;
+      $("#ctnName").val(val);
+      $("#selectedId").val(id);
+      $("#noteCtgForm").dialog("open");
     }
     function triggerIsMade() {
       var obj = $("input[name=_isMade]");
@@ -283,12 +283,10 @@
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-
-
   <div id="categoriesHolder" class="ctnHolder" style="float:left;">
     <g:each in="${categories}" var="ctgNote" status="i">
       <div id="ctgNote${ctgNote.id}" style="padding:7px; font-size:16px; background-color:#f5f5dc;
-      border-radius:5px; margin:10px;" ondblclick="categoryManage(${ctgNote.id},'${ctgNote.name}');">${ctgNote.name}</div>
+      border-radius:5px; margin:10px;" ondblclick="categoryManage(${ctgNote.id}, '${ctgNote.name}');">${ctgNote.name}</div>
       <script type="text/javascript">
         bindCtgClickEvent(${ctgNote.id});
       </script>
