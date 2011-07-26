@@ -1,4 +1,4 @@
-<div id="note-form">
+<div id="note-form" title="<g:message code="note.create" default="Note edit"/>">
 
   <g:formRemote name="noteForm" url="[controller: 'notes', action: 'manageNote']" onSuccess="ctgClick(data.cId)" onComplete="closeNoteDialog();">
     <div class="dialog">
