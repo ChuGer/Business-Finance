@@ -8,7 +8,10 @@ class MainController {
           title: "main",
           action: 'index'
   ]
+  def userService
+
   def index = {
-    }
+    userService.saveUserInfo(this.class.simpleName)
+  }
 
 }

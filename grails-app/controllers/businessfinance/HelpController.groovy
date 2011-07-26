@@ -7,5 +7,9 @@ class HelpController {
           title: "help",
           action: 'index'
   ]
-  def index = { }
+  def userService
+
+  def index = {
+    userService.saveUserInfo(this.class.simpleName)
+  }
 }

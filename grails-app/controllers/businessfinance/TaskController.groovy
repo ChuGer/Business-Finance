@@ -15,8 +15,10 @@ class TaskController {
   ]
   def springSecurityService
   def categoryService
+  def userService
 
   def index = {
+    userService.saveUserInfo(this.class.simpleName)
     def operationInstance = new Operation(type: 1)
     def billInstance = new Bill()
     billInstance.properties = params

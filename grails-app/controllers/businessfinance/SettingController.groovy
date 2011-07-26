@@ -11,8 +11,10 @@ class SettingController {
   ]
 
   def springSecurityService
+  def userService
 
   def index = {
+    userService.saveUserInfo(this.class.simpleName)
     SecUser user = springSecurityService.getCurrentUser();
     [user : user]
   }

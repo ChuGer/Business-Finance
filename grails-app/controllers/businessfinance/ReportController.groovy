@@ -16,8 +16,10 @@ class ReportController {
 
   // Export service provided by Export plugin
   def exportService
+  def userService
 
   def index = {
+    userService.saveUserInfo(this.class.simpleName)
     if (!params.max) params.max = 10
 
     if (params?.format && params.format != "html") {

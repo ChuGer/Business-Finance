@@ -10,7 +10,9 @@ class NotesController {
           title: 'note',
           action: 'index'
   ]
+  def userService
   def index = {
+    userService.saveUserInfo(this.class.simpleName)
     def categories = []
     SecUser user = springSecurityService.getCurrentUser();
     if (user)
