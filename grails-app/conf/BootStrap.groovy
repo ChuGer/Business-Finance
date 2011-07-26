@@ -52,12 +52,14 @@ class BootStrap {
       //creating notes
       def ctn1 = new  CategoryNote(name : 'Payments')
       def ctn2 = new  CategoryNote(name : 'Loclo')
-      def note1 = new Note(name : 'About Artup', value :'text text zozozohnanejn an nwoot tro ginuief gre ., ! g,eGER ')
+      def note1 = new Note(name : 'About Artup', endDate : new Date(), value :'text text zozozohnanejn an nwoot tro ginuief gre ., ! g,eGER ', isImportant: true)
       def note2 = new Note(name : 'take corkt', value :'text text zgh  GG /g?$? r1?R GErG ?@4segweweG$ gsd seg, 3 ')
-      def note3 = new Note(name : 'Gofe nHio', value :'text text zGHD GHERKG EGQG M WG ')
+      def note3 = new Note(name : 'Gofe nHio',endDate : new Date() -2, value :'text text zGHD GHERKG EGQG M WG ')
       def note4 = new Note(name : 'Kuziy pes', value :'СЕДьмао поораз атв выдоа волйое ицугоищ ')
+      def note5 = new Note(name : 'Alfable ritoniy',endDate : new Date() -3, value :'Серый ронслдиай за жк ипод лвыть , пкуп ,')
+      def note6 = new Note(name : 'Duso xiotr jiu', value :'Елзьме бювбтаы д жиао оу и пронос ипгоцук ')
       ctn1.addToNotes(note1).addToNotes(note2)
-      ctn2.addToNotes(note3).addToNotes(note4)
+      ctn2.addToNotes(note3).addToNotes(note4).addToNotes(note5).addToNotes(note6)
 
       //Creating Bills
       def bill1 = new Bill(name: 'Webmoney', currency: cur2, balance: 1000, category: ctg1, isChecked: true, user: user).save(failOnError: true)

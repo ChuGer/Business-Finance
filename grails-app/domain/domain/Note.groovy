@@ -6,11 +6,13 @@ class Note {
   Boolean isMade = false
   Date endDate
   Boolean isImportant  = false
+  static belongsTo = [ category:CategoryNote]
 
   static constraints = {
     name()
     value(maxSize: 1000)
     endDate( nullable: true)
+    category( nullable: true)
   }
 
   public String toString() {
