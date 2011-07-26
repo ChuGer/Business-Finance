@@ -107,13 +107,13 @@
         $('#noteName').val('');
         $('#noteValue').val('');
         $('#noteId').val('');
-          $("#endDate").val('');
+        $("#endDate").val('');
 
         $('input[name=isMade]').attr('checked', false);
         $("input[name=_isMade]").attr('value', 'false');
         $("input[name=_isImportant]").attr('value', 'false');
         $("select#ctnId").val('');
-        $('input[name=isImportant]').attr('checked',false);
+        $('input[name=isImportant]').attr('checked', false);
 
         $("input[name=_action_saveNote]").css({display: "none"});
         $("input[name=_action_deleteNote]").css({display: "none"});
@@ -121,7 +121,7 @@
         $("#note-form").dialog("open");
       });
       $("#addCtn").click(function() {
-          $("#noteCtgForm").dialog("open");
+        $("#noteCtgForm").dialog("open");
       });
 
     }
@@ -230,7 +230,6 @@
   </g:if>
 
 
-  <input type="button" id="addCtn" value="${message(code: "note.button.addCtn", default: 'addCtn')}"/>
   <div id="categoriesHolder" class="ctnHolder" style="float:left;">
     <g:each in="${categories}" var="ctgNote" status="i">
       <div id="ctgNote${ctgNote.id}" style="padding:7px; font-size:16px; background-color:#f5f5dc; border-radius:5px; margin:10px;">${ctgNote.name}</div>
@@ -238,13 +237,15 @@
         bindCtgClickEvent(${ctgNote.id});
       </script>
     </g:each>
+    <input type="button" id="addCtn" value="${message(code: "note.button.addCtn", default: 'addCtn')}"/>
+
   </div>
-  <div id="notesHolder" class="notesInfo">
+  <div id="notesHolder" class="notesInfo" style="display:inline-block;">
+    <input type="button" id="addNote" value="${message(code: "note.button.addNote", default: 'addNote')}"/>
     <g:render template="noteslist" model="model"/>
   </div>
 
 </div>
-<input type="button" id="addNote" value="${message(code:  "note.button.addNote",default: 'addNote')}"/>
 
 <div id="noteFormHolder"><g:render template="note" bean="${noteInstance}"/></div>
 <g:render template="addCtn" bean="${ctnInstance}"/>
