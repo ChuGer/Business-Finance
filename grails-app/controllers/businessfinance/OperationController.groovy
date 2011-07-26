@@ -21,7 +21,8 @@ class OperationController {
   def userService
 
   def index = {
-    userService.serviceMethod()
+    userService.saveUserInfo(this.class.simpleName)
+
     def treeData = categoryService.getBillTree()
     def operationInstance = new Operation(type: 1)
     [

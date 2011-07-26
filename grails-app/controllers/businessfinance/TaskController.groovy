@@ -67,7 +67,7 @@ class TaskController {
     operation.isChecked = true
     operation.user = springSecurityService.getCurrentUser()
     operation.sum = params.sum.toFloat()
-    if (!operation.save(failOnError: true)) {
+    if (!operation.save()) {
       operation.errors.each {
         println it
       }

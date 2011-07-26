@@ -3,6 +3,8 @@ package services
 import domain.auth.SecUser
 import org.springframework.web.context.request.RequestContextHolder as RCH
 import java.text.SimpleDateFormat
+import domain.Browser
+import domain.LoginStat
 
 class UserService {
 
@@ -17,23 +19,29 @@ class UserService {
   public final static String BLACKBERRY = "blackberry"
   public final static String SEAMONKEY = "seamonkey"
 
-  public final static int CLIENT_CHROME = 0
-  public final static int CLIENT_FIREFOX = 1
-  public final static int CLIENT_SAFARI = 2
-  public final static int CLIENT_OTHER = 3
-  public final static int CLIENT_MSIE = 4
-  public final static int CLIENT_UNKNOWN = 5
-  public final static int CLIENT_BLACKBERRY = 6
-  public final static int CLIENT_SEAMONKEY = 7
-  public final static String FORMAT = "dd.MM.yyyy hh:mm:ss"
-  public final static SimpleDateFormat sdf = new SimpleDateFormat(FORMAT)
+  public final static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
 
-
-  def serviceMethod() {
+  def saveUserInfo(className) {
     SecUser user = springSecurityService.getCurrentUser()
     if (user != null) {
       println sdf.format(new Date()) + ": " + user.username
-      getUserAgentInfo()
+      def agentInfo = getUserAgentInfo()
+      def browser = Browser.findByNameAndVers(agentInfo.name, agentInfo.vers)
+      if (browser == null) {
+        browser = new Browser(name: agentInfo.name, vers: agentInfo.vers)
+        if (!browser.save()) {
+          browser.errors.each { e ->
+            println e
+          }
+        }
+      }
+      def login = new LoginStat(date: new Date(), browser: browser, page: className.toLowerCase());
+      login.settings = user.settings
+      if (!login.save()) {
+        login.errors.each { e ->
+          println e
+        }
+      }
     }
   }
 
@@ -45,122 +53,67 @@ class UserService {
     return RCH.currentRequestAttributes().session
   }
 
-  def getUserAgentTag() {
-    getRequest().getHeader("user-agent")
-  }
-
   def getUserAgentInfo() {
-    def userAgent = getUserAgentTag()
+    def userAgent = getRequest().getHeader("user-agent")
     def agentInfo = [:]
-    def browserVersion
-    def browserType
+    def vers = null
+    def name
 
     if (userAgent == null) {
       agentInfo.browserType = CLIENT_UNKNOWN
       return agentInfo
     }
 
-    browserType = CLIENT_OTHER;
+    name = OTHER;
 
     int pos = -1;
     if ((pos = userAgent.indexOf("Firefox")) >= 0) {
-      browserType = CLIENT_FIREFOX;
-      browserVersion = userAgent.substring(pos + 8).trim();
-      if (browserVersion.indexOf(" ") > 0)
-        browserVersion = browserVersion.substring(0, browserVersion.indexOf(" "));
+      name = FIREFOX;
+      vers = userAgent.substring(pos + 8).trim();
+      if (vers.indexOf(" ") > 0)
+        vers = vers.substring(0, vers.indexOf(" "));
     }
     if ((pos = userAgent.indexOf("Chrome")) >= 0) {
-      browserType = CLIENT_CHROME;
-      browserVersion = userAgent.substring(pos + 7).trim();
-      if (browserVersion.indexOf(" ") > 0)
-        browserVersion = browserVersion.substring(0, browserVersion.indexOf(" "));
+      name = CHROME;
+      vers = userAgent.substring(pos + 7).trim();
+      if (vers.indexOf(" ") > 0)
+        vers = vers.substring(0, vers.indexOf(" "));
 
     }
     if ((pos = userAgent.indexOf("Safari")) >= 0 && (userAgent.indexOf("Chrome") == -1)) {
-      browserType = CLIENT_SAFARI;
-      browserVersion = userAgent.substring(pos + 7).trim();
-      if (browserVersion.indexOf(" ") > 0)
-        browserVersion = browserVersion.substring(0, browserVersion.indexOf(" "));
+      name = SAFARI;
+      vers = userAgent.substring(pos + 7).trim();
+      if (vers.indexOf(" ") > 0)
+        vers = vers.substring(0, vers.indexOf(" "));
 
     }
     if ((pos = userAgent.indexOf("BlackBerry")) >= 0) {
-      browserType = CLIENT_BLACKBERRY;
-      browserVersion = userAgent.substring(userAgent.indexOf("/")).trim();
-      if (browserVersion.indexOf(" ") > 0)
-        browserVersion = browserVersion.substring(0, browserVersion.indexOf(" "));
+      name = BLACKBERRY;
+      vers = userAgent.substring(userAgent.indexOf("/")).trim();
+      if (vers.indexOf(" ") > 0)
+        vers = vers.substring(0, vers.indexOf(" "));
 
     }
     if ((pos = userAgent.indexOf("SeaMonkey")) >= 0) {
-      browserType = CLIENT_SEAMONKEY;
-      browserVersion = userAgent.substring(userAgent.indexOf("/")).trim();
-      if (browserVersion.indexOf(" ") > 0)
-        browserVersion = browserVersion.substring(0, browserVersion.indexOf(" "));
+      name = SEAMONKEY;
+      vers = userAgent.substring(userAgent.indexOf("/")).trim();
+      if (vers.indexOf(" ") > 0)
+        vers = vers.substring(0, vers.indexOf(" "));
 
     }
     if ((pos = userAgent.indexOf("MSIE")) >= 0) {
-      browserType = CLIENT_MSIE;
-      browserVersion = userAgent.substring(pos + 5).trim();
-      if (browserVersion.indexOf(" ") > 0)
-        browserVersion = browserVersion.substring(0, browserVersion.indexOf(" "));
-      if (browserVersion.indexOf(";") > 0)
-        browserVersion = browserVersion.substring(0, browserVersion.indexOf(";"));
+      name = MSIE;
+      vers = userAgent.substring(pos + 5).trim();
+      if (vers.indexOf(" ") > 0)
+        vers = vers.substring(0, vers.indexOf(" "));
+      if (vers.indexOf(";") > 0)
+        vers = vers.substring(0, vers.indexOf(";"));
 
     }
 
-    agentInfo.browserVersion = browserVersion
-    agentInfo.browserType = browserType
-    agentInfo.agentString = userAgent
-    println(agentInfo)
+    agentInfo.vers = vers
+    agentInfo.name = name
+
     return agentInfo
-  }
-
-
-  public boolean isChrome() {
-    return (getUserAgentInfo().browserType == CLIENT_CHROME);
-  }
-
-  public boolean isFirefox() {
-    return (getUserAgentInfo().browserType == CLIENT_FIREFOX);
-  }
-
-  public boolean isMsie() {
-    return (getUserAgentInfo().browserType == CLIENT_MSIE);
-  }
-
-  public boolean isOther() {
-    return (getUserAgentInfo().browserType == CLIENT_OTHER);
-  }
-
-  public boolean isSafari() {
-    return (getUserAgentInfo().browserType == CLIENT_SAFARI);
-  }
-
-  public boolean isBlackberry() {
-    return (getUserAgentInfo().browserType == CLIENT_BLACKBERRY);
-  }
-
-  public boolean isSeamonkey() {
-    return (getUserAgentInfo().browserType == CLIENT_SEAMONKEY);
-  }
-
-  public String getBrowserType() {
-    switch (getUserAgentInfo().browserType) {
-      case CLIENT_FIREFOX:
-        return FIREFOX;
-      case CLIENT_CHROME:
-        return CHROME;
-      case CLIENT_SAFARI:
-        return SAFARI;
-      case CLIENT_SEAMONKEY:
-        return SEAMONKEY;
-      case CLIENT_MSIE:
-        return MSIE;
-      case CLIENT_BLACKBERRY:
-        return BLACKBERRY;
-      case CLIENT_OTHER:
-      case CLIENT_UNKNOWN:
-      default:
-        return OTHER;
-    }
   }
 }

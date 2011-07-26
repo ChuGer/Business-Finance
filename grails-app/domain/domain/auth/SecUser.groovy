@@ -15,7 +15,7 @@ class SecUser {
   boolean passwordExpired
   boolean fetchReady = true
   String email
-  Settings settings
+  Settings settings = new Settings()
   CategoryBill categoriesB
   CategoryOp categoriesO
   static hasMany = [bills: Bill, operations: Operation, notes : CategoryNote]
