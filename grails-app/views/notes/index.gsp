@@ -117,6 +117,7 @@
 
         $("input[name=_action_saveNote]").css({display: "none"});
         $("input[name=_action_deleteNote]").css({display: "none"});
+        isSingleCreatingMode = true;
         $("#note-form").dialog("open");
       });
       $("#addCtn").click(function() {

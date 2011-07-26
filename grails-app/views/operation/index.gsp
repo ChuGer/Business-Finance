@@ -156,7 +156,11 @@
       $("#name").val('');
       refreshTable();
     }
-
+    function closeBillDialog() {
+      $("#bill-form").dialog("close");
+      $("#name").val('');
+//      refreshTable();
+    }
     function showDialog() {
       $("#opr-form").dialog("open");
     }
@@ -190,7 +194,7 @@
         if (prefix == 'd' || prefix == 'c') {
           lastHoveredNodeId = d.rslt.obj.attr("id");
           $("#categoryb").val(lastHoveredNodeId);
-//          $("#categoryb2").val(lastHoveredNodeId);
+          $("#categoryb2").val(lastHoveredNodeId);
 //          $("#categoryb3").val(lastHoveredNodeId);
 //          $("#categoryb4").val(lastHoveredNodeId);
         }
