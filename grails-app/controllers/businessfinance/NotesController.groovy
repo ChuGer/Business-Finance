@@ -34,7 +34,7 @@ class NotesController {
       categories = user.notes
 
     println 'index'
-    [categories: categories, noteInstance: new Note(endDate: new Date()), table: table,
+    [categories: categories, noteInstance: new Note(endDate: new Date()), table: table, ctnInstance: new CategoryNote(),
             noteList: categories.asList().get(0).notes, notesTotal: categories.asList().get(0).notes.size()]
   }
   def locale = {
@@ -115,5 +115,20 @@ class NotesController {
     else {
       model
     }
+  }
+  def addCtn = {
+    println 'wood'
+    println params
+    redirect action: index
+  }
+  def saveCtn = {
+    println 'wood'
+    println params
+    redirect action: index
+  }
+  def deleteCtn = {
+    println 'wood2'
+    println params
+    redirect action: index
   }
 }

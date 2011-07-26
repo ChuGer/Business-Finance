@@ -14,12 +14,22 @@
   <script type="text/javascript" src="../js/jquery/jquery.dateFormat-1.0.js"></script>
   <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker.js"></script>
   %{--<link rel="stylesheet" media="screen" type="text/css" href="../css/layout.css"/>--}%
+  <style type="text/css">
+  .editNoteBtn {
+    width: 24px;
+    background-image: url('../images/tree/pencil--exclamation.png');
+    background-repeat: no-repeat;
+    display: none;
+    text-indent: -300px;
+  }
 
+
+  </style>
   <script type="text/javascript">
 
 
 
-
+    var isSingleCreatingMode = false;
     $(function() {
       createDialog();
       $.getJSON("locale", function(json) {
@@ -27,6 +37,7 @@
         $("#endDate").datepicker(regional);
       });
       setupGridAjax();
+      bindCreateButtons();
     });
     function ctgClick(id) {
       jQuery.ajax({
@@ -50,6 +61,11 @@
     }
     function closeNoteDialog() {
       $("#note-form").dialog("close");
+      if (isSingleCreatingMode) {
+        $("input[name=_action_saveNote]").css({display: "inline-block"});
+        $("input[name=_action_deleteNote]").css({display: "inline-block"});
+        isSingleCreatingMode = false;
+      }
     }
 
     function bindNoteClickEvent(id) {
@@ -86,6 +102,28 @@
                 );
       });
     }
+    function bindCreateButtons() {
+      $("#addNote").click(function() {
+        $('#noteName').val('');
+        $('#noteValue').val('');
+        $('#noteId').val('');
+          $("#endDate").val('');
+
+        $('input[name=isMade]').attr('checked', false);
+        $("input[name=_isMade]").attr('value', 'false');
+        $("input[name=_isImportant]").attr('value', 'false');
+        $("select#ctnId").val('');
+        $('input[name=isImportant]').attr('checked',false);
+
+        $("input[name=_action_saveNote]").css({display: "none"});
+        $("input[name=_action_deleteNote]").css({display: "none"});
+        $("#note-form").dialog("open");
+      });
+      $("#addCtn").click(function() {
+          $("#noteCtgForm").dialog("open");
+      });
+
+    }
     function createDialog() {
       $.getJSON("locale", function(json) {
         regional = $.datepicker.regional[json.locale];
@@ -95,6 +133,12 @@
       $("#note-form").dialog({
         autoOpen: false,
         height: 400,
+        width: 350,
+        modal: true
+      });
+      $("#noteCtgForm").dialog({
+        autoOpen: false,
+        height: 200,
         width: 350,
         modal: true
       });
@@ -186,7 +230,7 @@
 </div>
 
 
-
+<input type="button" id="addCtn" value="${message(code: "note.button.addCtn", default: 'addCtn')}"/>
 <div id="categoriesHolder" class="ctnHolder">
 
   <g:each in="${categories}" var="ctgNote" status="i">
@@ -198,6 +242,7 @@
   </g:each>
 
 </div>
+<input type="button" id="addNote" value="${message(code:  "note.button.addNote",default: 'addNote')}"/>
 <div id="notesHolder" class="notesInfo">
   <g:render template="noteslist" model="model"/>
   %{--<g:if test="${table != '!'}">--}%
@@ -205,6 +250,7 @@
   %{--</g:if>--}%
 </div>
 <div id="noteFormHolder"><g:render template="note" bean="${noteInstance}"/></div>
+<g:render template="addCtn" bean="${ctnInstance}"/>
 </body>
 </html>
 

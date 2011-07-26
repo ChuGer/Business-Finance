@@ -20,7 +20,7 @@
           ${note.name}
       </td>
       <td id="noteValue${i}" width="22" valign="top" class="notevalue ${hasErrors(bean: Note, field: 'value', 'errors')}">
-         ${note.value[0..16]}..
+         ${note.value.length() >15 ? note.value[0..16]+'..' : note.value }
       </td>
       <td id="noteDate${i}" width="22"  valign="top" class="notedate ${hasErrors(bean: Note, field: 'endDate', 'errors')}">
         <g:if test="${note.endDate}">${note.endDate?.dateString}</g:if>
@@ -29,7 +29,7 @@
       <td   width="5">
         <g:checkBox id = "isMade${i}" name="isMade${i}" checked="${note.isMade}"
             onclick="triggerAjaxIsMade(${note.id})"/>
-        <div id = "e${note.id}" style="display: none; width: 24px;">[e]</div>
+        <div id = "e${note.id}" class="editNoteBtn">.</div>
       </td>
 
 
