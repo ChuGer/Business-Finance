@@ -15,7 +15,7 @@
             <g:textField id="ctnName" name="name" value="${ctnInstance?.name}"/>
           </td>
         </tr>
-            <g:hiddenField id="ctnId" name="ctnId"/>
+            <g:hiddenField id="selectedId" name="ctnId"/>
         <div class="buttons">
           <span class="button"><g:actionSubmit class="save" action="saveCtn" value="${message(code: 'default.button.save.label', default: 'Save')}"/></span>
           <span class="button"><g:actionSubmit class="create" action="addCtn" value="${message(code: 'default.button.create.label', default: 'Create')}"/></span>

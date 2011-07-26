@@ -23,6 +23,7 @@ class NotesController {
 
     def categories = []
     SecUser user = springSecurityService.getCurrentUser();
+    def ctgList = user.notes
     def table = '!'
     if (request.xhr) {
       def ctg = CategoryNote.findById(session.categoryNoteId)
@@ -37,7 +38,7 @@ class NotesController {
 
     println 'index'
     [categories: categories, noteInstance: new Note(endDate: new Date()), table: table, ctnInstance: new CategoryNote(),
-            noteList: categories.asList().get(0).notes, notesTotal: categories.asList().get(0).notes.size()]
+            noteList: categories.asList().get(0).notes, notesTotal: categories.asList().get(0).notes.size(),categoryNoteList :ctgList]
   }
   def locale = {
     def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
@@ -119,18 +120,31 @@ class NotesController {
     }
   }
   def addCtn = {
-    println 'wood'
+     println 'add'
     println params
+    def ctg = new CategoryNote(name: params.name)
+    ctg.save(failOnError: true)
+    SecUser user = springSecurityService.getCurrentUser();
+    user.notes.add(ctg)
     redirect action: index
   }
   def saveCtn = {
-    println 'wood'
+    println 'sace'
     println params
+    def ctg = CategoryNote.findById(params.ctnId)
+    if (ctg) {
+      ctg.name = params.name
+      ctg.save(failOnError: true)
+    }
     redirect action: index
   }
   def deleteCtn = {
-    println 'wood2'
-    println params
+    def ctg = CategoryNote.findById(params.ctnId)
+    if (ctg) {
+      SecUser user = springSecurityService.getCurrentUser();
+      user.notes.remove(ctg)
+      ctg.delete()
+    }
     redirect action: index
   }
 }

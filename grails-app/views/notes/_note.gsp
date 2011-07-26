@@ -38,7 +38,7 @@
             <label for="category.id"><g:message code="note.category.label" default="Category"/></label>
           </td>
           <td valign="top" class="value ${hasErrors(bean: noteInstance, field: 'category', 'errors')}">
-            <g:select id="ctnId" name="category.id" from="${domain.CategoryNote.list()}" optionKey="id"/>
+            <g:select id="ctnId" name="category.id" from="${categoryNoteList}" optionKey="id"/>
           </td>
         </tr>
 

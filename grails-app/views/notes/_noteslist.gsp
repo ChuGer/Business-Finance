@@ -16,7 +16,7 @@
         ${note.name}
       </td>
       <td id="noteValue${i}" valign="top" class="notevalue ${hasErrors(bean: Note, field: 'value', 'errors')}" style="min-width:150px;">
-         ${note.value.length() >15 ? note.value[0..16]+'..' : note.value }
+         ${note.value.length() >16 ? note.value[0..16]+'..' : note.value }
       </td>
       <td id="noteDate${i}" valign="top" class="notedate ${hasErrors(bean: Note, field: 'endDate', 'errors')}" style="min-width:150px;">
         <g:if test="${note.endDate}">${note.endDate?.dateString}</g:if>

@@ -30,6 +30,7 @@
 
 
     var isSingleCreatingMode = false;
+    var lastClickedCategoryId;
     $(function() {
       createDialog();
       $.getJSON("locale", function(json) {
@@ -40,6 +41,7 @@
       bindCreateButtons();
     });
     function ctgClick(id) {
+      lastClickedCategoryId = id;
       jQuery.ajax({
         url: 'categorySelect',
         type: "POST",
@@ -112,7 +114,7 @@
         $('input[name=isMade]').attr('checked', false);
         $("input[name=_isMade]").attr('value', 'false');
         $("input[name=_isImportant]").attr('value', 'false');
-        $("select#ctnId").val('');
+        $("select#ctnId").val(lastClickedCategoryId);
         $('input[name=isImportant]').attr('checked', false);
 
         $("input[name=_action_saveNote]").css({display: "none"});
@@ -121,6 +123,10 @@
         $("#note-form").dialog("open");
       });
       $("#addCtn").click(function() {
+        isSingleCreatingMode = true;
+        $("#ctnName").val('');
+        $("input[name=_action_saveCtn]").css({display: "none"});
+        $("input[name=_action_deleteCtn]").css({display: "none"});
         $("#noteCtgForm").dialog("open");
       });
 
@@ -135,13 +141,21 @@
         autoOpen: false,
         height: 400,
         width: 350,
-        modal: true
+        modal: true,
+        close: function(ev, ui) {
+          $("input[name=_action_saveNote]").css({display: "inline-block"});
+          $("input[name=_action_deleteNote]").css({display: "inline-block"});
+        }
       });
       $("#noteCtgForm").dialog({
         autoOpen: false,
         height: 200,
         width: 350,
-        modal: true
+        modal: true,
+        close: function(ev, ui) {
+          $("input[name=_action_saveCtn]").css({display: "inline-block"});
+          $("input[name=_action_deleteCtn]").css({display: "inline-block"});
+        }
       });
 
       $("input[name=_action_addNote]").click(function() {
@@ -169,7 +183,12 @@
     function noteLineHoverOut(id) {
       $("#e" + id).animate().css({display: "none"});
     }
-
+    function categoryManage(id,val){
+       isSingleCreatingMode = true;
+        $("#ctnName").val(val);
+        $("#selectedId").val(id);
+        $("#noteCtgForm").dialog("open");
+    }
     function triggerIsMade() {
       var obj = $("input[name=_isMade]");
       var value = String(obj.attr('value'));
@@ -232,7 +251,8 @@
 
   <div id="categoriesHolder" class="ctnHolder" style="float:left;">
     <g:each in="${categories}" var="ctgNote" status="i">
-      <div id="ctgNote${ctgNote.id}" style="padding:7px; font-size:16px; background-color:#f5f5dc; border-radius:5px; margin:10px;">${ctgNote.name}</div>
+      <div id="ctgNote${ctgNote.id}" style="padding:7px; font-size:16px; background-color:#f5f5dc;
+      border-radius:5px; margin:10px;" ondblclick="categoryManage(${ctgNote.id},'${ctgNote.name}');">${ctgNote.name}</div>
       <script type="text/javascript">
         bindCtgClickEvent(${ctgNote.id});
       </script>
