@@ -232,13 +232,13 @@
   <input type="button" id="addCtn" value="${message(code: "note.button.addCtn", default: 'addCtn')}"/>
   <div id="categoriesHolder" class="ctnHolder" style="float:left;">
     <g:each in="${categories}" var="ctgNote" status="i">
-      <div id='ctgNote${ctgNote.id}' style="padding:7px; font-size:16px; background-color:#f5f5dc; border-radius:5px; margin:10px;">${ctgNote.name}</div>
+      <div id="ctgNote${ctgNote.id}" style="padding:7px; font-size:16px; background-color:#f5f5dc; border-radius:5px; margin:10px;">${ctgNote.name}</div>
       <script type="text/javascript">
         bindCtgClickEvent(${ctgNote.id});
       </script>
     </g:each>
   </div>
-  <div id="notesHolder" class="notesInfo" style="position:relative; ">
+  <div id="notesHolder" class="notesInfo">
     <g:render template="noteslist" model="model"/>
   </div>
 
