@@ -18,8 +18,10 @@ class OperationController {
 
   def springSecurityService
   def categoryService
+  def userService
 
   def index = {
+    userService.serviceMethod()
     def treeData = categoryService.getBillTree()
     def operationInstance = new Operation(type: 1)
     [
