@@ -1,12 +1,9 @@
 package businessfinance
 
-import domain.Bill
-import domain.CategoryBill
-import domain.CategoryOp
-import domain.Operation
 import domain.auth.SecUser
 import grails.converters.JSON
 import java.text.SimpleDateFormat
+import domain.*
 
 class OperationController {
   static navigation = [
@@ -55,10 +52,10 @@ class OperationController {
   }
 
   def addBill = {
-    def ctgId = params.categoryb
+    def ctgId = params.categoryb[1..-1].toInteger()
     def billInstance = new Bill(name: params.name, balance: params.balance.toFloat(), user: springSecurityService.getCurrentUser(),
-            currency: Currency.findById(params.currency), category: CategoryBill.findById(ctgId), isChecked: true)
-    if (billInstance.save()) {
+            currency: Currency.findById( params.currency.toInteger()), category: CategoryBill.findById(ctgId), isChecked: true)
+    if (billInstance.save(failOnError: true)) {
       flash.message = "${message(code: 'bill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
       println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
     }
