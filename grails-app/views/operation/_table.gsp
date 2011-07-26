@@ -1,7 +1,7 @@
 <tr>
-  <th><h4><g:message code="operation.name.label"/></h4></th>
-  <th><h4><g:message code="operation.sum.label"/></h4></th>
-  <th><h4><g:message code="operation.startDate.label"/></h4></th>
+  <th style="min-width:350px;"><h4><g:message code="operation.name.label"/></h4></th>
+  <th style="min-width:100px;"><h4><g:message code="operation.sum.label"/></h4></th>
+  <th style="min-width:100px;"><h4><g:message code="operation.startDate.label"/></h4></th>
 </tr>
 <g:each in="${rootCat.operations}" var="rio">
   <tr>

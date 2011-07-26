@@ -41,9 +41,6 @@
     display: inline-block;
   }
 
-  td {
-    min-width: 150px;
-  }
   </style>
   <script type="text/javascript">
     $(function() {
