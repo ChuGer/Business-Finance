@@ -15,7 +15,9 @@ class NotesController {
           title: 'note',
           action: 'index'
   ]
+  def userService
   def index = {
+    userService.saveUserInfo(this.class.simpleName)
     if (params.max)
       params.max = Math.min(params.max ? params.int('max') : 20, 100)
 

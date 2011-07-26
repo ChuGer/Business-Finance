@@ -1,10 +1,10 @@
 package services
 
-import domain.auth.SecUser
 import org.springframework.web.context.request.RequestContextHolder as RCH
-import java.text.SimpleDateFormat
+
 import domain.Browser
 import domain.LoginStat
+import domain.auth.SecUser
 
 class UserService {
 
@@ -14,17 +14,16 @@ class UserService {
   public final static String FIREFOX = "firefox"
   public final static String SAFARI = "safari"
   public final static String OTHER = "other"
+  public final static String OPERA = "opera"
   public final static String MSIE = "msie"
-  public final static String UNKNOWN = "unknown"
   public final static String BLACKBERRY = "blackberry"
   public final static String SEAMONKEY = "seamonkey"
 
-  public final static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
+//  public final static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
 
   def saveUserInfo(className) {
     SecUser user = springSecurityService.getCurrentUser()
     if (user != null) {
-      println sdf.format(new Date()) + ": " + user.username
       def agentInfo = getUserAgentInfo()
       def browser = Browser.findByNameAndVers(agentInfo.name, agentInfo.vers)
       if (browser == null) {
@@ -35,7 +34,7 @@ class UserService {
           }
         }
       }
-      def login = new LoginStat(date: new Date(), browser: browser, page: className.toLowerCase());
+      def login = new LoginStat(date: new Date(), browser: browser, page: className.toLowerCase().replaceAll('controller', ''), ip:agentInfo.ip);
       login.settings = user.settings
       if (!login.save()) {
         login.errors.each { e ->
@@ -55,12 +54,15 @@ class UserService {
 
   def getUserAgentInfo() {
     def userAgent = getRequest().getHeader("user-agent")
+
     def agentInfo = [:]
     def vers = null
+    def ip = getRequest().getRemoteAddr()
     def name
 
     if (userAgent == null) {
-      agentInfo.browserType = CLIENT_UNKNOWN
+      agentInfo.vers = null
+      agentInfo.name = OTHER
       return agentInfo
     }
 
@@ -70,6 +72,12 @@ class UserService {
     if ((pos = userAgent.indexOf("Firefox")) >= 0) {
       name = FIREFOX;
       vers = userAgent.substring(pos + 8).trim();
+      if (vers.indexOf(" ") > 0)
+        vers = vers.substring(0, vers.indexOf(" "));
+    }
+    if ((pos = userAgent.indexOf("Opera")) >= 0) {
+      name = OPERA
+      vers = userAgent.substring(pos + 6).trim();
       if (vers.indexOf(" ") > 0)
         vers = vers.substring(0, vers.indexOf(" "));
     }
@@ -113,6 +121,7 @@ class UserService {
 
     agentInfo.vers = vers
     agentInfo.name = name
+    agentInfo.ip = ip
 
     return agentInfo
   }

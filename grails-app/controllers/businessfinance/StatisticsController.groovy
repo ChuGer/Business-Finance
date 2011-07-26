@@ -1,5 +1,8 @@
 package businessfinance
 
+import domain.LoginStat
+import domain.auth.SecUser
+
 class StatisticsController {
   static navigation = [
           group: 'tabs',
@@ -7,5 +10,12 @@ class StatisticsController {
           title: "statistics",
           action: 'index'
   ]
-  def index = { }
+  def springSecurityService
+
+  def index = {
+    SecUser user = springSecurityService.getCurrentUser()
+    if (user != null) {
+      [logins: LoginStat.list(params) ]
+    }
+  }
 }

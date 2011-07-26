@@ -1,8 +1,8 @@
 package businessfinance
 
-import grails.converters.JSON
-import domain.Operation
 import domain.CategoryOp
+import domain.Operation
+import grails.converters.JSON
 import org.apache.commons.lang.StringUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
 
@@ -16,8 +16,10 @@ class ReportController {
 
   // Export service provided by Export plugin
   def exportService
+  def userService
 
   def index = {
+    userService.saveUserInfo(this.class.simpleName)
     if (!params.max) params.max = 10
 
     if (params?.format && params.format != "html") {

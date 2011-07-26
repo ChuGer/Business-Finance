@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="layout" content="nemain"/>
-  <title><g:message code="menu.note.title"/></title>
+  <title><g:message code="menu.notes.title"/></title>
   <g:javascript library="jquery" plugin="jquery"/>
   <script type="text/javascript" src="../js/jquery/jquery-ui-1.8.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery/jquery.ui.datepicker-ru.js"></script>
@@ -223,32 +223,28 @@
 <div class="nav">
 </div>
 <div class="body">
-  <h1><g:message code="menu.note.title"/></h1>
+  <h1><g:message code="menu.notes.title"/></h1>
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-</div>
 
 
-<input type="button" id="addCtn" value="${message(code: "note.button.addCtn", default: 'addCtn')}"/>
-<div id="categoriesHolder" class="ctnHolder">
-
-  <g:each in="${categories}" var="ctgNote" status="i">
-
-    <div id='ctgNote${ctgNote.id}'>${ctgNote.name}</div>
-    <script type="text/javascript">
-      bindCtgClickEvent(${ctgNote.id});
-    </script>
-  </g:each>
+  <input type="button" id="addCtn" value="${message(code: "note.button.addCtn", default: 'addCtn')}"/>
+  <div id="categoriesHolder" class="ctnHolder" style="float:left;">
+    <g:each in="${categories}" var="ctgNote" status="i">
+      <div id='ctgNote${ctgNote.id}' style="padding:7px; font-size:16px; background-color:#f5f5dc; border-radius:5px; margin:10px;">${ctgNote.name}</div>
+      <script type="text/javascript">
+        bindCtgClickEvent(${ctgNote.id});
+      </script>
+    </g:each>
+  </div>
+  <div id="notesHolder" class="notesInfo" style="position:relative; ">
+    <g:render template="noteslist" model="model"/>
+  </div>
 
 </div>
 <input type="button" id="addNote" value="${message(code:  "note.button.addNote",default: 'addNote')}"/>
-<div id="notesHolder" class="notesInfo">
-  <g:render template="noteslist" model="model"/>
-  %{--<g:if test="${table != '!'}">--}%
-  %{--${table}--}%
-  %{--</g:if>--}%
-</div>
+
 <div id="noteFormHolder"><g:render template="note" bean="${noteInstance}"/></div>
 <g:render template="addCtn" bean="${ctnInstance}"/>
 </body>
