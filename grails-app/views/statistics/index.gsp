@@ -8,23 +8,46 @@
   <style type="text/css">
   .prevLink {
     background: url("../images/browser/back.png") no-repeat;
-  }
+     height: 30px;
+    display:inline-block; }
 
   .nextLink {
     background: url("../images/browser/forward.png") no-repeat;
+    height: 30px;
+    display:inline-block;
   }
 
   .step {
-    font-size: 16px;
-    font-weight: lighter;
+    margin: 0 0.2em 0 0.1em;
+    padding:3px;
+    font-size:16px;
   }
 
   .currentStep {
-    font-size: 18px;
-    font-weight: bolder;
-    background-color: #f5f5f5;
-    border-radius: 2px;
+    background: none repeat scroll 0 0 #7A9BAC;
+    color: #FFFFFF;
+    font-style: normal;
+    font-weight: 400;
+    font-size:18px;
+    padding:5px;
   }
+
+  input[name="_action_filter"] {
+    background: -moz-linear-gradient(90deg, #3570B8, #5E9AE2) repeat scroll 0 0 transparent;
+    border: 1px solid #2E63A5;
+    text-decoration: none;
+    color: white;
+    text-shadow: 0 -1px 0 #2E63A5;
+    padding:5px;
+    display:inline-block;
+    border-radius:3px;
+    text-align:center;
+  }
+
+  input[name="_action_filter"]:hover {
+    background: -moz-linear-gradient(90deg, whiteSmoke, #5E9AE2) repeat scroll 0 0 transparent;
+  }
+
   </style>
 </head>
 <body>
@@ -66,7 +89,7 @@
     <filterpane:filterPane domain="domain.LoginStat"
             filterProperties="${['date','ip','browser']}"
             associatedProperties="browser.name, browser.vers"/>
-    <filterpane:filterButton/>
+    <filterpane:filterButton />
   </div>
 </div>
 </body>
