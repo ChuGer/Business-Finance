@@ -44,5 +44,5 @@
 
 </table>
   <div class="pagination">
-      <g:paginate total="${notesTotal}" action="index"/>
+      <g:paginate total="${notesTotal}" action="index" prev="&nbsp" next="&nbsp"/>
     </div>
