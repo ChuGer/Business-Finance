@@ -43,6 +43,6 @@
   </tbody>
 
 </table>
-<div class="pagination">
-  <g:paginate total="${notesTotal}"/>
-</div>
+  <div class="pagination">
+      <g:paginate total="${notesTotal}" action="index"/>
+    </div>

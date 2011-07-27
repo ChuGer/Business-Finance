@@ -82,7 +82,8 @@
         url: 'categorySelect',
         type: "POST",
         data: {id: id},
-        dataType: "json",
+        dataType: "json"
+        ,
         complete: function(data) {
           $('#notesHolder').html(data.responseText);
         }
@@ -254,11 +255,11 @@
     }
     // Turn all sorting and paging links into ajax requests for the grid
     function setupGridAjax() {
-      $("#notesHolder").find(".paginateButtons a, th.sortable a").live('click', function(event) {
+      $("#notesHolder").find("div.pagination a, th.sortable a").live('click', function(event) {
         event.preventDefault();
         var url = $(this).attr('href');
 
-        var grid = $(this).parents("table.ajax");
+        var grid =  $("#notesHolder");   // $(this).parents("table.ajax");
         $(grid).html($("#spinner").html());
 
         $.ajax({
