@@ -66,7 +66,7 @@
     <filterpane:filterPane domain="domain.LoginStat"
             filterProperties="${['date','ip','browser']}"
             associatedProperties="browser.name, browser.vers"/>
-    <filterpane:filterButton title="Whatever"/>
+    <filterpane:filterButton/>
   </div>
 </div>
 </body>
