@@ -40,7 +40,7 @@ class NotesController {
         ctg = user.notes.asList().get(0)
     def noteList = Note.findAllByCategory(ctg,[max :10, offset : 0])
     [categories: user.notes, noteInstance: new Note(endDate: new Date()), table: table, ctnInstance: new CategoryNote(),
-            noteList: noteList, notesTotal: ctg.notes.size(), categoryNoteList: ctgList]
+            noteList: noteList, notesTotal: ctg.notes.size(), categoryNoteList: ctgList, initialCtnId : ctg.id ]
   }
   def locale = {
     def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'

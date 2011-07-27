@@ -75,9 +75,13 @@
       });
       setupGridAjax();
       bindCreateButtons();
+      lastClickedCategoryId = ${initialCtnId};
+      $("#ctgNote" + lastClickedCategoryId).css({borderStyle: "groove"});
     });
     function ctgClick(id) {
+      $("#ctgNote" + lastClickedCategoryId).css({borderStyle: "hidden "});
       lastClickedCategoryId = id;
+      $("#ctgNote" + lastClickedCategoryId).css({borderStyle: "groove "});
       jQuery.ajax({
         url: 'categorySelect',
         type: "POST",
@@ -287,7 +291,8 @@
   <div id="categoriesHolder" class="ctnHolder" style="float:left;">
     <g:each in="${categories}" var="ctgNote" status="i">
       <div id="ctgNote${ctgNote.id}" style="padding:7px; font-size:16px; background-color:#f5f5dc;
-      border-radius:5px; margin:10px;" ondblclick="categoryManage(${ctgNote.id}, '${ctgNote.name}');">${ctgNote.name}</div>
+      border-radius:5px; margin:10px;border-width: 3px; border-color: rgb(62, 23, 135);"
+              ondblclick="categoryManage(${ctgNote.id}, '${ctgNote.name}');">${ctgNote.name}</div>
       <script type="text/javascript">
         bindCtgClickEvent(${ctgNote.id});
       </script>
