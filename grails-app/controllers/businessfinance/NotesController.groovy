@@ -38,8 +38,9 @@ class NotesController {
     if (user)
       if (!ctg)
         ctg = user.notes.asList().get(0)
+    def noteList = Note.findAllByCategory(ctg,[max :10, offset : 0])
     [categories: user.notes, noteInstance: new Note(endDate: new Date()), table: table, ctnInstance: new CategoryNote(),
-            noteList: ctg.notes, notesTotal: ctg.notes.size(), categoryNoteList: ctgList]
+            noteList: noteList, notesTotal: ctg.notes.size(), categoryNoteList: ctgList]
   }
   def locale = {
     def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
@@ -48,15 +49,12 @@ class NotesController {
   }
   def categorySelect = {
     if (params.id) {
-      println 'werew'
-      def list = CategoryNote.findById(params.id).notes
+      def category = CategoryNote.findById(params.id)
+      def list =  Note.findAllByCategory(category,[max :10, offset : 0])
       session.categoryNoteId = params.id
-      def model = [noteList: list, notesTotal: list.size()]
-      println model
+      def model = [noteList: list, notesTotal: category.notes.size()]
       render(template: "noteslist", model: model)
 
-//      def table = render(template: 'noteslist', model: [noteList: list, notesTotal: list.size()])
-//      table
     }
   }
   def getNode = {
