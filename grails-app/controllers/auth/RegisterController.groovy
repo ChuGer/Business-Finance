@@ -1,13 +1,12 @@
 package auth
 
-
-import groovy.text.SimpleTemplateEngine
-
 import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
+
+import grails.plugins.springsecurity.ui.AbstractS2UiController
+import groovy.text.SimpleTemplateEngine
 import org.codehaus.groovy.grails.plugins.springsecurity.NullSaltSource
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.ui.RegistrationCode
-import grails.plugins.springsecurity.ui.AbstractS2UiController
 
 //class RegisterController extends grails.plugins.springsecurity.ui.RegisterController { }
 class RegisterController extends AbstractS2UiController {

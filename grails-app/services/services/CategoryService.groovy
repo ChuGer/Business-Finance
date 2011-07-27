@@ -1,7 +1,10 @@
 package services
 
+import domain.Bill
+import domain.CategoryBill
+import domain.CategoryOp
+import domain.Operation
 import domain.auth.SecUser
-import domain.*
 
 class CategoryService {
   def springSecurityService

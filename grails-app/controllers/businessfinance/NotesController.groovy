@@ -21,22 +21,25 @@ class NotesController {
     if (params.max)
       params.max = Math.min(params.max ? params.int('max') : 20, 100)
 
-    def categories = []
     SecUser user = springSecurityService.getCurrentUser();
     def ctgList = user.notes
     def table = '!'
+    def ctg = null
+    if (session.categoryNoteId)
+      ctg = CategoryNote.findById(session.categoryNoteId)
     if (request.xhr) {
-      def ctg = CategoryNote.findById(session.categoryNoteId)
-      params.id = 8
+      println 'ajasx'
       def list = Note.findAllByCategory(ctg, params)
-      def model = [noteList: list, notesTotal: list.count()]
+      println list
+      println list.size()
+      def model = [noteList: list, notesTotal: ctg.notes.size()]
       render(template: "noteslist", model: model)
     }
     if (user)
-      categories = user.notes
-
-    [categories: categories, noteInstance: new Note(endDate: new Date()), table: table, ctnInstance: new CategoryNote(),
-            noteList: categories.asList().get(0).notes, notesTotal: categories.asList().get(0).notes.size(),categoryNoteList :ctgList]
+      if (!ctg)
+        ctg = user.notes.asList().get(0)
+    [categories: user.notes, noteInstance: new Note(endDate: new Date()), table: table, ctnInstance: new CategoryNote(),
+            noteList: ctg.notes, notesTotal: ctg.notes.size(), categoryNoteList: ctgList]
   }
   def locale = {
     def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
@@ -45,10 +48,15 @@ class NotesController {
   }
   def categorySelect = {
     if (params.id) {
+      println 'werew'
       def list = CategoryNote.findById(params.id).notes
       session.categoryNoteId = params.id
-      def table = render(template: 'noteslist', model: [noteList: list, notesTotal: list.size()])
-      table
+      def model = [noteList: list, notesTotal: list.size()]
+      println model
+      render(template: "noteslist", model: model)
+
+//      def table = render(template: 'noteslist', model: [noteList: list, notesTotal: list.size()])
+//      table
     }
   }
   def getNode = {
@@ -101,7 +109,7 @@ class NotesController {
   def noteList = {
     def list = CategoryNote.findById(session.categoryNoteId).notes
     params.max = Math.min(params.max ? params.int('max') : 20, 100)
-    def model = [noteList: list, notesTotal: list.count()]
+    def model = [noteList: list, notesTotal: list.size()]
 
     if (request.xhr) {
       // ajax request
