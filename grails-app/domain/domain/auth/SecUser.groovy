@@ -3,7 +3,6 @@ package domain.auth
 import domain.*
 
 class SecUser {
-  static auditable = true
 
   String username
   String realname

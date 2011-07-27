@@ -32,7 +32,7 @@ class RegisterController extends AbstractS2UiController {
     String password = springSecurityService.encodePassword(command.password, salt)
     def user = lookupUserClass().newInstance(email: command.email, username: command.username,
             password: password, accountLocked: true, enabled: true, surname: command.surname, realname: command.realname)
-    if (!user.validate() || !user.save()) {
+    if (!user.validate() || !user.save(failOnError: true)) {
       // TODO
     }
 
