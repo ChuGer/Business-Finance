@@ -6,32 +6,6 @@
   <title><g:message code="menu.statistics.title"/></title>
   <filterpane:includes/>
   <style type="text/css">
-  .prevLink {
-    background: url("../images/browser/back.png") no-repeat;
-     height: 30px;
-    display:inline-block; }
-
-  .nextLink {
-    background: url("../images/browser/forward.png") no-repeat;
-    height: 30px;
-    display:inline-block;
-  }
-
-  .step {
-    margin: 0 0.2em 0 0.1em;
-    padding:3px;
-    font-size:16px;
-  }
-
-  .currentStep {
-    background: none repeat scroll 0 0 #7A9BAC;
-    color: #FFFFFF;
-    font-style: normal;
-    font-weight: 400;
-    font-size:18px;
-    padding:5px;
-  }
-
   input[name="_action_filter"] {
     background: -moz-linear-gradient(90deg, #3570B8, #5E9AE2) repeat scroll 0 0 transparent;
     border: 1px solid #2E63A5;
@@ -61,8 +35,8 @@
   <div>
 
     <g:paginate
-            prev="&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
-            next="&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
+            prev="&nbsp"
+            next="&nbsp"
             total="${count == null ? LoginStat.count(): count}"
             params="${filterParams}"/>
   </div>
