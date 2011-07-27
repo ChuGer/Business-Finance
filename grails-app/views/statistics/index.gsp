@@ -1,9 +1,31 @@
-<%@ page import="java.text.SimpleDateFormat" contentType="text/html;charset=UTF-8" %>
+<%@ page import="domain.LoginStat; java.text.SimpleDateFormat" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="layout" content="nemain"/>
   <title><g:message code="menu.statistics.title"/></title>
+  <filterpane:includes/>
+  <style type="text/css">
+  .prevLink {
+    background: url("../images/browser/back.png") no-repeat;
+  }
+
+  .nextLink {
+    background: url("../images/browser/forward.png") no-repeat;
+  }
+
+  .step {
+    font-size: 16px;
+    font-weight: lighter;
+  }
+
+  .currentStep {
+    font-size: 18px;
+    font-weight: bolder;
+    background-color: #f5f5f5;
+    border-radius: 2px;
+  }
+  </style>
 </head>
 <body>
 <div class="nav">
@@ -13,16 +35,24 @@
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
+  <div>
 
+    <g:paginate
+            prev="&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
+            next="&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
+            total="${count == null ? LoginStat.count(): count}"
+            params="${filterParams}"/>
+  </div>
   <div>
     <table>
       <thead>
-      <g:sortableColumn property="date" titleKey="settings.date" style="min-width: 200px;"/>
-      <g:sortableColumn property="page" titleKey="settings.page" style="min-width: 200px;"/>
-      <g:sortableColumn property="ip" titleKey="settings.ip" style="min-width: 200px;"/>
-      <g:sortableColumn property="browser.name" titleKey="settings.browser" style="min-width: 200px;"/>
+      <g:sortableColumn property="date" titleKey="settings.date" style="min-width: 200px;" params="${filterParams}"/>
+      <g:sortableColumn property="page" titleKey="settings.page" style="min-width: 200px;" params="${filterParams}"/>
+      <g:sortableColumn property="ip" titleKey="settings.ip" style="min-width: 200px;" params="${filterParams}"/>
+      <g:sortableColumn property="browser.name" titleKey="settings.browser" style="min-width: 200px;" params="${filterParams}"/>
       </thead>
       <tbody>
+
       <g:each in="${logins}" var="login">
         <tr>
           <td>${new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(login.date)}</td>
@@ -33,6 +63,10 @@
       </g:each>
       </tbody>
     </table>
+    <filterpane:filterPane domain="domain.LoginStat"
+            filterProperties="${['date','ip','browser']}"
+            associatedProperties="browser.name, browser.vers"/>
+    <filterpane:filterButton/>
   </div>
 </div>
 </body>

@@ -1,7 +1,10 @@
 package services
 
+import domain.Bill
+import domain.CategoryBill
+import domain.CategoryOp
+import domain.Operation
 import domain.auth.SecUser
-import domain.*
 
 class CategoryService {
   def springSecurityService
@@ -87,8 +90,9 @@ class CategoryService {
     }
     data
   }
-  def getBillTree(){
-     def data = []
+
+  def getBillTree() {
+    def data = []
     SecUser user = springSecurityService.getCurrentUser()
     if (!user)
       return data
@@ -101,6 +105,7 @@ class CategoryService {
     data.add(inn)
     data
   }
+
   def getCategoryTree() {
     def data = []
     SecUser user = springSecurityService.getCurrentUser()
@@ -278,16 +283,9 @@ class CategoryService {
   def initRegisteredUser(def user) {
     // TODO inject from bootsra4
     //Creating categories
-    def ctg1 = new CategoryBill(name: 'Cards', isChecked: true, color: 'red',).save(failOnError: true)
-    def ctg2 = new CategoryBill(name: 'Debentures', isChecked: true, color: 'magenta').save(failOnError: true)
-
-    //Creating Bills
-    def bill1 = new Bill(name: 'Card1', currency: Currency.findByCode('usd'), balance: 1000, category: ctg1, isChecked: true).save(failOnError: true)
-    def bill2 = new Bill(name: 'Note2', currency: Currency.findByCode('eur'), balance: 4040, category: ctg1, isChecked: true).save(failOnError: true)
-
-    ctg1.addToBills(bill1)
-    ctg2.addToBills(bill2)
-
-    user.addToCategories(ctg1).addToCategories(ctg2)
+    def rootB = new CategoryBill(name: 'Bills', isChecked: true, color: 'lime', ico: 'smiley-mr-green.png').save(failOnError: true)
+    def rootO = new CategoryOp(name: 'Operations', isChecked: true, color: 'magenta', ico: 'script-office.png').save(failOnError: true)
+    user.categoriesB = rootB
+    user.categoriesO = rootO
   }
 }

@@ -1,13 +1,12 @@
 package auth
 
-
-import groovy.text.SimpleTemplateEngine
-
 import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
+
+import grails.plugins.springsecurity.ui.AbstractS2UiController
+import groovy.text.SimpleTemplateEngine
 import org.codehaus.groovy.grails.plugins.springsecurity.NullSaltSource
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.ui.RegistrationCode
-import grails.plugins.springsecurity.ui.AbstractS2UiController
 
 //class RegisterController extends grails.plugins.springsecurity.ui.RegisterController { }
 class RegisterController extends AbstractS2UiController {
@@ -32,7 +31,7 @@ class RegisterController extends AbstractS2UiController {
     String password = springSecurityService.encodePassword(command.password, salt)
     def user = lookupUserClass().newInstance(email: command.email, username: command.username,
             password: password, accountLocked: true, enabled: true, surname: command.surname, realname: command.realname)
-    if (!user.validate() || !user.save()) {
+    if (!user.validate() || !user.save(failOnError: true)) {
       // TODO
     }
 
@@ -70,7 +69,6 @@ class RegisterController extends AbstractS2UiController {
     RegistrationCode.withTransaction { status ->
       user = lookupUserClass().findByUsername(registrationCode.username)
       if (!user) {
-        println "f  r1 " + registrationCode.username
         return
       }
       user.accountLocked = false

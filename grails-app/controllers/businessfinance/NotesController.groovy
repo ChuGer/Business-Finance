@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat
 
 class NotesController {
   def springSecurityService
-  def sdf = new SimpleDateFormat("dd/MM/yyyy");
+  def sdf = new SimpleDateFormat("d/M/yyyy");
   static navigation = [
           group: 'tabs',
           order: 5,
@@ -29,7 +29,6 @@ class NotesController {
       ctg = CategoryNote.findById(session.categoryNoteId)
     if (request.xhr) {
       println 'ajasx'
-      println params
       def list = Note.findAllByCategory(ctg, params)
       println list
       println list.size()
@@ -39,7 +38,6 @@ class NotesController {
     if (user)
       if (!ctg)
         ctg = user.notes.asList().get(0)
-    println 'index'
     [categories: user.notes, noteInstance: new Note(endDate: new Date()), table: table, ctnInstance: new CategoryNote(),
             noteList: ctg.notes, notesTotal: ctg.notes.size(), categoryNoteList: ctgList]
   }
@@ -49,8 +47,6 @@ class NotesController {
     render locale as JSON
   }
   def categorySelect = {
-    println 'ctgsel'
-    println params
     if (params.id) {
       println 'werew'
       def list = CategoryNote.findById(params.id).notes
@@ -72,8 +68,6 @@ class NotesController {
   }
 
   def manageNote = {
-    println 'ssaving'
-    println params
     def note = Note.findById(params.noteId)
     //TODO: if (note) {
     int cId = params.category.id.toInteger()
@@ -86,7 +80,7 @@ class NotesController {
         note.value = params.value
         note.isImportant = Boolean.parseBoolean(params._isImportant)
         note.isMade = Boolean.parseBoolean(params._isMade)
-        //if(params.endDate != '')note.endDate = sdf.parse(params.endDate) + 1  //TODO parse date
+        if(params.endDate != '') note.endDate = sdf.parse(params.endDate) + 1
         note.category = CategoryNote.findById(params.category.id)
         note.save(failOnError: true)
         break
@@ -96,14 +90,12 @@ class NotesController {
         note.value = params.value
         note.isImportant = Boolean.parseBoolean(params._isImportant)
         note.isMade = Boolean.parseBoolean(params._isMade)
-        //if(params.endDate != '')note.endDate = sdf.parse(params.endDate) + 1  //TODO parse date
+        if(params.endDate != '')note.endDate = sdf.parse(params.endDate) + 1
         note.category = CategoryNote.findById(params.category.id)
         note.save(failOnError: true)
         break
 
     }
-
-
     def answer = [cId: cId]
     render answer as JSON
   }
@@ -128,8 +120,6 @@ class NotesController {
     }
   }
   def addCtn = {
-    println 'add'
-    println params
     def ctg = new CategoryNote(name: params.name)
     ctg.save(failOnError: true)
     SecUser user = springSecurityService.getCurrentUser();
@@ -137,8 +127,6 @@ class NotesController {
     redirect action: index
   }
   def saveCtn = {
-    println 'sace'
-    println params
     def ctg = CategoryNote.findById(params.ctnId)
     if (ctg) {
       ctg.name = params.name

@@ -1,14 +1,12 @@
+import org.springframework.security.core.context.SecurityContextHolder as SCH
+
 import grails.converters.JSON
-
 import javax.servlet.http.HttpServletResponse
-
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
 import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.LockedException
-import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.WebAttributes
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
@@ -29,7 +27,6 @@ class LoginController {
    */
   def index = {
     if (springSecurityService.isLoggedIn()) {
-      println new Date().toString() + ' ' + springSecurityService.getCurrentUser()
       redirect uri: SpringSecurityUtils.securityConfig.successHandler.defaultTargetUrl
     }
     else {
@@ -78,7 +75,6 @@ class LoginController {
    * Login page for users with a remember-me cookie but accessing a IS_AUTHENTICATED_FULLY page.
    */
   def full = {
-    println new Date().toString() + ' ' + springSecurityService.getCurrentUser()    +' ajaxSuccess'
     def config = SpringSecurityUtils.securityConfig
     render view: 'auth', params: params,
             model: [hasCookie: authenticationTrustResolver.isRememberMe(SCH.context?.authentication),
@@ -124,7 +120,6 @@ class LoginController {
    * The Ajax success redirect url.
    */
   def ajaxSuccess = {
-    println new Date().toString() + ' ' + springSecurityService.authentication.name  +' ajaxSuccess'
     render([success: true, username: springSecurityService.authentication.name] as JSON)
   }
 
@@ -132,7 +127,6 @@ class LoginController {
    * The Ajax denied redirect url.
    */
   def ajaxDenied = {
-    println new Date().toString() + ' ' + springSecurityService.getCurrentUser()    +' ajaxSuccess'
     render([error: 'access denied'] as JSON)
   }
 }

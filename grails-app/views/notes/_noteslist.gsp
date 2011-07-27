@@ -2,10 +2,10 @@
 <table id="notesTable" width="140px" class="ajax">
   <thead>
   <tr>
-    <g:sortableColumn property="name" action="index" title="${message(code: 'note.name', default: 'name')}"/>
-    <th><g:message code="note.value" default="value"/></th>
-    <g:sortableColumn property="endDate" action="index" title="${message(code: 'note.endDate', default: 'endDate')}"/>
-    <th><g:message code="note.isMade" default="isMade"/></th>
+    <g:sortableColumn property="name" action="index" title="${message(code: 'note.name.label', default: 'name')}"/>
+    <th><g:message code="note.value.label" default="value"/></th>
+    <g:sortableColumn property="endDate" action="index" title="${message(code: 'note.endDate.label', default: 'endDate')}"/>
+    <th><g:message code="note.isMade.label" default="isMade"/></th>
   </tr>
   </thead>
   <tbody>

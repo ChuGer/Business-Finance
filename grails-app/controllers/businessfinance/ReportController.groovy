@@ -87,7 +87,6 @@ class ReportController {
             [type: 'string', name: 'incomeTitle', data: incomeTitleList],
     ];
 
-    println lineChart
     render lineChart as JSON
   }
 
