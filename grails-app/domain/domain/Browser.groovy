@@ -8,4 +8,8 @@ class Browser {
   static constraints = {
     vers(nullable: true)
   }
+
+  public String toString (){
+    name
+  }
 }

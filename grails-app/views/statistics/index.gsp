@@ -1,4 +1,4 @@
-<%@ page import="domain.LoginStat; java.text.SimpleDateFormat" contentType="text/html;charset=UTF-8" %>
+<%@ page import="domain.Browser; domain.LoginStat; java.text.SimpleDateFormat" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -36,7 +36,7 @@
 
     <g:paginate
             prev="&nbsp"
-            next="&nbsp"
+            next="&n  bsp"
             total="${count == null ? LoginStat.count(): count}"
             params="${filterParams}"/>
   </div>
@@ -62,6 +62,7 @@
     </table>
     <filterpane:filterPane domain="domain.LoginStat"
             filterProperties="${['date','ip','browser']}"
+            filterPropertyValues="${['browser.name': [values: Browser.executeQuery('select b.name from Browser b')], 'browser.vers': [values: Browser.executeQuery('select b.vers from Browser b')]]}"
             associatedProperties="browser.name, browser.vers"/>
     <filterpane:filterButton/>
   </div>
