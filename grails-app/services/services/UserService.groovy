@@ -18,7 +18,6 @@ class UserService {
   public final static String MSIE = "msie"
   public final static String BLACKBERRY = "blackberry"
   public final static String SEAMONKEY = "seamonkey"
-
 //  public final static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
 
   def saveUserInfo(className) {
@@ -34,7 +33,7 @@ class UserService {
           }
         }
       }
-      def login = new LoginStat(date: new Date(), browser: browser, page: className.toLowerCase().replaceAll('controller', ''), ip:agentInfo.ip);
+      def login = new LoginStat(date: new Date(), browser: browser, page: className.toLowerCase().replaceAll('controller', ''), ip: agentInfo.ip);
       login.settings = user.settings
       if (!login.save()) {
         login.errors.each { e ->
@@ -56,17 +55,18 @@ class UserService {
     def userAgent = getRequest().getHeader("user-agent")
 
     def agentInfo = [:]
-    def vers = null
-    def ip = getRequest().getRemoteAddr()
-    def name
+
 
     if (userAgent == null) {
       agentInfo.vers = null
+      agentInfo.ip = null
       agentInfo.name = OTHER
       return agentInfo
     }
 
-    name = OTHER;
+    def vers = null
+    def ip = getRequest().getRemoteAddr()
+    def name = OTHER
 
     int pos = -1;
     if ((pos = userAgent.indexOf("Firefox")) >= 0) {

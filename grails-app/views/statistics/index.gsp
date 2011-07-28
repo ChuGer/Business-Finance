@@ -12,10 +12,10 @@
     text-decoration: none;
     color: white;
     text-shadow: 0 -1px 0 #2E63A5;
-    padding:5px;
-    display:inline-block;
-    border-radius:3px;
-    text-align:center;
+    padding: 5px;
+    display: inline-block;
+    border-radius: 3px;
+    text-align: center;
   }
 
   input[name="_action_filter"]:hover {
@@ -63,7 +63,7 @@
     <filterpane:filterPane domain="domain.LoginStat"
             filterProperties="${['date','ip','browser']}"
             associatedProperties="browser.name, browser.vers"/>
-    <filterpane:filterButton />
+    <filterpane:filterButton/>
   </div>
 </div>
 </body>
