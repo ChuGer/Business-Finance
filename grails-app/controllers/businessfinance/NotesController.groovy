@@ -16,6 +16,7 @@ class NotesController {
           action: 'index'
   ]
   def userService
+
   def index = {
     userService.saveUserInfo(this.class.simpleName)
     if (params.max)
@@ -38,31 +39,33 @@ class NotesController {
     if (user)
       if (!ctg)
         ctg = user.notes.asList().get(0)
-    def noteList = Note.findAllByCategory(ctg,[max :10, offset : 0])
+    def noteList = Note.findAllByCategory(ctg, [max: 10, offset: 0])
     [categories: user.notes, noteInstance: new Note(endDate: new Date()), table: table, ctnInstance: new CategoryNote(),
-            noteList: noteList, notesTotal: ctg.notes.size(), categoryNoteList: ctgList, initialCtnId : ctg.id ]
+            noteList: noteList, notesTotal: ctg.notes.size(), categoryNoteList: ctgList, initialCtnId: ctg.id]
   }
+
   def locale = {
     def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
     def locale = [locale: code]
     render locale as JSON
   }
+
   def categorySelect = {
     if (params.id) {
       def category = CategoryNote.findById(params.id)
-      def list =  Note.findAllByCategory(category,[max :10, offset : 0])
+      def list = Note.findAllByCategory(category, [max: 10, offset: 0])
       session.categoryNoteId = params.id
       def model = [noteList: list, notesTotal: category.notes.size()]
       render(template: "noteslist", model: model)
 
     }
   }
+
   def getNode = {
     def note = Note.findById(params.id)
     def nodeData = [name: note.name, value: note.value, isImportant: note.isImportant, isMade: note.isMade,
             date: note.endDate, ctg: note.category.id, id: note.id]
     render nodeData as JSON
-//    render(template: 'note', model: [noteInstance: note])
   }
 
   def manageNote = {
@@ -78,7 +81,7 @@ class NotesController {
         note.value = params.value
         note.isImportant = Boolean.parseBoolean(params._isImportant)
         note.isMade = Boolean.parseBoolean(params._isMade)
-        if(params.endDate != '') note.endDate = sdf.parse(params.endDate) + 1
+        if (params.endDate != '') note.endDate = sdf.parse(params.endDate) + 1
         note.category = CategoryNote.findById(params.category.id)
         note.save(failOnError: true)
         break
@@ -88,15 +91,15 @@ class NotesController {
         note.value = params.value
         note.isImportant = Boolean.parseBoolean(params._isImportant)
         note.isMade = Boolean.parseBoolean(params._isMade)
-        if(params.endDate != '')note.endDate = sdf.parse(params.endDate) + 1
+        if (params.endDate != '') note.endDate = sdf.parse(params.endDate) + 1
         note.category = CategoryNote.findById(params.category.id)
         note.save(failOnError: true)
         break
-
     }
     def answer = [cId: cId]
     render answer as JSON
   }
+
   def isMadeTrigger = {
     if (params.id) {
       def note = Note.findById(params.id)
@@ -117,6 +120,7 @@ class NotesController {
       model
     }
   }
+
   def addCtn = {
     def ctg = new CategoryNote(name: params.name)
     ctg.save(failOnError: true)
@@ -124,6 +128,7 @@ class NotesController {
     user.notes.add(ctg)
     redirect action: index
   }
+
   def saveCtn = {
     def ctg = CategoryNote.findById(params.ctnId)
     if (ctg) {
@@ -132,6 +137,7 @@ class NotesController {
     }
     redirect action: index
   }
+
   def deleteCtn = {
     def ctg = CategoryNote.findById(params.ctnId)
     if (ctg) {
