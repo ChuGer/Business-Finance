@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="java.text.SimpleDateFormat" contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -12,6 +12,10 @@
   <script type="text/javascript" src="../js/jquery/jquery-ui-1.8.1.min.js"></script>
   <script type="text/javascript" src="http://www.google.com/jsapi"></script>
   <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.2.custom.css"/>
+
+  <script type="text/javascript" src="../js/daterangepicker.jQuery.js"></script>
+  <link rel="stylesheet" href="../css/ui.daterangepicker.css" type="text/css"/>
+
   <export:resource/>
 
   <script type="text/javascript">
@@ -21,6 +25,12 @@
   <script type="text/javascript">
     $(function() {
       $("#tabs").tabs();
+      $('#inputDate').daterangepicker({
+        arrows:true,
+        onChange: function() {
+          dateRangeChange();
+        }
+      });
     });
 
     function drawVisualization() {
@@ -68,7 +78,22 @@
     }
 
     google.setOnLoadCallback(drawVisualization);
-
+    function dateRangeChange() {
+      var newDateRange = $('#inputDate').val();
+      var dateArray = newDateRange.split(' - ');
+      if (dateArray.length == 1) {
+        dateArray[1] = dateArray[0];
+      }
+      jQuery.ajax({
+        url: 'changeDateRange',
+        type: "POST",
+        data: {startDate: dateArray[0] , endDate: dateArray[1]},
+        dataType: "json",
+        success: function() {
+          refreshTable();
+        }
+      });
+    }
   </script>
 </head>
 <body>
@@ -79,7 +104,10 @@
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-
+  <div>
+    <h3><label for="inputDate"><g:message code="dateRange.select"/>:</label></h3>
+    <input id="inputDate" type="text" value="1/1/2011 - ${new SimpleDateFormat("M/d/yyyy").format(new Date())}" readonly="true"/>
+  </div>
   <div id="tabs">
     <ul>
       <li><a href="#tabs-1" onclick="drawLineChart();"><g:message code="report.chart.line"/></a></li>
