@@ -13,7 +13,7 @@ class FetchService {
   def springSecurityService
   def messageSource
   static transactional = true
-  static scope = "session"
+//  static scope = "session"        TODO uncomment on release 8)
 
   def parseEntityOData(def bill) {
     def data = []

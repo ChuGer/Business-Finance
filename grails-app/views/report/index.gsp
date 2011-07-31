@@ -17,13 +17,14 @@
   <link rel="stylesheet" href="../css/ui.daterangepicker.css" type="text/css"/>
 
   <export:resource/>
-
+  <jsTree:resources/>
   <script type="text/javascript">
     google.load('visualization', '1', {packages: ['corechart'], timeout: 5000});
     google.load('visualization', '1', {packages: ['annotatedtimeline'], timeout: 5000});
   </script>
   <script type="text/javascript">
     $(function() {
+      createTree();
       $("#tabs").tabs();
       $('#inputDate').daterangepicker({
         arrows:true,
@@ -32,6 +33,84 @@
         }
       });
     });
+    var isLoaded = false;
+    function createTree() {
+      var treeData = $.parseJSON('${treeData}');
+      console.log(treeData);
+      var tree = $("#treeDiv").jstree({
+        "json_data" : {"data" : [treeData]},
+        "plugins" : [ "themes", "checkbox", "json_data", "ui"  ]
+      });
+
+      tree.bind("loaded.jstree", function (event, data) {
+        tree.jstree("open_all");
+        data.inst.get_container().find('li').each(function(i) {
+          //restoring check state
+          var cel = $('#' + $(this).attr("id")).children('a');
+          cel.css("background-color", $(this).attr("color"));
+          cel.css("background", "-moz-linear-gradient(left," + $(this).attr("color") + " 0%, white 70%)");
+          if ($(this).attr("chkd") == 'true') {
+            data.inst.check_node($(this));
+          }
+          else {
+            data.inst.uncheck_node($(this));
+          }
+
+
+        });
+        isLoaded = true;
+      });
+
+      tree.bind("check_node.jstree", function (e, d) {
+        if (isLoaded) {
+          var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
+          var sid = d.rslt.obj.attr("id");
+          var stype = d.rslt.obj.attr("type");
+          jQuery.ajax({
+            url: 'treeCheck',
+            type: "POST",
+            data: {name: sname, id: sid, type: stype, ch : 1},
+            dataType: "json",
+            success:function() {
+//                 refetchEvents();
+            }
+          });
+        }
+      });
+      tree.bind("uncheck_node.jstree", function (e, d) {
+        if (isLoaded) {
+          var sname = $("#treeDiv").jstree('get_text', '#' + d.rslt.obj.attr("id"));
+          var sid = d.rslt.obj.attr("id");
+          var stype = d.rslt.obj.attr("type");
+          jQuery.ajax({
+            url: 'treeCheck',
+            type: "POST",
+            data: {name: sname, id: sid, type: stype, ch : 0},
+            dataType: "json",
+            success:function() {
+//                 refetchEvents();
+            }
+          });
+        }
+      });
+
+//      tree.bind("select_node.jstree", function (e, d) {
+//        var newid = d.rslt.obj.attr("id");
+//        if (newid.substr(0, 1) == 'b') {
+//          jQuery.ajax({
+//            url: 'clickEvent',
+//            type: "POST",
+//            data: {id: newid},
+//            dataType: "json",
+//            complete: function(data) {
+//              $('#statForm').html(data.responseText);
+//            }
+//          }
+//                  );
+//        }
+//      });
+    }
+
 
     function drawVisualization() {
       drawLineChart();
@@ -104,29 +183,32 @@
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-  <div>
-    <h3><label for="inputDate"><g:message code="dateRange.select"/>:</label></h3>
-    <input id="inputDate" type="text" value="1/1/2011 - ${new SimpleDateFormat("M/d/yyyy").format(new Date())}" readonly="true"/>
-  </div>
-  <div id="tabs">
-    <ul>
-      <li><a href="#tabs-1" onclick="drawLineChart();"><g:message code="report.chart.line"/></a></li>
-      <li><a href="#tabs-2" onclick="drawPieChart();"><g:message code="report.chart.pie"/></a></li>
-    </ul>
-    <div id="tabs-1">
-      <div id="lineChart" style="min-width: 1000px; height: 450px;"></div>
+  <div id="treeDiv" style="min-width:220px; float :left; margin:10px;"></div>
+  <div style="min-width:700px;float :right;  margin:10px;">
+    <div>
+      <h3><label for="inputDate"><g:message code="dateRange.select"/>:</label></h3>
+      <input id="inputDate" type="text" value="1/1/2011 - ${new SimpleDateFormat("M/d/yyyy").format(new Date())}" readonly="true"/>
     </div>
-    <div id="tabs-2">
-      <div id="pieChart" style="min-width: 1000px; height: 450px;"></div>
-      <div style="display:inline-block;">
-        <g:formRemote name="root" url="[action: 'root']" onSuccess="drawPieChart()">
-          <button style="width:150px"><g:message code="chart.pie.root"/></button>
-        </g:formRemote>
+    <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1" onclick="drawLineChart();"><g:message code="report.chart.line"/></a></li>
+        <li><a href="#tabs-2" onclick="drawPieChart();"><g:message code="report.chart.pie"/></a></li>
+      </ul>
+      <div id="tabs-1">
+        <div id="lineChart" style="min-width: 1000px; height: 450px;"></div>
       </div>
-      <div style="display:inline-block;">
-        <g:formRemote name="up" url="[action: 'up']" onSuccess="drawPieChart()">
-          <button style="width:150px"><g:message code="chart.pie.up"/></button>
-        </g:formRemote>
+      <div id="tabs-2">
+        <div id="pieChart" style="min-width: 1000px; height: 450px;"></div>
+        <div style="display:inline-block;">
+          <g:formRemote name="root" url="[action: 'root']" onSuccess="drawPieChart()">
+            <button style="width:150px"><g:message code="chart.pie.root"/></button>
+          </g:formRemote>
+        </div>
+        <div style="display:inline-block;">
+          <g:formRemote name="up" url="[action: 'up']" onSuccess="drawPieChart()">
+            <button style="width:150px"><g:message code="chart.pie.up"/></button>
+          </g:formRemote>
+        </div>
       </div>
     </div>
   </div>

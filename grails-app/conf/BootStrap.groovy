@@ -1,3 +1,5 @@
+import org.springframework.context.i18n.LocaleContextHolder as LCH
+
 import domain.auth.SecRole
 import domain.auth.SecUser
 import domain.auth.SecUserSecRole
@@ -38,8 +40,8 @@ class BootStrap {
       def cur3 = new Currency(code: 'EUR', name: 'euro').save(failOnError: true)
 
       //Creating categories
-      def rootB = new CategoryBill(name: g.message(code: 'tree.title.rootBill'), isChecked: true, color: 'lime', ico: 'smiley-mr-green.png').save(failOnError: true)
-      def rootO = new CategoryOp(name: g.message(code: 'tree.title.rootOp'), isChecked: true, color: 'magenta', ico: 'script-office.png').save(failOnError: true)
+      def rootB = new CategoryBill(name:  messageSource.getMessage('tree.title.rootBill', null, LCH.getLocale()), isChecked: true, color: 'lime', ico: 'smiley-mr-green.png').save(failOnError: true)
+      def rootO = new CategoryOp(name:  messageSource.getMessage('tree.title.rootOp', null, LCH.getLocale()), isChecked: true, color: 'magenta', ico: 'script-office.png').save(failOnError: true)
 
       def ctg1 = new CategoryBill(name: 'Virtual', isChecked: true, color: 'blue').save(failOnError: true)
 

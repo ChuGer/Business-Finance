@@ -8,7 +8,7 @@ import domain.Operation
 class PersistService {
 
   static transactional = true
-  static scope = "session"
+//  static scope = "session"        TODO uncomment on release 8)
 
 
 

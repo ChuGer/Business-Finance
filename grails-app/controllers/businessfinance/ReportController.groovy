@@ -3,9 +3,9 @@ package businessfinance
 import domain.CategoryOp
 import domain.Operation
 import grails.converters.JSON
+import java.text.SimpleDateFormat
 import org.apache.commons.lang.StringUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import java.text.SimpleDateFormat
 
 class ReportController {
   static navigation = [
@@ -19,6 +19,7 @@ class ReportController {
   def exportService
   def userService
   def fetchService
+  def persistService
 
   def index = {
     userService.saveUserInfo(this.class.simpleName)
@@ -34,6 +35,15 @@ class ReportController {
       }
       exportService.export(params.format, response.outputStream, Operation.findAll(), fields, labels, [:], [:])
     }
+    def treeData = fetchService.getPureCategoryOpTree()
+    println treeData
+    [treeData: treeData as JSON]
+
+  }
+
+  def treeCheck = {
+    persistService.persistCheckEvent(params)
+    render ('')
   }
 
   def getMessage(code) {
