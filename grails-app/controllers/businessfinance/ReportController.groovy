@@ -5,6 +5,7 @@ import domain.Operation
 import grails.converters.JSON
 import org.apache.commons.lang.StringUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import java.text.SimpleDateFormat
 
 class ReportController {
   static navigation = [
@@ -212,5 +213,12 @@ class ReportController {
               colors: colors
       ]
     }
+  }
+
+  def changeDateRange = {
+    def sdf = new SimpleDateFormat("M/d/yyyy")
+    session.startDate = sdf.parse(params.startDate)
+    session.endDate = sdf.parse(params.endDate)
+    render('')
   }
 }

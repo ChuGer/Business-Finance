@@ -1,9 +1,6 @@
 <head>
   <title><g:message code='spring.security.ui.login.title'/></title>
   <meta name='layout' content='register'/>
-  %{--<script type="text/javascript" src="jquery/jquery-1.6.1.min.js"></script>--}%
-  %{--<g:javascript src="../jquery-1.6.1.js" />--}%
-  %{--<g:javascript src="jquery/jquery-1.6.1.min.js" />--}%
 </head>
 
 <body>

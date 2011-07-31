@@ -65,7 +65,7 @@ class RegisterController extends AbstractS2UiController {
       redirect uri: defaultTargetUrl
       return
     }
-    def user
+    def user = null
     RegistrationCode.withTransaction { status ->
       user = lookupUserClass().findByUsername(registrationCode.username)
       if (!user) {
