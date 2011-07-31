@@ -141,7 +141,8 @@
     function createBillnode(data, textStatus) {
       var nodeData = data[1];
       $("#treeDiv").jstree('create', '#' + lastHoveredNodeId, 'inside', nodeData[0], false, true);
-
+      //TODO call fun recreating list's
+      $("#selectBillId").append("<option value=" + data[0].id + " >" + nodeData[0].data[0].title + "</option>");
     }
     function createCtgBillnode(data, textStatus) {
       var nodeData = data[1];

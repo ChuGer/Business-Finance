@@ -17,6 +17,7 @@ class ReportController {
   // Export service provided by Export plugin
   def exportService
   def userService
+  def fetchService
 
   def index = {
     userService.saveUserInfo(this.class.simpleName)

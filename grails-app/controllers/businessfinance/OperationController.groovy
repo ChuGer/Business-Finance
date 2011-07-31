@@ -14,13 +14,14 @@ class OperationController {
   ]
 
   def springSecurityService
-  def categoryService
+  def fetchService
+  def persistService
   def userService
 
   def index = {
     userService.saveUserInfo(this.class.simpleName)
 
-    def treeData = categoryService.getBillTree()
+    def treeData = fetchService.getBillTree()
     def operationInstance = new Operation(type: 1)
     [
             operationInstance: operationInstance,
@@ -59,7 +60,7 @@ class OperationController {
       flash.message = "${message(code: 'bill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
       println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
     }
-    def answer = categoryService.parseBillById(billInstance.id)
+    def answer = fetchService.parseBillById(billInstance.id)
     render answer as JSON
   }
 
@@ -71,7 +72,7 @@ class OperationController {
       flash.message = "${message(code: 'ctGbill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
       println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
     }
-    def answer = categoryService.parseCtgBillById(billInstance.id)
+    def answer = fetchService.parseCtgBillById(billInstance.id)
     render answer as JSON
   }
 

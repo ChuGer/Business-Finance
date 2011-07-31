@@ -15,7 +15,7 @@ class RegisterController extends AbstractS2UiController {
 
   def mailService
   def saltSource
-  def categoryService
+  def persistService
   def index = {
     [command: new RegisterCommand()]
   }
@@ -90,7 +90,7 @@ class RegisterController extends AbstractS2UiController {
     springSecurityService.reauthenticate user.username
 
     flash.message = message(code: 'spring.security.ui.register.complete')
-    categoryService.initRegisteredUser(user)
+    persistService.initRegisteredUser(user)
     redirect uri: conf.ui.register.postRegisterUrl ?: defaultTargetUrl
   }
 

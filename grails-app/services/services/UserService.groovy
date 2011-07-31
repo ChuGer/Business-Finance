@@ -8,7 +8,8 @@ import domain.auth.SecUser
 
 class UserService {
 
-  static transactional = true
+  static transactional = false
+  static scope = "session"
   def springSecurityService
   public final static String CHROME = "chrome"
   public final static String FIREFOX = "firefox"

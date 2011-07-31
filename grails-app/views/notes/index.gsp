@@ -264,7 +264,7 @@
         var url = $(this).attr('href');
 
         var grid = $("#notesHolder");   // $(this).parents("table.ajax");
-        $(grid).html($("#spinner").html());
+//        $(grid).html($("#spinner").html());
 
         $.ajax({
           type: 'GET',

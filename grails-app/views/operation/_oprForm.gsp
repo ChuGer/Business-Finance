@@ -23,7 +23,7 @@
               <label for="bill.id"><g:message code="operation.bill.label" default="Bill"/></label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: operationInstance, field: 'bill', 'errors')}">
-              <g:select name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
+              <g:select id="selectBillId"  name="bill.id" from="${domain.Bill.list()}" optionKey="id" value="${operationInstance?.bill?.id}"/>
             </td>
           </tr>
 

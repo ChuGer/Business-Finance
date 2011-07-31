@@ -14,7 +14,8 @@ class TaskController {
           action: 'index'
   ]
   def springSecurityService
-  def categoryService
+  def fetchService
+  def persistService
   def userService
 
   def index = {
@@ -24,7 +25,7 @@ class TaskController {
     billInstance.properties = params
     if (springSecurityService.getCurrentUser()) {
       [
-              treeData: categoryService.getCategoryTree() as JSON,
+              treeData: fetchService.getCategoryTree() as JSON,
               operationInstance: operationInstance,
               billInstance: new Bill(),
               ctgBInstance: new CategoryBill(),
@@ -42,15 +43,15 @@ class TaskController {
   }
 
   def treeCheck = {
-    categoryService.persistCheckEvent(params)
+    persistService.persistCheckEvent(params)
     def answer = []
-    answer = categoryService.reflectedOpBillCkeck(params.type, params.id[1..-1])
+    answer = persistService.reflectedOpBillCkeck(params.type, params.id[1..-1])
     // TODO: select all persist problem
     def tdata = [
             [type: 'string', name: 'Task', data: 'Work'],
             [type: 'rf', name: 're', data: 'zo']
     ]
-
+    //TODO : does  that answer ever needed???
     render answer as JSON
   }
 
@@ -77,7 +78,7 @@ class TaskController {
     else {
       bill.balance += (operation.type == 1) ? operation.sum : -operation.sum
     }
-    def answer = categoryService.parseOperById(operation.id)
+    def answer = fetchService.parseOperById(operation.id)
     render answer as JSON
   }
   def addBill = {
@@ -89,7 +90,7 @@ class TaskController {
       flash.message = "${message(code: 'bill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
       println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
     }
-    def answer = categoryService.parseBillById(billInstance.id)
+    def answer = fetchService.parseBillById(billInstance.id)
 
     render answer as JSON
   }
@@ -102,7 +103,7 @@ class TaskController {
       flash.message = "${message(code: 'ctGbill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
       println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
     }
-    def answer = categoryService.parseCtgBillById(billInstance.id)
+    def answer = fetchService.parseCtgBillById(billInstance.id)
 
     render answer as JSON
   }
@@ -115,7 +116,7 @@ class TaskController {
       flash.message = "${message(code: 'ctGbill.created.message', args: [message(code: 'bill.label', default: 'Bill'), ctgOpInstance.name])}"
       println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), ctgOpInstance.id])}"
     }
-    def answer = categoryService.parseCtgOperById(ctgOpInstance.id)
+    def answer = fetchService.parseCtgOperById(ctgOpInstance.id)
 
     render answer as JSON
   }
@@ -174,11 +175,11 @@ class TaskController {
 
   def events = {
     def startDate = new Date(Long.parseLong(params.start))
-    def endDate =  new Date(Long.parseLong(params.end))
+    def endDate = new Date(Long.parseLong(params.end))
     def data = []
     def opsIds = []
     //TODO: SQL
-    opsIds = categoryService.usersSelectedOpsIds()
+    opsIds = fetchService.usersSelectedOpsIds()
     Operation.findAllByIdInList(opsIds).each {o ->
       if (o.id in opsIds && (o.startDate >= startDate && o.startDate <= endDate)) {
         def map = [:]
