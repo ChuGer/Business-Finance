@@ -1,5 +1,7 @@
 package services
 
+import org.springframework.context.i18n.LocaleContextHolder as LCH
+
 import domain.Bill
 import domain.CategoryBill
 import domain.CategoryOp
@@ -9,6 +11,7 @@ import domain.auth.SecUser
 class FetchService {
 
   def springSecurityService
+  def messageSource
   static transactional = true
   static scope = "session"
 
@@ -61,6 +64,27 @@ class FetchService {
     }
     data
   }
+def parsePureCtgOData(def ctg) {
+    def data = []
+    ctg.categories?.each {c ->
+      def inn = [:]
+      inn.put('data', [title: c.name, icon: '../images/treei/' + c.ico])
+      inn.put('attr', [id: 'd' + c.id, type: 'cto', chkd: c.isChecked, color: c.color])
+      def childs = []
+      c.categories?.each {cti ->
+        def inn2 = [:]
+        inn2.put('data', [title: cti.name, icon: '../images/treei/' + cti.ico])
+        inn2.put('attr', [id: 'd' + cti.id, type: 'cto', chkd: cti.isChecked, color: cti.color])
+        def childs2 = parsePureCtgOData(cti)
+        inn2.put('children', childs2)
+        childs.add(inn2)
+      }
+      inn.put('children', childs)
+      data.add(inn)
+
+    }
+    data
+  }
 
   def parseCtgBData(def ctg) {
     def data = []
@@ -100,7 +124,7 @@ class FetchService {
       return data
     def c = user.categoriesB
     def inn = [:]
-    inn.put('data', [title: c.name, icon: '../images/treei/' + c.ico])
+    inn.put('data', [title: messageSource.getMessage('tree.title.rootBill', null, LCH.getLocale())  , icon: '../images/treei/' + c.ico])
     inn.put('attr', [id: 'c' + c.id, type: 'ctb', chkd: c.isChecked, color: c.color])
     def childs = parseCtgBData(c)
     inn.put('children', childs)
@@ -115,7 +139,7 @@ class FetchService {
       return data
     def c = user.categoriesB
     def inn = [:]
-    inn.put('data', [title: c.name, icon: '../images/treei/' + c.ico])
+    inn.put('data', [title: messageSource.getMessage('tree.title.rootBill', null, LCH.getLocale()), icon: '../images/treei/' + c.ico])
     inn.put('attr', [id: 'c' + c.id, type: 'ctb', chkd: c.isChecked, color: c.color])
     def childs = parseCtgBData(c)
     inn.put('children', childs)
@@ -123,7 +147,7 @@ class FetchService {
 
     c = user.categoriesO
     def inn2 = [:]
-    inn2.put('data', [title: c.name, icon: '../images/treei/' + c.ico])
+    inn2.put('data', [title: messageSource.getMessage('tree.title.rootOp', null, LCH.getLocale()), icon: '../images/treei/' + c.ico])
     inn2.put('attr', [id: 'd' + c.id, type: 'cto', chkd: c.isChecked, color: c.color])
     def childs2 = parseCtgOData(c)
     inn2.put('children', childs2)
@@ -131,6 +155,21 @@ class FetchService {
     data
   }
 
+  def getPureCategoryOpTree() {
+    def data = []
+    SecUser user = springSecurityService.getCurrentUser()
+    if (!user)
+      return data
+
+    def c = user.categoriesO
+    def inn2 = [:]
+    inn2.put('data', [title: messageSource.getMessage('tree.title.rootOp', null, LCH.getLocale()), icon: '../images/treei/' + c.ico])
+    inn2.put('attr', [id: 'd' + c.id, type: 'cto', chkd: c.isChecked, color: c.color])
+    def childs = parsePureCtgOData(c)
+    inn2.put('children', childs)
+    data.add(inn2)
+    data
+  }
 
 
   def usersSelectedBillsIds() {
@@ -204,7 +243,6 @@ class FetchService {
     list.add(data)
     list
   }
-
 
 
 }

@@ -38,8 +38,8 @@ class BootStrap {
       def cur3 = new Currency(code: 'EUR', name: 'euro').save(failOnError: true)
 
       //Creating categories
-      def rootB = new CategoryBill(name: 'Bills', isChecked: true, color: 'lime', ico: 'smiley-mr-green.png').save(failOnError: true)
-      def rootO = new CategoryOp(name: 'Operations', isChecked: true, color: 'magenta', ico: 'script-office.png').save(failOnError: true)
+      def rootB = new CategoryBill(name: g.message(code: 'tree.title.rootBill'), isChecked: true, color: 'lime', ico: 'smiley-mr-green.png').save(failOnError: true)
+      def rootO = new CategoryOp(name: g.message(code: 'tree.title.rootOp'), isChecked: true, color: 'magenta', ico: 'script-office.png').save(failOnError: true)
 
       def ctg1 = new CategoryBill(name: 'Virtual', isChecked: true, color: 'blue').save(failOnError: true)
 
