@@ -177,19 +177,16 @@ class TaskController {
     def startDate = new Date(Long.parseLong(params.start))
     def endDate = new Date(Long.parseLong(params.end))
     def data = []
-    def opsIds = []
-    //TODO: SQL
-    opsIds = fetchService.usersSelectedOpsIds()
-    Operation.findAllByIdInList(opsIds).each {o ->
-      if (o.id in opsIds && (o.startDate >= startDate && o.startDate <= endDate)) {
-        def map = [:]
-        map.put('id', o.id)
-        map.put('title', o.name + ' (' + (o.type == 0 ? '-' : '+') + o.sum + ') ')
-        map.put('start', o.startDate)
-        map.put('allDay', true)
-        map.put('color', o.category.color);
-        data.add(map)
-      }
+    def opsIds = fetchService.usersSelectedOpsIds()
+    def opsQuery = "from Operation where id in (:id) and startDate >= :startDate and startDate <= :endDate"
+    Operation.executeQuery(opsQuery, [id: opsIds, startDate: startDate, endDate: endDate]).each {o ->
+      def map = [:]
+      map.put('id', o.id)
+      map.put('title', o.name + ' (' + (o.type == 0 ? '-' : '+') + o.sum + ') ')
+      map.put('start', o.startDate)
+      map.put('allDay', true)
+      map.put('color', o.category.color);
+      data.add(map)
     }
     render data as JSON
   }

@@ -64,7 +64,8 @@ class FetchService {
     }
     data
   }
-def parsePureCtgOData(def ctg) {
+
+  def parsePureCtgOData(def ctg) {
     def data = []
     ctg.categories?.each {c ->
       def inn = [:]
@@ -124,7 +125,7 @@ def parsePureCtgOData(def ctg) {
       return data
     def c = user.categoriesB
     def inn = [:]
-    inn.put('data', [title: messageSource.getMessage('tree.title.rootBill', null, LCH.getLocale())  , icon: '../images/treei/' + c.ico])
+    inn.put('data', [title: messageSource.getMessage('tree.title.rootBill', null, LCH.getLocale()), icon: '../images/treei/' + c.ico])
     inn.put('attr', [id: 'c' + c.id, type: 'ctb', chkd: c.isChecked, color: c.color])
     def childs = parseCtgBData(c)
     inn.put('children', childs)
@@ -173,21 +174,13 @@ def parsePureCtgOData(def ctg) {
 
 
   def usersSelectedBillsIds() {
-    //TODO: SQL
-    Set billsIds = []
-    SecUser user = (SecUser) springSecurityService.getCurrentUser()
-    List<Bill> bills = Bill.findAllByUserAndIsChecked(user, true)
-    bills.each { b ->  billsIds.add(b.id)}
-    billsIds
+    Operation.executeQuery("select id from Bill where user = :user and isChecked = true",
+            [user: springSecurityService.getCurrentUser()])
   }
 
   def usersSelectedOpsIds() {
-    //TODO: SQL
-    Set opsIds = []
-    SecUser user = (SecUser) springSecurityService.getCurrentUser()
-    List<Operation> ops = Operation.findAllByUserAndIsChecked(user, true)
-    ops.each { o -> opsIds.add(o.id)}
-    opsIds
+    Operation.executeQuery("select id from Operation where user = :user and isChecked = true",
+            [user: springSecurityService.getCurrentUser()])
   }
 
   def parseBillById(def id) {
