@@ -72,7 +72,7 @@
             data: {name: sname, id: sid, type: stype, ch : 1},
             dataType: "json",
             success:function() {
-//                 refetchEvents();
+                 drawLineChart();
             }
           });
         }
@@ -88,7 +88,7 @@
             data: {name: sname, id: sid, type: stype, ch : 0},
             dataType: "json",
             success:function() {
-//                 refetchEvents();
+              drawLineChart();
             }
           });
         }
@@ -169,7 +169,7 @@
         data: {startDate: dateArray[0] , endDate: dateArray[1]},
         dataType: "json",
         success: function() {
-          refreshTable();
+          drawVisualization();
         }
       });
     }
@@ -183,7 +183,6 @@
   <g:if test="${flash.message}">
     <div class="message">${flash.message}</div>
   </g:if>
-  <div id="treeDiv" style="min-width:220px; float :left; margin:10px;"></div>
   <div style="min-width:700px;float :right;  margin:10px;">
     <div>
       <h3><label for="inputDate"><g:message code="dateRange.select"/>:</label></h3>
@@ -195,7 +194,8 @@
         <li><a href="#tabs-2" onclick="drawPieChart();"><g:message code="report.chart.pie"/></a></li>
       </ul>
       <div id="tabs-1">
-        <div id="lineChart" style="min-width: 1000px; height: 450px;"></div>
+        <div id="treeDiv" style="min-width:220px; margin:10px;"></div>
+        <div id="lineChart" style="min-width: 1000px;display:inline-block;  height: 450px;"></div>
       </div>
       <div id="tabs-2">
         <div id="pieChart" style="min-width: 1000px; height: 450px;"></div>

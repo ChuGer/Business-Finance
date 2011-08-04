@@ -6,6 +6,7 @@ import grails.converters.JSON
 import java.text.SimpleDateFormat
 import org.apache.commons.lang.StringUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import domain.auth.SecUser
 
 class ReportController {
   static navigation = [
@@ -20,6 +21,7 @@ class ReportController {
   def userService
   def fetchService
   def persistService
+  def springSecurityService
 
   def index = {
     userService.saveUserInfo(this.class.simpleName)
@@ -43,37 +45,47 @@ class ReportController {
 
   def treeCheck = {
     persistService.persistCheckEvent(params)
-    render ('')
+    render('')
   }
 
   def getMessage(code) {
     g.message(code: 'operation.' + code + '.label')
   }
 
+  def defaultStartDate() {
+    session.startDate = session.startDate ?: new Date("1/1/2011")
+    session.endDate = session.endDate ?: new Date();
+  }
+
   def lineChart = {
     //dateMap contains startDate and map of two values by type 0 - outcome sum, 1 - income sum
     def dateMap = [:]
-    Operation.findAll().each { o ->
-      def key = o.type == 1 ? 'in' : 'out'
-      def titleKey = o.type == 1 ? 'inT' : 'outT'
-      def date = o.startDate
-      def sum = o.sum
-      def title = o.name
+    def opsIds = fetchService.usersSelectedOpsIds()
+    SecUser user = springSecurityService.getCurrentUser()
+    defaultStartDate()
+    Operation.findAllByUser(user).each { o ->
+      if (o.id in opsIds && (o.startDate >= session.startDate && o.startDate <= session.endDate)) {
+        def key = o.type == 1 ? 'in' : 'out'
+        def titleKey = o.type == 1 ? 'inT' : 'outT'
+        def date = o.startDate
+        def sum = o.sum
+        def title = o.name
 
-      if (dateMap.containsKey(date)) {
-        def map = dateMap.get(date)
-        if (map.containsKey(key)) {
-          def oldSum = map.get(key)
-          def oldTitle = map.get(titleKey)
-          map.put(key, oldSum + sum)
-          map.put(titleKey, oldTitle + ' ' + title)
+        if (dateMap.containsKey(date)) {
+          def map = dateMap.get(date)
+          if (map.containsKey(key)) {
+            def oldSum = map.get(key)
+            def oldTitle = map.get(titleKey)
+            map.put(key, oldSum + sum)
+            map.put(titleKey, oldTitle + ' ' + title)
+          } else {
+            map.put(key, sum)
+            map.put(titleKey, title)
+          }
+          dateMap.put(date, map)
         } else {
-          map.put(key, sum)
-          map.put(titleKey, title)
+          dateMap.put(date, [(key): sum, (titleKey): title])
         }
-        dateMap.put(date, map)
-      } else {
-        dateMap.put(date, [(key): sum, (titleKey): title])
       }
     }
 
@@ -125,7 +137,11 @@ class ReportController {
 
   def getOpsSumByType(type) {
     def opsSum = 0
-    Operation.findAllByType(type).each {o -> opsSum += o.sum};
+    SecUser user = springSecurityService.getCurrentUser()
+    Operation.findAllByTypeAndUser(type, user).each {o ->
+      if ((o.startDate >= session.startDate && o.startDate <= session.endDate))
+        opsSum += o.sum
+    };
     opsSum
   }
 
@@ -146,7 +162,7 @@ class ReportController {
 
   def recursiveSum(CategoryOp cat, sum) {
     cat.operations.each { o ->
-      if (o.type == session.catView)
+      if (o.type == session.catView &&(o.startDate >= session.startDate && o.startDate <= session.endDate))
         sum += o.sum
     }
     cat.categories.each { c ->
@@ -175,6 +191,7 @@ class ReportController {
   }
 
   def recreatePieChart(clickedCatId) {
+    defaultStartDate()
     if (!clickedCatId.equals('undef')) {
       session.historyCats.add(clickedCatId)
       def clickedCat = CategoryOp.findById(clickedCatId)
@@ -183,7 +200,7 @@ class ReportController {
       def colors = []
 
       clickedCat.operations.each {o ->
-        if (o.type == session.catView) {
+        if (o.type == session.catView   && (o.startDate >= session.startDate && o.startDate <= session.endDate)) {
           session.visibleCats.add('undef')
           dataMap.put(o.name, o.sum)
           colors.add('gray')

@@ -6,7 +6,7 @@ import domain.Browser
 import domain.LoginStat
 import domain.auth.SecUser
 
-class UserService {
+class   UserService {
 
   static transactional = false
   static scope = "session"
