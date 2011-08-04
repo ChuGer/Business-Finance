@@ -13,7 +13,6 @@ class TaskController {
           title: "task",
           action: 'index'
   ]
-  def springSecurityService
   def fetchService
   def persistService
   def userService
@@ -23,7 +22,7 @@ class TaskController {
     def operationInstance = new Operation(type: 1)
     def billInstance = new Bill()
     billInstance.properties = params
-    if (springSecurityService.getCurrentUser()) {
+    if (userService.getUser()) {
       [
               treeData: fetchService.getCategoryTree() as JSON,
               operationInstance: operationInstance,
@@ -31,8 +30,7 @@ class TaskController {
               ctgBInstance: new CategoryBill(),
               ctgOInstance: new CategoryOp()
       ]
-    }
-    else {  // goes as demonstration tree data?
+    } else {  // goes as demonstration tree data?
       def treeData = [
               [data: 'ExCateg1', attr: [id: '23'], children: [[[data: 'Bill1', attr: [id: '26']],
                       [data: 'bill2', attr: [id: '11']]]]],
@@ -68,7 +66,7 @@ class TaskController {
     operation.category = CategoryOp.findById(params.category.id)
     operation.type = Integer.parseInt(params.type)
     operation.isChecked = true
-    operation.user = springSecurityService.getCurrentUser()
+    operation.user = userService.getUser()
     operation.sum = params.sum.toFloat()
     if (!operation.save()) {
       operation.errors.each {
@@ -177,9 +175,12 @@ class TaskController {
     def startDate = new Date(Long.parseLong(params.start))
     def endDate = new Date(Long.parseLong(params.end))
     def data = []
-    def opsIds = fetchService.usersSelectedOpsIds()
-    def opsQuery = "from Operation where id in (:id) and startDate >= :startDate and startDate <= :endDate"
-    Operation.executeQuery(opsQuery, [id: opsIds, startDate: startDate, endDate: endDate]).each {o ->
+    def opsQuery = "from Operation where id in (:id) and startDate >= :startDate and startDate <= :endDate and user= :user"
+    Operation.executeQuery(opsQuery, [id: fetchService.usersSelectedOpsIds(),
+            user: userService.getUser(),
+            startDate: startDate,
+            endDate: endDate]
+    ).each {o ->
       def map = [:]
       map.put('id', o.id)
       map.put('title', o.name + ' (' + (o.type == 0 ? '-' : '+') + o.sum + ') ')
@@ -192,8 +193,6 @@ class TaskController {
   }
 
   def locale = {
-    def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
-    def locale = [locale: code]
-    render locale as JSON
+    render userService.getUserLocale() as JSON
   }
 }

@@ -10,7 +10,7 @@ import domain.auth.SecUser
 
 class FetchService {
 
-  def springSecurityService
+  def userService
   def messageSource
   static transactional = true
 //  static scope = "session"        TODO uncomment on release 8)
@@ -120,7 +120,7 @@ class FetchService {
 
   def getBillTree() {
     def data = []
-    SecUser user = springSecurityService.getCurrentUser()
+    def user = userService.getUser()
     if (!user)
       return data
     def c = user.categoriesB
@@ -135,7 +135,7 @@ class FetchService {
 
   def getCategoryTree() {
     def data = []
-    SecUser user = springSecurityService.getCurrentUser()
+    def user = userService.getUser()
     if (!user)
       return data
     def c = user.categoriesB
@@ -158,7 +158,7 @@ class FetchService {
 
   def getPureCategoryOpTree() {
     def data = []
-    SecUser user = springSecurityService.getCurrentUser()
+    def user = userService.getUser()
     if (!user)
       return data
 
@@ -172,15 +172,14 @@ class FetchService {
     data
   }
 
-
   def usersSelectedBillsIds() {
     Operation.executeQuery("select id from Bill where user = :user and isChecked = true",
-            [user: springSecurityService.getCurrentUser()])
+            [user: usersServ.getCurrentUser()])
   }
 
   def usersSelectedOpsIds() {
     Operation.executeQuery("select id from Operation where user = :user and isChecked = true",
-            [user: springSecurityService.getCurrentUser()])
+            [user: userService.getUser()])
   }
 
   def parseBillById(def id) {

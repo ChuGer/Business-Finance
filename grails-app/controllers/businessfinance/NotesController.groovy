@@ -2,12 +2,11 @@ package businessfinance
 
 import domain.CategoryNote
 import domain.Note
-import domain.auth.SecUser
+
 import grails.converters.JSON
 import java.text.SimpleDateFormat
 
 class NotesController {
-  def springSecurityService
   def sdf = new SimpleDateFormat("d/M/yyyy");
   static navigation = [
           group: 'tabs',
@@ -22,7 +21,7 @@ class NotesController {
     if (params.max)
       params.max = Math.min(params.max ? params.int('max') : 20, 100)
 
-    SecUser user = springSecurityService.getCurrentUser();
+    def user = userService.getUser();
     def ctgList = user.notes
     def table = '!'
     def ctg = null
@@ -124,8 +123,7 @@ class NotesController {
   def addCtn = {
     def ctg = new CategoryNote(name: params.name)
     ctg.save(failOnError: true)
-    SecUser user = springSecurityService.getCurrentUser();
-    user.notes.add(ctg)
+    userService.getUser().notes.add(ctg)
     redirect action: index
   }
 
@@ -141,8 +139,7 @@ class NotesController {
   def deleteCtn = {
     def ctg = CategoryNote.findById(params.ctnId)
     if (ctg) {
-      SecUser user = springSecurityService.getCurrentUser();
-      user.notes.remove(ctg)
+      userService.getUser().notes.remove(ctg)
       ctg.delete()
     }
     redirect action: index

@@ -1,7 +1,6 @@
 package businessfinance
 
 import domain.Settings
-import domain.auth.SecUser
 
 class SettingController {
   static navigation = [
@@ -11,15 +10,11 @@ class SettingController {
           action: 'index'
   ]
 
-  def springSecurityService
   def userService
 
   def index = {
     userService.saveUserInfo(this.class.simpleName)
-    SecUser user = springSecurityService.getCurrentUser();
-    if (user != null) {
-      [user: user, settingsInstance: user.settings]
-    }
+    [user: userService.getUser(), settingsInstance: userService.getUser()?.settings]
   }
 
   def update = {

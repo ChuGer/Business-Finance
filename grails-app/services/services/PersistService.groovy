@@ -10,8 +10,6 @@ class PersistService {
   static transactional = true
 //  static scope = "session"        TODO uncomment on release 8)
 
-
-
   def checkCtgB(CategoryBill ctg) {
     ctg.bills?.each { bill ->
       bill.isChecked = bill.category.isChecked
@@ -31,7 +29,6 @@ class PersistService {
       checkCtgO(bill)
     }
   }
-
 
   def persistCheckEvent(def params) {
 
@@ -56,10 +53,6 @@ class PersistService {
       checkCtgO(ctg)
     }
   }
-
-
-
-
 
   private def ctgReflect(def ctb) {
     def data = []

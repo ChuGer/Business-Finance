@@ -27,9 +27,6 @@ class StatisticsController {
     params.max = params.max ?: 20
     params.sort = params.sort ?: 'date'
     params.order = params.order ?: 'desc'
-//    params.put('filter.settings.user.idTo',null)
-//    params.put('filter.settings.user.id',2)
-//    params.put('filter.op.settings.user.id','Equal')
   }
 
   def filter = {

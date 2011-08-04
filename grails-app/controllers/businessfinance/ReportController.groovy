@@ -6,7 +6,6 @@ import grails.converters.JSON
 import java.text.SimpleDateFormat
 import org.apache.commons.lang.StringUtils
 import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import domain.auth.SecUser
 
 class ReportController {
   static navigation = [
@@ -21,7 +20,6 @@ class ReportController {
   def userService
   def fetchService
   def persistService
-  def springSecurityService
 
   def index = {
     userService.saveUserInfo(this.class.simpleName)
@@ -60,32 +58,33 @@ class ReportController {
   def lineChart = {
     //dateMap contains startDate and map of two values by type 0 - outcome sum, 1 - income sum
     def dateMap = [:]
-    def opsIds = fetchService.usersSelectedOpsIds()
-    SecUser user = springSecurityService.getCurrentUser()
     defaultStartDate()
-    Operation.findAllByUser(user).each { o ->
-      if (o.id in opsIds && (o.startDate >= session.startDate && o.startDate <= session.endDate)) {
-        def key = o.type == 1 ? 'in' : 'out'
-        def titleKey = o.type == 1 ? 'inT' : 'outT'
-        def date = o.startDate
-        def sum = o.sum
-        def title = o.name
+    def opsQuery = "from Operation where id in (:id) and startDate >= :startDate and startDate <= :endDate and user = :user"
+    Operation.executeQuery(opsQuery, [id: fetchService.usersSelectedOpsIds(),
+            user: userService.getUser(),
+            startDate: session.startDate,
+            endDate: session.endDate]
+    ).each { o ->
+      def key = o.type == 1 ? 'in' : 'out'
+      def titleKey = o.type == 1 ? 'inT' : 'outT'
+      def date = o.startDate
+      def sum = o.sum
+      def title = o.name
 
-        if (dateMap.containsKey(date)) {
-          def map = dateMap.get(date)
-          if (map.containsKey(key)) {
-            def oldSum = map.get(key)
-            def oldTitle = map.get(titleKey)
-            map.put(key, oldSum + sum)
-            map.put(titleKey, oldTitle + ' ' + title)
-          } else {
-            map.put(key, sum)
-            map.put(titleKey, title)
-          }
-          dateMap.put(date, map)
+      if (dateMap.containsKey(date)) {
+        def map = dateMap.get(date)
+        if (map.containsKey(key)) {
+          def oldSum = map.get(key)
+          def oldTitle = map.get(titleKey)
+          map.put(key, oldSum + sum)
+          map.put(titleKey, oldTitle + ' ' + title)
         } else {
-          dateMap.put(date, [(key): sum, (titleKey): title])
+          map.put(key, sum)
+          map.put(titleKey, title)
         }
+        dateMap.put(date, map)
+      } else {
+        dateMap.put(date, [(key): sum, (titleKey): title])
       }
     }
 
@@ -115,6 +114,9 @@ class ReportController {
   }
 
   def pieChart = {
+    userService.saveUserInfo(this.class.simpleName)
+    userService.getUser()
+
     def pieChart = session.pieChart ?:
       [
               data:
@@ -136,13 +138,10 @@ class ReportController {
   }
 
   def getOpsSumByType(type) {
-    def opsSum = 0
-    SecUser user = springSecurityService.getCurrentUser()
-    Operation.findAllByTypeAndUser(type, user).each {o ->
-      if ((o.startDate >= session.startDate && o.startDate <= session.endDate))
-        opsSum += o.sum
-    };
-    opsSum
+    def user = userService.getUser()
+    Operation.executeQuery("select sum(o.sum) from Operation o where user=:user and startDate >= :startDate and startDate <= :endDate and type = :type",
+            [user: user, startDate: session.startDate, endDate: session.endDate, type: type])
+
   }
 
   def updatePie = {
@@ -162,7 +161,7 @@ class ReportController {
 
   def recursiveSum(CategoryOp cat, sum) {
     cat.operations.each { o ->
-      if (o.type == session.catView &&(o.startDate >= session.startDate && o.startDate <= session.endDate))
+      if (o.type == session.catView && (o.startDate >= session.startDate && o.startDate <= session.endDate))
         sum += o.sum
     }
     cat.categories.each { c ->
@@ -200,7 +199,7 @@ class ReportController {
       def colors = []
 
       clickedCat.operations.each {o ->
-        if (o.type == session.catView   && (o.startDate >= session.startDate && o.startDate <= session.endDate)) {
+        if (o.type == session.catView && (o.startDate >= session.startDate && o.startDate <= session.endDate)) {
           session.visibleCats.add('undef')
           dataMap.put(o.name, o.sum)
           colors.add('gray')

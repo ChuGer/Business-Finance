@@ -1,6 +1,5 @@
 package businessfinance
 
-import domain.auth.SecUser
 import grails.converters.JSON
 import java.text.SimpleDateFormat
 import domain.*
@@ -13,7 +12,6 @@ class OperationController {
           action: 'index'
   ]
 
-  def springSecurityService
   def fetchService
   def persistService
   def userService
@@ -42,7 +40,7 @@ class OperationController {
     operation.category = category
     operation.type = Integer.parseInt(params.type)
     operation.isChecked = true
-    operation.user = springSecurityService.getCurrentUser()
+    operation.user = userService.getUser()
     operation.sum = params.sum.toFloat()
     if (!operation.save()) {
       operation.errors.each {
@@ -54,8 +52,8 @@ class OperationController {
 
   def addBill = {
     def ctgId = params.categoryb[1..-1].toInteger()
-    def billInstance = new Bill(name: params.name, balance: params.balance.toFloat(), user: springSecurityService.getCurrentUser(),
-            currency: Currency.findById( params.currency.toInteger()), category: CategoryBill.findById(ctgId), isChecked: true)
+    def billInstance = new Bill(name: params.name, balance: params.balance.toFloat(), user: userService.getUser(),
+            currency: Currency.findById(params.currency.toInteger()), category: CategoryBill.findById(ctgId), isChecked: true)
     if (billInstance.save(failOnError: true)) {
       flash.message = "${message(code: 'bill.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.name])}"
       println "${message(code: 'default.created.message', args: [message(code: 'bill.label', default: 'Bill'), billInstance.id])}"
@@ -77,25 +75,17 @@ class OperationController {
   }
 
   def locale = {
-    def code = session.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
-    def locale = [locale: code]
-    render locale as JSON
+    render userService.getUserLocale() as JSON
   }
 
   def incomeTable = {
-    SecUser user = springSecurityService.currentUser
-    if (user) {
-      def newCat = createCategorySkilet(user.categoriesO, 1, getClickedBillId())
-      render(template: 'table', model: [rootCat: newCat])
-    }
+    def newCat = createCategorySkilet(userService.getUser().categoriesO, 1, getClickedBillId())
+    render(template: 'table', model: [rootCat: newCat])
   }
 
   def outcomeTable = {
-    SecUser user = springSecurityService.currentUser
-    if (user) {
-      def newCat = createCategorySkilet(user.categoriesO, 0, getClickedBillId())
-      render(template: 'table', model: [rootCat: newCat])
-    }
+    def newCat = createCategorySkilet(userService.getUser().categoriesO, 0, getClickedBillId())
+    render(template: 'table', model: [rootCat: newCat])
   }
 
   def getClickedBillId() {
@@ -107,7 +97,6 @@ class OperationController {
   // TODO: SQL
 
   def createCategorySkilet(rootCat, type, billId) {
-
     def skilet = new CategoryOp()
     skilet.name = rootCat.name
     skilet.color = rootCat.color

@@ -6,7 +6,7 @@ import domain.Browser
 import domain.LoginStat
 import domain.auth.SecUser
 
-class   UserService {
+class UserService {
 
   static transactional = false
   static scope = "session"
@@ -21,8 +21,17 @@ class   UserService {
   public final static String SEAMONKEY = "seamonkey"
 //  public final static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
 
+  SecUser getUser() {
+    (SecUser) springSecurityService.getCurrentUser()
+  }
+
+  def getUserLocale() {
+    def code = getSession()?.'org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE' ?: 'ru'
+    [locale: code]
+  }
+
   def saveUserInfo(className) {
-    SecUser user = springSecurityService.getCurrentUser()
+    def user = getUser()
     if (user != null) {
       def agentInfo = getUserAgentInfo()
       def browser = Browser.findByNameAndVers(agentInfo.name, agentInfo.vers)
@@ -126,4 +135,5 @@ class   UserService {
 
     return agentInfo
   }
+
 }
